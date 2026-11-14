@@ -1,0 +1,124 @@
+{
+  "timing": "Opening stock before all receipts; consume usable resources chronologically once",
+  "stock": [
+    {
+      "ingredient": "pasta",
+      "unit": "KG",
+      "total": 5,
+      "reserved": 1,
+      "expired": 2
+    },
+    {
+      "ingredient": "minced beef",
+      "unit": "KG",
+      "total": 3,
+      "reserved": 1,
+      "expired": 0
+    },
+    {
+      "ingredient": "onion",
+      "unit": "KG",
+      "total": 1,
+      "reserved": 0,
+      "expired": 0
+    },
+    {
+      "ingredient": "carrot",
+      "unit": "KG",
+      "total": 6,
+      "reserved": 1,
+      "expired": 2
+    },
+    {
+      "ingredient": "potato",
+      "unit": "KG",
+      "total": 4,
+      "reserved": 1,
+      "expired": 1
+    },
+    {
+      "ingredient": "oat drink",
+      "unit": "L",
+      "total": 5,
+      "reserved": 1,
+      "expired": 1
+    },
+    {
+      "ingredient": "rapeseed oil",
+      "unit": "L",
+      "total": 0.1,
+      "reserved": 0,
+      "expired": 0
+    },
+    {
+      "ingredient": "oats",
+      "unit": "KG",
+      "total": 1,
+      "reserved": 0,
+      "expired": 0
+    },
+    {
+      "ingredient": "berries",
+      "unit": "KG",
+      "total": 1,
+      "reserved": 0.2,
+      "expired": 0.3
+    }
+  ],
+  "receipts": [
+    {
+      "ingredient": "pasta",
+      "unit": "KG",
+      "amount": 1,
+      "available_date": "2026-11-20"
+    },
+    {
+      "ingredient": "carrot",
+      "unit": "KG",
+      "amount": 2,
+      "available_date": "2026-11-20"
+    },
+    {
+      "ingredient": "oat drink",
+      "unit": "L",
+      "amount": 2,
+      "available_date": "2026-11-20"
+    },
+    {
+      "ingredient": "pasta",
+      "unit": "KG",
+      "amount": 2,
+      "available_date": "2026-11-21"
+    },
+    {
+      "ingredient": "carrot",
+      "unit": "KG",
+      "amount": 1,
+      "available_date": "2026-11-21"
+    },
+    {
+      "ingredient": "potato",
+      "unit": "KG",
+      "amount": 3,
+      "available_date": "2026-11-21"
+    },
+    {
+      "ingredient": "oat drink",
+      "unit": "L",
+      "amount": 1,
+      "available_date": "2026-11-21"
+    },
+    {
+      "ingredient": "berries",
+      "unit": "KG",
+      "amount": 0.4,
+      "available_date": "2026-11-21"
+    },
+    {
+      "ingredient": "pasta",
+      "unit": "KG",
+      "amount": 50,
+      "available_date": "2026-11-23"
+    }
+  ]
+}

@@ -18,18 +18,18 @@ def test_four_anomalies():
     result = detect_drift(history())
     assert {a['kind'] for a in result['anomalies']} == {
         'new_product', 'missing_product', 'unit_price_increase', 'quantity_above_trend'}
-    assert result['recommendation'] == 'спросить'
-    assert all(a['explanation'] and a['recommendation'] == 'спросить' for a in result['anomalies'])
+    assert result['recommendation'] == 'ask'
+    assert all(a['explanation'] and a['recommendation'] == 'ask' for a in result['anomalies'])
 
 
 def test_trend_without_false_alarm():
     weeks = history()[:-1]
-    assert detect_drift(weeks)['recommendation'] == 'продлить'
+    assert detect_drift(weeks)['recommendation'] == 'renew'
 
 
 def test_cli(capsys):
     main(['drift', str(FIXTURE)])
-    assert json.loads(capsys.readouterr().out)['recommendation'] == 'спросить'
+    assert json.loads(capsys.readouterr().out)['recommendation'] == 'ask'
 
 
 @pytest.mark.parametrize('mutation', ['short', 'duplicate', 'unit', 'nan', 'date'])

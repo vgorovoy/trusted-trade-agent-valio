@@ -1,0 +1,164 @@
+[
+  {
+    "ingredient": "berries",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 2.0,
+    "available_before": 0.5,
+    "consumed": 0.5,
+    "net": 1.5
+  },
+  {
+    "ingredient": "carrot",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 10.4,
+    "available_before": 5.0,
+    "consumed": 5.0,
+    "net": 5.4
+  },
+  {
+    "ingredient": "minced beef",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 6.4,
+    "available_before": 2.0,
+    "consumed": 2.0,
+    "net": 4.4
+  },
+  {
+    "ingredient": "oat drink",
+    "unit": "L",
+    "date": "2026-11-20",
+    "gross": 11.6,
+    "available_before": 5.0,
+    "consumed": 5.0,
+    "net": 6.6
+  },
+  {
+    "ingredient": "oats",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 3.0,
+    "available_before": 1.0,
+    "consumed": 1.0,
+    "net": 2.0
+  },
+  {
+    "ingredient": "onion",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 2.0,
+    "available_before": 1.0,
+    "consumed": 1.0,
+    "net": 1.0
+  },
+  {
+    "ingredient": "pasta",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 8.0,
+    "available_before": 3.0,
+    "consumed": 3.0,
+    "net": 5.0
+  },
+  {
+    "ingredient": "potato",
+    "unit": "KG",
+    "date": "2026-11-20",
+    "gross": 6.0,
+    "available_before": 2.0,
+    "consumed": 2.0,
+    "net": 4.0
+  },
+  {
+    "ingredient": "rapeseed oil",
+    "unit": "L",
+    "date": "2026-11-20",
+    "gross": 0.2,
+    "available_before": 0.1,
+    "consumed": 0.1,
+    "net": 0.1
+  },
+  {
+    "ingredient": "berries",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 1.2,
+    "available_before": 0.4,
+    "consumed": 0.4,
+    "net": 0.8
+  },
+  {
+    "ingredient": "carrot",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 10.2,
+    "available_before": 1.0,
+    "consumed": 1.0,
+    "net": 9.2
+  },
+  {
+    "ingredient": "minced beef",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 4.8,
+    "available_before": 0.0,
+    "consumed": 0.0,
+    "net": 4.8
+  },
+  {
+    "ingredient": "oat drink",
+    "unit": "L",
+    "date": "2026-11-21",
+    "gross": 8.8,
+    "available_before": 1.0,
+    "consumed": 1.0,
+    "net": 7.8
+  },
+  {
+    "ingredient": "oats",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 1.8,
+    "available_before": 0.0,
+    "consumed": 0.0,
+    "net": 1.8
+  },
+  {
+    "ingredient": "onion",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 1.5,
+    "available_before": 0.0,
+    "consumed": 0.0,
+    "net": 1.5
+  },
+  {
+    "ingredient": "pasta",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 6.0,
+    "available_before": 2.0,
+    "consumed": 2.0,
+    "net": 4.0
+  },
+  {
+    "ingredient": "potato",
+    "unit": "KG",
+    "date": "2026-11-21",
+    "gross": 10.5,
+    "available_before": 3.0,
+    "consumed": 3.0,
+    "net": 7.5
+  },
+  {
+    "ingredient": "rapeseed oil",
+    "unit": "L",
+    "date": "2026-11-21",
+    "gross": 0.35,
+    "available_before": 0.0,
+    "consumed": 0.0,
+    "net": 0.35
+  }
+]

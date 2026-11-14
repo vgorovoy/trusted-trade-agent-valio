@@ -40,24 +40,24 @@ def detect_drift(weeks: list[dict], *, quantity_threshold: float = 0.2,
     anomalies = []
     def add(pid, kind, explanation):
         anomalies.append({"product_id": pid, "kind": kind, "explanation": explanation,
-                          "recommendation": "спросить"})
+                          "recommendation": "ask"})
     previous_ids = set().union(*history)
     for pid in sorted(proposed.keys() - previous_ids):
-        add(pid, "new_product", "Новый товар: в истории кухни не встречался; подтвердите назначение")
+        add(pid, "new_product", "New product: not seen in this kitchen's history; confirm its purpose")
     # Missing means present in the immediately preceding order; occasional historical
     # purchases are not treated as standing items forever.
     for pid in sorted(history[-1].keys() - proposed.keys()):
-        add(pid, "missing_product", "Товар прошлого недельного заказа пропал; подтвердите изменение меню")
+        add(pid, "missing_product", "Item from last week's order is missing; confirm the menu change")
     for pid in sorted(proposed.keys() & previous_ids):
         samples = [(i, order[pid]) for i, order in enumerate(history) if pid in order]
         current = proposed[pid]
         baseline = median(line["unit_price_eur"] for _, line in samples)
         if current["unit_price_eur"] > baseline * (1 + price_threshold) + 1e-9:
             add(pid, "unit_price_increase",
-                f"Цена за {current['unit']} выросла с медианы {baseline:.2f} до "
-                f"{current['unit_price_eur']:.2f} EUR; проверьте цену до продления")
+                f"Price per {current['unit']} rose from a median of {baseline:.2f} to "
+                f"{current['unit_price_eur']:.2f} EUR; check the price before renewing")
         if len(samples) < 3:
-            add(pid, "insufficient_history", "Меньше трёх наблюдений: тренд количества пока ненадёжен")
+            add(pid, "insufficient_history", "Fewer than three observations: quantity trend not yet reliable")
             continue
         xs = [i for i, _ in samples]
         ys = [line["quantity"] for _, line in samples]
@@ -66,9 +66,9 @@ def detect_drift(weeks: list[dict], *, quantity_threshold: float = 0.2,
         forecast = max(0, my + slope * (len(history) - mx))
         if current["quantity"] > forecast * (1 + quantity_threshold) + 1e-9:
             add(pid, "quantity_above_trend",
-                f"Количество {current['quantity']:g} {current['unit']} выше прогноза "
-                f"{forecast:.1f} по недельному тренду; уточните число порций")
+                f"Quantity {current['quantity']:g} {current['unit']} is above the weekly-trend forecast "
+                f"of {forecast:.1f}; confirm the number of servings")
     return {"week": weeks[-1]["week"], "anomalies": anomalies,
-            "recommendation": "спросить" if anomalies else "продлить",
-            "explanation": "Проверьте изменения до автопродления" if anomalies else
-                           "Количество следует тренду, цена стабильна, состав заказа сохранён"}
+            "recommendation": "ask" if anomalies else "renew",
+            "explanation": "Review the changes before auto-renewal" if anomalies else
+                           "Quantities follow the trend, prices are stable, order contents unchanged"}

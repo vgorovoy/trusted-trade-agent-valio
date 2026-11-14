@@ -1,0 +1,39 @@
+{
+  "version": "synthetic-menu-techcards-v1",
+  "supplier": "Valio Aimo only",
+  "today": "2026-11-19",
+  "counts_provenance": "Explicit hypothetical planning counts supplied by kitchen; not predicted by LLM",
+  "dates_scope": "Requested planning dates, not verified supplier delivery availability",
+  "services": [
+    {
+      "delivery_date": "2026-11-20",
+      "dish_id": "beef-pasta",
+      "portions": 80
+    },
+    {
+      "delivery_date": "2026-11-20",
+      "dish_id": "vegetable-soup",
+      "portions": 40
+    },
+    {
+      "delivery_date": "2026-11-20",
+      "dish_id": "oat-porridge",
+      "portions": 50
+    },
+    {
+      "delivery_date": "2026-11-21",
+      "dish_id": "beef-pasta",
+      "portions": 60
+    },
+    {
+      "delivery_date": "2026-11-21",
+      "dish_id": "vegetable-soup",
+      "portions": 70
+    },
+    {
+      "delivery_date": "2026-11-21",
+      "dish_id": "oat-porridge",
+      "portions": 30
+    }
+  ]
+}

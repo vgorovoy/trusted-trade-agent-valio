@@ -196,7 +196,23 @@ def hospital() -> BuyerProfile:
     )
 
 
-PROFILES = {"hotel": hotel, "school": school, "hospital": hospital}
+def restaurant() -> BuyerProfile:
+    """General restaurant demo: explicit buyer rules, no inferred dietary restriction."""
+    return BuyerProfile(
+        key="restaurant", kitchen="Demo Restaurant / Cafe: sous-chef prepares weekly orders and top-ups.",
+        mandate=sign_mandate(Mandate(
+            mandate_id="mandate-restaurant-demo", buyer_id="restaurant-demo-001",
+            buyer_name="Demo Restaurant / Cafe", agent_id="restaurant-buyer-agent",
+            valid_until=_valid(), auto_order_limit_eur=500, hard_limit_eur=5000,
+            substitution_policy="approval", max_substitute_price_increase_pct=10,
+            approvers=["chef@restaurant.example"])),
+        passport=demo_passport("restaurant-buyer-agent"),
+        preferences=["use supplied recipe cards and usable stock; do not invent demand",
+                     "show pack-size surplus and ask before changing the requested basket"],
+    )
+
+
+PROFILES = {"restaurant": restaurant, "hotel": hotel, "school": school, "hospital": hospital}
 
 
 def get_profile(key: str) -> BuyerProfile:

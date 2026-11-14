@@ -1,12 +1,13 @@
-"""Local live view of the isolated agent benchmark.
+"""Isolated benchmark UI: offline, recorded, or explicitly enabled bounded live models.
 
-The benchmark uses synthetic catalogue/stock, temporary keys and a temporary database.
-This UI deliberately offers only the offline agent and recorded model replies: no live
-provider call, production order or persistent benchmark result can be triggered here.
+Supplier/catalogue/orders remain synthetic in interactive live-model mode. Credentials
+stay server-side; the single spawned worker isolates clocks and temporary state.
 """
 
 from __future__ import annotations
 
+import asyncio
+import json
 import multiprocessing
 import threading
 import time
@@ -16,9 +17,13 @@ from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from trade_agents.bench.scenario import BENCH_DIR, Scenario, load_scenarios
+from web.live_models import LIMITS, capabilities, validate_selection
+from web.live_snapshot import configured as official_configured
+from web.live_snapshot import dataset_capabilities, diagnostic_scenarios
 from web.live_worker import run_worker
 
 router = APIRouter(prefix="/ui/live", tags=["live demo"])
@@ -26,8 +31,12 @@ RECORDED_DIR = BENCH_DIR / "replays" / "nvidia-nvidia-nemotron-3.5-super-vl-120b
 
 
 class StartIn(BaseModel):
-    scenario_ids: list[str] = Field(min_length=1, max_length=40)
-    mode: str = Field(default="offline", pattern="^(offline|recorded)$")
+    scenario_ids: list[str] = Field(min_length=1, max_length=50)
+    mode: str = Field(default="offline", pattern="^(offline|recorded|live)$")
+
+    provider: str | None = None
+    model: str | None = None
+    dataset: str = Field(default="synthetic", pattern="^(synthetic|official_snapshot)$")
 
 
 @dataclass
@@ -36,6 +45,9 @@ class LiveRun:
     mode: str
     scenario_ids: list[str]
     created_at: str
+    provider: str | None = None
+    model: str | None = None
+    dataset: str = "synthetic"
     events: list[dict[str, Any]] = field(default_factory=list)
     done: bool = False
     report: dict[str, Any] | None = None
@@ -49,18 +61,39 @@ class LiveRuns:
         self.lock = threading.RLock()
         self.runs: dict[str, LiveRun] = {}
         self.active: str | None = None
+        self.live_attempts = 0
 
     def emit(self, run: LiveRun, kind: str, data: dict[str, Any]) -> None:
         with self.lock:
             run.events.append({"seq": len(run.events) + 1, "kind": kind,
                                "at": datetime.now(UTC).isoformat(), "data": data})
 
-    def start(self, scenarios: list[Scenario], mode: str) -> LiveRun:
+    def start(self, scenarios: list[Scenario], mode: str,
+              provider: str | None = None, model: str | None = None,
+              dataset: str = "synthetic") -> LiveRun:
         with self.lock:
             if self.active is not None:
                 raise HTTPException(409, "a live benchmark is already running")
+            if dataset not in {"synthetic", "official_snapshot"}:
+                raise HTTPException(400, "Unknown benchmark dataset")
+            if dataset == "official_snapshot":
+                if mode != "live" or not official_configured():
+                    raise HTTPException(400, "Official snapshot needs live mode and server configuration")
+                permitted = {scenario.id for scenario in diagnostic_scenarios()}
+                if any(scenario.id not in permitted for scenario in scenarios):
+                    raise HTTPException(400, "Select an official mock diagnostic")
+            if mode == "live":
+                try:
+                    validate_selection(provider, model)
+                except ValueError as exc:
+                    raise HTTPException(400, str(exc)) from None
+                if len(scenarios) != 1 or any(sc.world.name == "live" for sc in scenarios):
+                    raise HTTPException(400, "Live model mode permits one synthetic scenario only")
+                if self.live_attempts >= LIMITS["max_live_runs_per_container"]:
+                    raise HTTPException(429, "Live benchmark budget exhausted for this server instance")
+                self.live_attempts += 1
             run = LiveRun(uuid.uuid4().hex, mode, [s.id for s in scenarios],
-                          datetime.now(UTC).isoformat())
+                          datetime.now(UTC).isoformat(), provider=provider, model=model, dataset=dataset)
             self.runs[run.id] = run
             self.active = run.id
             # Keep recent completed runs for a browser refresh, without unbounded memory.
@@ -84,11 +117,18 @@ class LiveRuns:
         try:
             context = multiprocessing.get_context("spawn")
             receive, send = context.Pipe(duplex=False)
-            process = context.Process(target=self.worker, args=(scenarios, run.mode, send), daemon=True)
-            self.emit(run, "run_started", {"mode": run.mode, "total": len(scenarios)})
+            args = (scenarios, run.mode, send)
+            if run.mode == "live":
+                args += ({"provider": run.provider, "model": run.model, "dataset": run.dataset},)
+            process = context.Process(target=self.worker, args=args, daemon=True)
+            self.emit(run, "run_started", {"mode": run.mode, "total": len(scenarios),
+                                           "provider": run.provider, "model": run.model,
+                                           "dataset": run.dataset,
+                                           "limits": LIMITS if run.mode == "live" else None})
             process.start()
             send.close()  # only the child keeps the sending end; crash becomes EOF
-            deadline = time.monotonic() + self.worker_timeout
+            deadline = time.monotonic() + (LIMITS["worker_timeout_seconds"]
+                                          if run.mode == "live" else self.worker_timeout)
             while True:
                 if time.monotonic() >= deadline:
                     raise TimeoutError("benchmark worker exceeded its time limit")
@@ -148,6 +188,7 @@ class LiveRuns:
                 raise HTTPException(404, "unknown live run")
             return {"id": run.id, "mode": run.mode, "scenario_ids": run.scenario_ids,
                     "created_at": run.created_at, "done": run.done, "error": run.error,
+                    "provider": run.provider, "model": run.model, "dataset": run.dataset,
                     "events": run.events[after:], "next": len(run.events),
                     "report": run.report if run.done else None}
 
@@ -155,8 +196,22 @@ class LiveRuns:
 manager = LiveRuns()
 
 
+@router.get("/capabilities")
+def get_capabilities() -> dict[str, Any]:
+    return {**capabilities(), "live_attempts_used": manager.live_attempts,
+            "datasets": dataset_capabilities(),
+            "data_scope": "Dataset-specific supplier inputs; orders are always simulated locally",
+            "default_dataset": "official_snapshot" if official_configured() else "synthetic"}
+
+
 @router.get("/scenarios")
-def scenarios() -> dict[str, Any]:
+def scenarios(dataset: str = Query(default="synthetic", pattern="^(synthetic|official_snapshot)$")
+              ) -> dict[str, Any]:
+    if dataset == "official_snapshot":
+        return {"scenarios": [{"id": sc.id, "category": sc.category, "title": sc.title,
+                "buyer": sc.buyer, "request": sc.request, "expected": "capture-dependent",
+                "tier": "diagnostic", "recorded": False} for sc in diagnostic_scenarios()],
+                "modes": ["live"], "dataset": dataset}
     smoke = {s.id for s in load_scenarios(tier="smoke")}
     core = {s.id for s in load_scenarios(tier="core")}
     return {"scenarios": [{"id": s.id, "category": s.category, "title": s.title,
@@ -166,7 +221,7 @@ def scenarios() -> dict[str, Any]:
                                    "core" if s.id in core else "full",
                            "recorded": (RECORDED_DIR / f"{s.id}.json").exists()}
                           for s in load_scenarios()],
-            "modes": ["offline", "recorded"]}
+            "modes": ["offline", "recorded", "live"]}
 
 
 @router.post("/runs", status_code=202)
@@ -175,7 +230,10 @@ def start_run(body: StartIn) -> dict[str, Any]:
     if len(ids) != len(set(ids)):
         raise HTTPException(400, "duplicate scenario id")
     try:
-        selected = load_scenarios(only=ids)
+        if body.dataset == "official_snapshot":
+            selected = [sc for sc in diagnostic_scenarios() if sc.id in ids]
+        else:
+            selected = load_scenarios(only=ids)
     except ValueError as exc:
         raise HTTPException(400, str(exc)) from exc
     if len(selected) != len(ids):
@@ -184,10 +242,30 @@ def start_run(body: StartIn) -> dict[str, Any]:
         unavailable = [s.id for s in selected if not (RECORDED_DIR / f"{s.id}.json").exists()]
         if unavailable:
             raise HTTPException(400, f"no model recording for: {', '.join(unavailable)}")
-    run = manager.start(selected, body.mode)
-    return {"run_id": run.id, "scenario_ids": run.scenario_ids, "mode": run.mode}
+    run = manager.start(selected, body.mode, body.provider, body.model, body.dataset)
+    return {"run_id": run.id, "scenario_ids": run.scenario_ids, "mode": run.mode,
+            "provider": run.provider, "model": run.model, "dataset": run.dataset}
 
 
 @router.get("/runs/{run_id}")
 def get_run(run_id: str, after: int = Query(default=0, ge=0)) -> dict[str, Any]:
     return manager.snapshot(run_id, after)
+
+
+@router.get("/runs/{run_id}/events")
+def stream_events(run_id: str, after: int = Query(default=0, ge=0)):
+    manager.snapshot(run_id, after)  # Validate before starting the response.
+
+    async def stream():
+        cursor = after
+        while True:
+            snapshot = manager.snapshot(run_id, cursor)
+            for event in snapshot["events"]:
+                yield f"id: {event['seq']}\nevent: {event['kind']}\ndata: {json.dumps(event)}\n\n"
+            cursor = snapshot["next"]
+            if snapshot["done"]:
+                break
+            await asyncio.sleep(0.2)
+
+    return StreamingResponse(stream(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})

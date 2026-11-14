@@ -245,6 +245,9 @@ class Gemini:
 # -- OpenAI-compatible (OpenAI, Verda, NVIDIA Build, ...) --------------------------------
 
 PRESETS = {
+    "verda-nemotron": (("VERDA_INFERENCE_KEY",), "VERDA_NEMOTRON_BASE_URL",
+                       "https://containers.datacrunch.io/nemotron-3-5-super-vl-b300/v1",
+                       "nemotron-3.5-super-vl", True),
     # provider: (api key envs, base url env, default base url, default model, vision by default)
     "openai": (("OPENAI_API_KEY",), "OPENAI_BASE_URL", None, "gpt-5-mini", True),
     # Verda Inference API (EU, open-weight models); a model must be enabled in the project.

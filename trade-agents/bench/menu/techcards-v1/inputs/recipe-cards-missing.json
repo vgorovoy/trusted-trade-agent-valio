@@ -1,0 +1,94 @@
+{
+  "version": "synthetic-techcards-v1",
+  "provenance": "New synthetic benchmark cards, not official recipes or validated nutritional guidance",
+  "supplier": "Valio Aimo only",
+  "rules": "raw_purchase amounts require no yield correction. edible_net amounts must be divided by the explicit usable_yield once. No cooking-weight correction, case rounding or safety margin.",
+  "dishes": [
+    {
+      "id": "beef-pasta",
+      "name": "Synthetic beef and carrot pasta",
+      "ingredients": [
+        {
+          "ingredient": "pasta",
+          "amount_per_portion": 0.1,
+          "unit": "KG",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "minced beef",
+          "amount_per_portion": 0.08,
+          "unit": "KG",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "onion",
+          "amount_per_portion": 0.025,
+          "unit": "KG",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "carrot",
+          "amount_per_portion": 0.08,
+          "unit": "KG",
+          "basis": "edible_net",
+          "usable_yield": 0.8
+        }
+      ]
+    },
+    {
+      "id": "vegetable-soup",
+      "name": "Synthetic potato and carrot soup",
+      "ingredients": [
+        {
+          "ingredient": "potato",
+          "amount_per_portion": 0.12,
+          "unit": "KG",
+          "basis": "edible_net",
+          "usable_yield": 0.8
+        },
+        {
+          "ingredient": "carrot",
+          "amount_per_portion": 0.06,
+          "unit": "KG",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "oat drink",
+          "amount_per_portion": 0.04,
+          "unit": "L",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "rapeseed oil",
+          "amount_per_portion": 0.005,
+          "unit": "L",
+          "basis": "raw_purchase"
+        }
+      ]
+    },
+    {
+      "id": "oat-porridge",
+      "name": "Synthetic oat and berry porridge",
+      "ingredients": [
+        {
+          "ingredient": "oats",
+          "amount_per_portion": 0.06,
+          "unit": "KG",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "oat drink",
+          "amount_per_portion": null,
+          "unit": "L",
+          "basis": "raw_purchase"
+        },
+        {
+          "ingredient": "berries",
+          "amount_per_portion": 0.04,
+          "unit": "KG",
+          "basis": "raw_purchase"
+        }
+      ]
+    }
+  ]
+}

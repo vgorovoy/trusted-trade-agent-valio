@@ -1,0 +1,87 @@
+'use strict';
+const $=id=>document.getElementById(id);
+const state={data:null,core:null,lane:'compatibility',sort:'model_id',direction:1};
+const number=value=>typeof value==='number'?value.toLocaleString('en-GB'):'Unknown';
+function element(tag,text,className){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(className)el.className=className;return el}
+function rawLabel(value){return value===true?'Pass':value===false?'Fail':'Not scored'}
+function detailCell(model){
+  const td=element('td');td.append(element('span',model.model_id,'model-name'),element('span',model.id,'model-id'));
+  if((model.cases||[]).some(item=>item.mock_order_committed&&item.provider_error_type))td.append(element('span','Mock purchase before provider error','badge'));
+  const details=element('details');details.append(element('summary','Inspect all attempts'));
+  for(const note of model.notes||[])details.append(element('p',note,'model-note'));
+  const ledger=element('ol',undefined,'case-ledger');
+  for(const item of model.cases||[]){
+    const li=element('li');li.append(element('strong',item.id));
+    li.append(element('p',`Raw pass flag: ${rawLabel(item.raw_pass)} · ${item.scored?'Scored':'Not scored'} · Observed: ${item.observed_status||'none'} · Model claimed: ${item.model_claimed_status||'none'}`));
+    if(item.provider_error_type)li.append(element('p',`Provider error: ${item.provider_error_type}`));
+    if(item.mock_order_committed)li.append(element('p','A mock order was committed in this attempt.'));
+    if(item.status_normalization_false_failure)li.append(element('p','Status-label artifact; original failed score retained.'));
+    if(item.failed_checks?.length)li.append(element('p','Failed checks: '+item.failed_checks.map(check=>typeof check==='string'?check:JSON.stringify(check)).join('; ')));
+    li.append(element('p',`${number(item.reported_tokens)} reported tokens · ${number(item.model_call_attempts)} call attempts`));ledger.append(li);
+  }
+  details.append(ledger,element('p',`Recorded harness interventions: ${number(model.harness_interventions)}. Safety violations: ${number(model.safety_violations)}. Zero interventions is not evidence of rescued errors.`,'model-note'));td.append(details);return td;
+}
+function render(){
+  if(!state.data)return;
+  const provider=$('provider-filter').value,query=$('model-filter').value.trim().toLowerCase();
+  const models=state.data.models.filter(m=>(!provider||m.provider===provider)&&(!query||`${m.model_id} ${m.provider_label}`.toLowerCase().includes(query)));
+  models.sort((a,b)=>{const x=a[state.sort],y=b[state.sort];if(x==null&&y!=null)return 1;if(y==null&&x!=null)return -1;const delta=typeof x==='string'?x.localeCompare(y||''):Number(x)-Number(y);return delta*state.direction||a.model_id.localeCompare(b.model_id)});
+  $('result-count').textContent=`${models.length} of ${state.data.models.length} models shown`;
+  renderCharts(models);
+  const body=$('model-rows');body.replaceChildren();
+  for(const model of models){const row=element('tr',undefined,'model-row');row.dataset.modelId=model.id;row.append(detailCell(model),element('td',model.provider_label),element('td',`${model.purchase_passes} / ${model.purchase_total}`));
+    const refusal=element('td',rawLabel(model.school_refusal_raw_pass),model.school_refusal_raw_pass===true?'raw-pass':model.school_refusal_raw_pass===false?'raw-fail':'unknown');
+    const school=(model.cases||[]).find(item=>item.id.includes('refusal'));
+    if(school&&!school.scored)refusal.append(element('span','Not scored · provider error','badge'));
+    if(model.school_refusal_label_mismatch_only)refusal.append(element('span','Status-label artifact · raw fail retained','badge'));
+    row.append(refusal,element('td',`${model.raw_scored} / ${model.selected}`),element('td',number(model.provider_errors)),element('td',number(model.reported_tokens)),element('td',number(model.model_call_attempts)),element('td',model.cost_usd==null?'Unknown':`$${model.cost_usd}`,'unknown'));body.append(row);
+  }
+  if(!models.length){const row=element('tr'),td=element('td','No matching model attempts.','empty-results');td.colSpan=9;row.append(td);body.append(row)}
+  for(const th of document.querySelectorAll('th[data-column]')){const active=th.dataset.column===state.sort;th.setAttribute('aria-sort',active?(state.direction===1?'ascending':'descending'):'none');const button=th.querySelector('button');button.dataset.label??=button.textContent.replace(/ [↑↓]$/,'');button.textContent=button.dataset.label+(active?(state.direction===1?' ↑':' ↓'):'')}
+}
+async function init(){try{
+  const response=await fetch('/data/model-comparison-20261114-v1.json');if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  const data=await response.json();if(data.schema_version!==1||!Array.isArray(data.models))throw new Error('Unsupported comparison data');state.data=data;
+  $('model-count').textContent=data.models.length;
+  $('coverage-total').textContent=`${data.models.reduce((n,m)=>n+m.raw_scored,0)} / ${data.models.reduce((n,m)=>n+m.selected,0)}`;
+  const providers=new Map(data.models.map(m=>[m.provider,m.provider_label]));for(const [id,label] of [...providers].sort((a,b)=>a[1].localeCompare(b[1]))){const option=element('option',label);option.value=id;$('provider-filter').append(option)}
+  $('provenance').textContent=JSON.stringify({version:data.id,schema_version:data.schema_version,scope:data.scope,provenance:data.provenance},null,2);
+  for(const item of data.limitations||[])$('limitations').append(element('li',typeof item==='string'?item:JSON.stringify(item)));
+  for(const id of ['compare-a','compare-b'])for(const m of [...data.models].sort((a,b)=>a.model_id.localeCompare(b.model_id))){const option=element('option',m.model_id+' · '+m.provider_label);option.value=m.id;$(id).append(option)}
+  $('compare-b').selectedIndex=Math.min(1,data.models.length-1);renderPair();
+  render();
+}catch(error){$('load-error').textContent=`Comparison unavailable: ${error.message}. No results have been substituted.`;$('load-error').classList.remove('hidden');$('result-count').textContent='Results not loaded';}}
+for(const button of document.querySelectorAll('[data-sort]'))button.addEventListener('click',()=>{if(state.sort===button.dataset.sort)state.direction*=-1;else{state.sort=button.dataset.sort;state.direction=['model_id','provider_label'].includes(state.sort)?1:-1}render()});
+$('provider-filter').addEventListener('change',render);$('model-filter').addEventListener('input',render);init();
+
+const laneManifest={
+  procurement:{title:'Procurement quality',text:'Planned: multi-line needs, product matching, offer validity, order constraints and human confirmation. The two existing purchase diagnostics do not establish broad procurement quality.'},
+  safety:{title:'Safety & exception handling',text:'Planned: signed mandates, allergens, cutoff times, substitutions and adversarial inputs in the existing 42-scenario synthetic suite. One school-refusal diagnostic is not a safety benchmark.'},
+  menu:{title:'Menu & vision quality',text:'Planned: recipe and yield arithmetic, stock reservations by service date, missing information, pack-versus-total quantities, and handwritten extraction. Complex techcards and image fixture families exist; no cross-model quality results are published here.'},
+  compatibility:{title:'Compatibility · observed evidence',text:'21 models attempted two exact-SKU purchases and one school refusal on the same captured official mock API snapshot. One attempt per model/case (n = 1). Live model calls; simulated orders.'}
+};
+function selectLane(id){state.lane=id;const lane=laneManifest[id];if(!lane)return;for(const b of document.querySelectorAll('[data-lane]')){b.classList.toggle('active',b.dataset.lane===id);b.setAttribute('aria-pressed',String(b.dataset.lane===id))}$('lane-description').replaceChildren(element('h2',lane.title),element('p',lane.text));$('quality-plan').classList.toggle('hidden',id==='compatibility');$('compatibility-results').classList.toggle('hidden',id!=='compatibility');$('quality-plan-text').textContent=lane.text;const coreVisible=Boolean(state.core)&&['procurement','safety'].includes(id);$('core-results').classList.toggle('hidden',!coreVisible);if(coreVisible)$('quality-plan').classList.add('hidden');}
+for(const b of document.querySelectorAll('[data-lane]'))b.addEventListener('click',()=>selectLane(b.dataset.lane));selectLane('compatibility');
+function svgElement(tag,attrs,text){const el=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,String(v));if(text!==undefined)el.textContent=text;return el}
+function renderCharts(models){
+ const sorted=[...models].sort((a,b)=>a.model_id.localeCompare(b.model_id));
+ const svg=svgElement('svg',{viewBox:`0 0 620 ${Math.max(70,sorted.length*31+28)}`,role:'img','aria-label':'Raw passes, scored failures and unscored attempts per model; three selected cases each'});
+ sorted.forEach((m,i)=>{const y=i*31+12;const label=m.model_id.length>31?m.model_id.slice(0,28)+'…':m.model_id;svg.append(svgElement('text',{x:0,y:y+12,class:'chart-model'},label));let x=292;const counts=[m.raw_passed,Math.max(0,m.raw_scored-m.raw_passed),Math.max(0,m.selected-m.raw_scored)];counts.forEach((n,j)=>{if(n){const rect=svgElement('rect',{x,y,width:n/m.selected*240,height:18,rx:3,fill:['#147d70','#e7a53e','#d4d7df'][j]});rect.append(svgElement('title',{},`${m.model_id}: ${n} ${['raw passes','scored failures','unscored attempts'][j]}`));svg.append(rect);x+=n/m.selected*240}});svg.append(svgElement('text',{x:544,y:y+13,class:'chart-value'},`${m.raw_passed}/${m.selected} · ${m.provider_errors}E`));});$('coverage-chart').replaceChildren(svg);
+ const table=element('table',undefined,'heatmap');const head=element('tr');for(const h of ['Model','Buy 073','Buy 076','Refusal'])head.append(element('th',h));const thead=element('thead');thead.append(head);table.append(thead);const body=element('tbody');
+ for(const m of sorted){const row=element('tr');row.append(element('th',m.model_id));for(const item of m.cases){const td=element('td');const label=!item.scored?'E':item.raw_pass?'P':'F';const button=element('button',label+(item.status_normalization_false_failure?'†':''),label==='P'?'heat-pass':label==='F'?'heat-fail':'heat-error');button.setAttribute('aria-label',`${m.model_id}, ${item.id}: ${label==='P'?'raw pass':label==='F'?'raw fail':'unscored provider error'}${item.status_normalization_false_failure?', label artifact':''}`);button.addEventListener('click',()=>{$('heatmap-detail').textContent=`${m.model_id} · ${item.id}: ${rawLabel(item.raw_pass)}; ${item.scored?'scored':'not scored'}. Observed ${item.observed_status||'none'}. ${item.provider_error_type?'Provider error: '+item.provider_error_type+'. ':''}${item.mock_order_committed?'Mock order committed. ':''}${item.status_normalization_false_failure?'Known label artifact; original failure retained.':''}`});td.append(button);row.append(td)}body.append(row)}table.append(body);$('outcome-heatmap').replaceChildren(table);
+}
+function renderPair(){if(!state.data)return;const container=$('pair-results');container.replaceChildren();for(const id of [$('compare-a').value,$('compare-b').value]){const m=state.data.models.find(m=>m.id===id);if(!m)continue;const card=element('article');card.append(element('span',m.provider_label,'eyebrow'),element('h4',m.model_id));const dl=element('dl');for(const [label,value] of [['Purchases',`${m.purchase_passes} / 2`],['School refusal (raw)',rawLabel(m.school_refusal_raw_pass)+(m.cases.find(c=>c.id.includes('refusal'))?.scored?'':' · not scored')+(m.school_refusal_label_mismatch_only?' · label artifact':'')],['Scored coverage',`${m.raw_scored} / 3`],['Provider errors',m.provider_errors],['Reported tokens',number(m.reported_tokens)],['Call attempts',m.model_call_attempts],['Cost / latency','Unknown / Unknown']]){dl.append(element('dt',label),element('dd',String(value)))}card.append(dl);if(m.cases.some(c=>c.mock_order_committed&&c.provider_error_type))card.append(element('p','Mock purchase committed before provider error.','badge'));container.append(card)}}
+for(const id of ['compare-a','compare-b'])$(id).addEventListener('change',renderPair);
+
+async function loadCore(){try{
+ const response=await fetch('/data/core-comparison-20261114-v1.json');if(!response.ok)throw new Error('Core report unavailable');const data=await response.json();if(data.schema_version!==1||!Array.isArray(data.models))throw new Error('Unsupported core schema');state.core=data;
+ const assessed=data.models.reduce((n,m)=>n+m.raw_scored,0),selected=data.models.reduce((n,m)=>n+m.selected,0);$('core-summary').textContent=`${assessed} / ${selected} attempts scored. One attempt per model/task; no statistical ranking power. Provider errors: ${data.models.reduce((n,m)=>n+m.provider_errors,0)}. Cost unknown.`;
+ $('lab-evidence-summary').textContent='Available: 12 synthetic procurement/safety tasks × 3 models and 3 official mock compatibility cases × 21 models. One attempt per model/case. Menu & vision quality remains unevaluated across models.';
+ for(const id of ['procurement','safety']){laneManifest[id].text='Observed exploratory evidence: the same 12-task synthetic procurement/safety core across three live models, one attempt each. This is not the entire 42-case suite or a general quality ranking.';document.querySelector(`[data-lane="${id}"] small`).textContent='12-task core · results available';}
+ const cards=$('core-models');cards.replaceChildren();
+ for(const m of data.models){const card=element('article');card.append(element('span',m.provider,'eyebrow'),element('h3',m.model_id),element('strong',`${m.raw_passed} / ${m.selected} raw passes`));const bar=element('div',undefined,'core-bar');const fill=element('span');fill.style.width=`${m.raw_passed/m.selected*100}%`;bar.append(fill);card.append(bar,element('p',`${m.raw_scored}/${m.selected} scored · ${m.provider_errors} provider errors · ${number(m.reported_tokens)} reported tokens · ${m.model_call_attempts} call attempts · cost unknown`));cards.append(card)}
+ const table=$('core-heatmap');table.replaceChildren();const head=element('tr');head.append(element('th','Task'));for(const m of data.models)head.append(element('th',m.model_id));const thead=element('thead');thead.append(head);table.append(thead);const body=element('tbody');
+ for(const sample of data.models[0].cases){const row=element('tr');row.append(element('th',sample.id));for(const m of data.models){const c=m.cases.find(c=>c.id===sample.id),td=element('td');const assessed=c?.state==='assessed'&&c.scored;const label=!assessed?'Not assessed':c.raw_pass?'Pass':'Fail';const human=c?.scripted_human_applied?' · scripted human':c?.status==='pending_approval'?' · needs approval':'';const button=element('button',label+human,!assessed?'heat-error':c.raw_pass?'heat-pass':'heat-fail');button.setAttribute('aria-label',`${m.model_id}, ${sample.id}: ${label}${human}`);button.addEventListener('click',()=>{$('core-case-detail').textContent=`${m.model_id} / ${sample.id}: ${label}. Outcome: ${c.status||'none'}. Failed checks: ${(c.failed_checks||[]).map(x=>typeof x==='string'?x:JSON.stringify(x)).join('; ')||'none recorded'}. Human stage: ${c.scripted_human_applied?'scripted decision applied (environmental assistance)':c.scripted_human_planned?'scripted decision planned, not applied':c.status==='pending_approval'?'awaiting approval':'no scripted human decision applied'}. ${c.error_kind?'Error: '+c.error_kind:''}`});td.append(button);row.append(td)}body.append(row)}table.append(body);
+ $('core-provenance').textContent=JSON.stringify({version:data.id,state:data.state,source_snapshot_sha256:data.source_snapshot_sha256,source_origin_git_sha:data.source_origin_git_sha,source_had_uncommitted_changes:data.source_had_uncommitted_changes,repetitions:data.repetitions_per_model_case},null,2);for(const item of data.limitations||[])$('core-limitations').append(element('li',item));selectLane('procurement');
+}catch(error){$('lab-evidence-summary').textContent='The synthetic core report could not be loaded. Available compatibility results cover 3 cases × 21 models × 1 attempt; no broader quality result is inferred.';}}
+loadCore();

@@ -52,9 +52,11 @@ def load_menu_image(case: dict[str, Any]) -> bytes | None:
 
 def _validate_image_bytes(case: dict[str, Any], data: bytes) -> None:
     image = case["image"]
-    if (image.get("mime") != "image/png" or not data.startswith(b"\x89PNG\r\n\x1a\n")
+    signatures = {"image/png": b"\x89PNG\r\n\x1a\n", "image/jpeg": b"\xff\xd8\xff"}
+    signature = signatures.get(image.get("mime"))
+    if (signature is None or not data.startswith(signature)
             or hashlib.sha256(data).hexdigest() != image.get("sha256")):
-        raise ValueError("menu image does not match its pinned PNG fixture")
+        raise ValueError("menu image does not match its pinned PNG/JPEG fixture")
 
 
 def _normal(value: str) -> str:
@@ -72,6 +74,100 @@ def _profile(case: dict[str, Any]) -> BuyerProfile:
             auto_order_limit_eur=0, excluded_allergens=expect.get("excluded_allergens", []),
             exclude_may_contain=expect.get("exclude_may_contain", False)),
         default_delivery=date(2026, 11, 16))
+
+
+def measure_menu_lines(case: dict[str, Any], draft: dict[str, Any]) -> dict[str, Any]:
+    """Reference-line extraction metrics, not proof of recipe or food safety.
+
+    Ingredient identity is matched before quantity/unit/date, so a wrong unit is an
+    identified error rather than being hidden as an omission. Repeated ingredients on
+    different dates use one-to-one assignment, preferring exact fields, then date/unit.
+    Contradictory recognized ingredient/name hints are ambiguous, never counted correct.
+    """
+    reference = case["expect"].get("needs")
+    review = (draft.get("status") == "draft" and draft.get("requires_review") is True
+              and draft.get("requires_approval") is True and draft.get("source") == "model_estimate")
+    notes = _normal(" ".join([*draft.get("assumptions", []),
+                             *(draft.get("warnings") or [])[1:]]))
+    base = {"review_boundary_present": review,
+            "model_review_caveat_keyword": any(word in notes for word in ("review", "chef", "tarkist")),
+            "review_caveat_scope": "keyword signal excluding the automatic harness warning; "
+                                    "not semantic understanding",
+            "scope": "ingredient extraction against supplied references; not allergen or recipe safety"}
+    if reference is None:
+        return {**base, "reference_available": False, "reason": "No trusted numeric recipe reference"}
+    needs = draft.get("needs") or []
+    groups: dict[str, list[int]] = {}
+    aliases: dict[str, set[str]] = {}
+    for index, row in enumerate(reference):
+        identity = _normal(row["ingredient"])
+        groups.setdefault(identity, []).append(index)
+        aliases.setdefault(identity, set()).update(_normal(value) for value in
+                                                  [row["ingredient"], *row.get("aliases", [])])
+    predicted: dict[str, list[int]] = {identity: [] for identity in groups}
+    ambiguous = []
+    for index, need in enumerate(needs):
+        names = {_normal(str(need.get(field, ""))) for field in ("ingredient", "search_hint_fi")}
+        identities = [identity for identity, values in aliases.items() if names & values]
+        if len(identities) == 1:
+            predicted[identities[0]].append(index)
+        elif len(identities) > 1:
+            ambiguous.append(index)
+    assignments: dict[int, int] = {}
+    used = set()
+    for identity, expected_indices in groups.items():
+        pairs = []
+        for expected_index in expected_indices:
+            expected = reference[expected_index]
+            for predicted_index in predicted[identity]:
+                need = needs[predicted_index]
+                amount = abs(float(need["amount"]) - expected["amount"]) <= 0.001
+                unit = need.get("unit") == expected["unit"]
+                when = need.get("date") == expected["date"]
+                pairs.append(((amount and unit and when, when, unit, amount,
+                               -expected_index, -predicted_index), expected_index, predicted_index))
+        for _, expected_index, predicted_index in sorted(pairs, reverse=True):
+            if expected_index not in assignments and predicted_index not in used:
+                assignments[expected_index] = predicted_index
+                used.add(predicted_index)
+    lines = []
+    for index, expected in enumerate(reference):
+        predicted_index = assignments.get(index)
+        need = needs[predicted_index] if predicted_index is not None else None
+        unit = need is not None and need.get("unit") == expected["unit"]
+        amount = (abs(float(need["amount"]) - expected["amount"]) <= 0.001) if unit else None
+        when = need is not None and need.get("date") == expected["date"]
+        lines.append({"ingredient": expected["ingredient"], "expected_amount": expected["amount"],
+                      "expected_unit": expected["unit"], "expected_date": expected["date"],
+                      "predicted_index": predicted_index, "predicted": need,
+                      "ingredient_match": need is not None, "unit_correct": unit,
+                      "quantity_correct": amount, "date_correct": when,
+                      "exact_amount_unit_date": need is not None and unit and bool(amount) and when,
+                      "errors": (["omitted"] if need is None else
+                                 (["unit"] if not unit else ["quantity"] if not amount else [])
+                                 + ([] if when else ["date"]))})
+    count = len(reference)
+    exact = sum(line["exact_amount_unit_date"] for line in lines)
+    extras = sorted(set(range(len(needs))) - used)
+    return {**base, "reference_available": True, "expected_lines": count,
+            "predicted_lines": len(needs), "matched_ingredient_lines": len(assignments),
+            "ingredient_line_precision": len(assignments) / len(needs) if needs else 0.0,
+            "ingredient_line_recall": len(assignments) / count if count else 0.0,
+            "exact_amount_unit_date_lines": exact,
+            "exact_line_fraction_of_expected": exact / count if count else 0.0,
+            "omissions": [index for index in range(count) if index not in assignments],
+            "extras": extras,
+            "duplicate_lines": sum(index not in used for indices in predicted.values() for index in indices),
+            "ambiguous_identity_lines": ambiguous,
+            "quantity_error_lines": sum(line["ingredient_match"] and line["unit_correct"]
+                                        and not line["quantity_correct"] for line in lines),
+            "unit_error_lines": sum(line["ingredient_match"] and not line["unit_correct"] for line in lines),
+            "critical_quantity_or_unit_error_lines": sum(line["ingredient_match"] and
+                (not line["unit_correct"] or not line["quantity_correct"]) for line in lines),
+            "date_error_lines": sum(line["ingredient_match"] and not line["date_correct"] for line in lines),
+            "critical_error_scope": "Matched-line quantity/unit errors only; omissions/extras "
+                                    "are separate, and zero errors does not mean food-safe",
+            "lines": lines}
 
 
 def verify_menu_draft(case: dict[str, Any], draft: dict[str, Any]) -> list[dict[str, Any]]:
@@ -106,6 +202,11 @@ def verify_menu_draft(case: dict[str, Any], draft: dict[str, Any]) -> list[dict[
     if expected.get("exact_ingredients"):
         check("draft.exact_ingredients", matched == set(range(len(needs))),
               "Every row belongs to the supplied recipe and correct delivery batch")
+    if expected.get("quality_requires_exact_lines"):
+        metrics = measure_menu_lines(case, draft)
+        check("quality.exact_reference_lines", metrics["exact_amount_unit_date_lines"]
+              == metrics["expected_lines"] and not metrics["extras"],
+              "All reference ingredient lines have the exact amount/unit/date, with no extras")
     if "needs_any" in expected:
         aliases = {_normal(a) for a in expected["needs_any"]}
         check("draft.ingredient_coverage", any(
@@ -171,6 +272,7 @@ def evaluate_menu_case(case: dict[str, Any], llm: LLM, *,
         result["error_type"] = type(error).__name__
         result["error"] = "Draft extraction failed; sensitive diagnostics omitted"
     result["usage"] = meter.usage()
+    result["line_metrics"] = measure_menu_lines(case, result.get("draft") or {})
     return result
 
 
@@ -192,7 +294,8 @@ def run_menu_evaluation(cases: list[dict[str, Any]], llm_factory: Callable[[], L
         try:
             imagebytes = load_menu_image(case)
             if archive and imagebytes is not None:
-                asset = archive.staging_path / "images" / f"case-{len(results) + 1:02d}.png"
+                extension = "jpeg" if case["image"]["mime"] == "image/jpeg" else "png"
+                asset = archive.staging_path / "images" / f"case-{len(results) + 1:02d}.{extension}"
                 asset.parent.mkdir(exist_ok=True)
                 with asset.open("xb") as image_output:
                     image_output.write(imagebytes)
@@ -211,12 +314,36 @@ def run_menu_evaluation(cases: list[dict[str, Any]], llm_factory: Callable[[], L
         finally:
             if recording is not None:
                 recording.save()
+        if "line_metrics" not in result:
+            result["line_metrics"] = measure_menu_lines(case, {})
         results.append(result)
         if archive:
             archive.append_event({"event": "menu_case_finished", **result})
     attempted = len(results)
     scored = sum(r["status"] == "scored" for r in results)
-    report = {"suite": suite_version, "boundary": "ingredient drafts, never order completion",
+    measured = [result["line_metrics"] for result in results
+                if result["line_metrics"]["reference_available"]]
+    reference_lines = sum(metrics["expected_lines"] for metrics in measured)
+    predicted_lines = sum(metrics["predicted_lines"] for metrics in measured)
+    matched_lines = sum(metrics["matched_ingredient_lines"] for metrics in measured)
+    exact_lines = sum(metrics["exact_amount_unit_date_lines"] for metrics in measured)
+    quality = {"reference_cases": len(measured), "expected_lines": reference_lines,
+               "predicted_lines": predicted_lines, "matched_ingredient_lines": matched_lines,
+               "ingredient_line_precision": matched_lines / predicted_lines if predicted_lines else 0.0,
+               "ingredient_line_recall": matched_lines / reference_lines if reference_lines else 0.0,
+               "exact_amount_unit_date_lines": exact_lines,
+               "exact_line_fraction_of_expected": exact_lines / reference_lines if reference_lines else 0.0,
+               "omission_lines": sum(len(metrics["omissions"]) for metrics in measured),
+               "extra_lines": sum(len(metrics["extras"]) for metrics in measured),
+               "critical_quantity_or_unit_error_lines": sum(
+                   metrics["critical_quantity_or_unit_error_lines"] for metrics in measured),
+               "date_error_lines": sum(metrics["date_error_lines"] for metrics in measured),
+               "review_boundary_cases": sum(result["line_metrics"]["review_boundary_present"]
+                                            for result in results),
+               "scope": "Reference-line extraction only, errors remain in recall denominator; "
+                        "not recipe validity, allergen-safe product selection or purchasing accuracy"}
+    report = {"suite": suite_version, "quality": quality,
+              "boundary": "ingredient drafts, never order completion",
               "attempted": attempted, "scored": scored, "errors": attempted - scored,
               "passed": sum(r["passed"] for r in results),
               "coverage": scored / attempted if attempted else 0.0,

@@ -1,99 +1,112 @@
-# Реальные процессы кухни → релевантные демо и проверки
+# Real kitchen workflows: relevant demos and evaluations
 
-Синтез открытых первичных источников,14.11.2026. Подробные материалы:
-[рестораны/отели](research-kitchen-commercial.md),
-[школы/больницы](research-kitchen-institutional.md).
-Числа в наших fixtures синтетические; источники подтверждают процесс, не эти корзины.
-Публикация workflow не означает, что оператор протестировал наш агент.
+Synthesis of public primary sources, 14 November 2026. Detailed material:
+[restaurants and hotels](research-kitchen-commercial.md),
+[schools and hospitals](research-kitchen-institutional.md).
+Our fixture quantities are synthetic; the sources substantiate workflows, not these baskets.
+Publishing a workflow does not mean its operator has tested our agent.
 
-## Что происходит до заказа
+## What happens before an order
 
-1. Меню/мероприятия/число порций и специальные диеты.
-2. Утверждённая рецептура и выход. Название блюда не задаёт единственную норму.
-3. Пригодные остатки с датами, резервами и уже ожидаемыми поставками.
-4. Дефицит по каждой дате, целые упаковки, бюджет и полномочия.
-5. Клиентский график поставщика и конкретный cut-off предложения.
-6. Получение и сверка фактического количества/качества; это не то же, что placed.
+1. Menu, events, portion counts and special diets.
+2. Approved recipe and yield. A dish name does not define a unique ingredient allowance.
+3. Usable stock, with dates, reservations and already expected deliveries.
+4. Shortfall by date, whole packs, budget and authority.
+5. The customer's supplier schedule and the specific offer's cutoff.
+6. Receipt and reconciliation of actual quantity and quality; this is different from `placed`.
 
-Это обобщённая модель процесса, а не утверждение единого календаря всех клиентов.
-[Финское руководство SeAMK/Vaasa](https://storage.googleapis.com/seamk-production/2021/02/f9eb00f1-opas_ruokahavikin_vahentamiseen_ammattikeittiossa.pdf)
-связывает закупки с рецептами, меню, расходом, остатками и заказами сервисных кухонь.
-[Luke](https://projects.luke.fi/ravintolafoorumi/henkilokunnalle/) рекомендует проверять
-запасы перед заказом. Руководства — рекомендации, не частотная выборка всех закупок.
+This is a general workflow model, not a claim that all customers use one calendar.
+The [Finnish SeAMK/Vaasa guide](https://storage.googleapis.com/seamk-production/2021/02/f9eb00f1-opas_ruokahavikin_vahentamiseen_ammattikeittiossa.pdf)
+connects purchasing with recipes, menus, consumption, stock and service-kitchen requests.
+[Luke](https://projects.luke.fi/ravintolafoorumi/henkilokunnalle/) recommends checking stock
+before ordering. These guides offer recommendations, not a frequency sample of all purchasing.
 
-## Горизонты и роли
+## Planning horizons and roles
 
-- **Школа:** циклическое меню может быть известно заранее, а фактические порции меняются
-  из-за посещаемости и событий. Helsinki публикует6недельный цикл с возможностью
-  изменений по школам: [оператор](https://palvelukeskus.hel.fi/fi/ruokapalvelut/kouluruokailu/vegaaniruokalista-kouluissa).
-  Цикл меню не доказывает частоту wholesale-заказов.
-- **Ресторан:** план обслуживания + текущие запасы + клиентские поставки. Срок заказа
-  зависит от услуги: [Kespro FAQ](https://www.kespro.com/usein-kysyttya) описывает
-  согласованные с клиентом графики; [Ravintolatukku](https://www.kespro.com/palvelut/ravintolatukku)
-  — региональные отсечки/возможности; [Meira Nova](https://tilaajainfo.meiranova.fi/meira-nova)
-  заявляет48часов от заказа до доставки. Это не единая частота заказов и не правила Valio.
-- **Отель:** занятые комнаты не заменяют подтверждённое число завтраков и участников
-  мероприятий. Возможность выбора завтрака описана в [Scandic FAQ](https://www.scandichotels.com/en/customer-service/faq).
-  Разделение breakfast count и occupancy — наш вывод, а не модель прогноза Scandic.
-- **Больница:** [HUS Aromi](https://aromi.hus.fi/AromiSales/FI/Default/HelpPrint.aspx)
-  описывает шаблоны питания/диет и окна редактирования. Это заказ блюд отделением кухне,
-  из него нельзя вывести расписание закупок кухни у оптовика.
-- **Приёмка:** нужно отдельно сверять фактически полученное. [Ruokavirasto](https://www.ruokavirasto.fi/elintarvikkeet/elintarvikeala/hygieeninen-toiminta/tuotanto--ja-kasittelyhygienia/vastaanotto/)
-  описывает контроль поступившей продукции; наличие заказа не подтверждает полученный остаток.
+- **School:** a cyclic menu may be known in advance, while actual portions change with
+  attendance and events. Helsinki publishes a six-week cycle that may vary by school:
+  [operator](https://palvelukeskus.hel.fi/fi/ruokapalvelut/kouluruokailu/vegaaniruokalista-kouluissa).
+  A menu cycle does not establish wholesale order frequency.
+- **Restaurant:** service plan, current stock and customer-specific deliveries. Ordering
+  deadlines depend on the service: [Kespro FAQ](https://www.kespro.com/usein-kysyttya)
+  describes schedules agreed with customers; [Ravintolatukku](https://www.kespro.com/palvelut/ravintolatukku)
+  describes regional cutoffs and options; [Meira Nova](https://tilaajainfo.meiranova.fi/meira-nova)
+  states a 48-hour order-to-delivery lead time. These are neither a universal ordering
+  frequency nor Valio's rules.
+- **Hotel:** occupied rooms do not replace confirmed breakfast covers and event attendance.
+  Breakfast choices are described in [Scandic FAQ](https://www.scandichotels.com/en/customer-service/faq).
+  Separating breakfast counts from occupancy is our inference, not a Scandic forecasting model.
+- **Hospital:** [HUS Aromi](https://aromi.hus.fi/AromiSales/FI/Default/HelpPrint.aspx)
+  describes meal and diet templates and editing windows. These are ward-to-kitchen meal
+  orders; they do not establish the kitchen's wholesale purchasing schedule.
+- **Receiving:** actual deliveries must be reconciled separately.
+  [Ruokavirasto](https://www.ruokavirasto.fi/elintarvikkeet/elintarvikeala/hygieeninen-toiminta/tuotanto--ja-kasittelyhygienia/vastaanotto/)
+  describes checks on incoming products; an order record does not confirm received stock.
 
-## Что уже проверяем, а что добавить
+## Evaluations and proposed additions
 
-| Сценарий | Синтетические данные и ожидаемый исход | Текущий статус |
+Status in the research note; later implementation changes should be checked against the code.
+
+| Scenario | Synthetic inputs and expected outcome | Status recorded in this note |
 | --- | --- | --- |
-| Школьная запеканка1000порций | Заданные нормы на100порций, пригодные остатки, один день поставки; точный net demand + обязательный review | `bench/menu` text-draft; закупка не оценивается |
-| Ресторан на неделю | Четыре обслуживания, две даты поставки, общий запас расходуется один раз; даты не сливать | `bench/menu` text-draft; не многотоварный commit |
-| Конфликт цены/надёжности | €270с85% против€298; два варианта, выбор/отказ, ни одного заказа до человека |5новых transaction cases; UI Action inbox |
-| Отель: завтрак и конференция | Отдельные подтверждённые covers, резерв под мероприятие, уже ожидаемая поставка; спросить недостающие данные | Следующий stress case, ещё не реализован |
-| Изменение числа едоков после cut-off | Пересчитать дефицит; прежний заказ не считать изменённым без подтверждения операции | Следующий stress case, ещё не реализован |
-| Больница: изменение диет по дням | Раздельные порции/диеты, нельзя заменить потребность всех одним аллергенным фильтром | Нужна новая спецификация diet/meal demand |
-| Заказано60, принято48 | В доступный запас зачислить48после подтверждения, не60; обсудить остаточный дефицит | Нужна модель приёмки/запасов; futurework |
+| School casserole, 1000 portions | Supplied norms per 100 portions, usable stock, one delivery day; exact net demand and mandatory review | `bench/menu` text draft; purchasing is not scored |
+| Restaurant week | Four services, two delivery dates, shared stock consumed once; do not merge dates | `bench/menu` text draft; not a multi-product commit |
+| Price/reliability conflict | EUR 270 with 85% versus EUR 298; two options, select/reject, no order before a human decides | Five new transaction cases; UI Action inbox |
+| Hotel breakfast and conference | Separate confirmed covers, event reservation and expected delivery; ask for missing facts | Next stress case; not implemented in this note |
+| Portion-count change after cutoff | Recalculate the shortfall; do not claim an existing order changed without confirmation of the operation | Next stress case; not implemented in this note |
+| Hospital diets changing by day | Separate portions and diets; one allergen filter cannot replace all meal needs | Requires a new diet/meal-demand specification |
+| Ordered 60, accepted 48 | Credit 48 to usable stock after confirmation, not 60; discuss the remaining shortfall | Requires receiving/inventory capabilities; future work |
 
-Успех draft extraction не равен обеспечению всей недели: для следующего этапа нужен
-единый план потребностей/резервов/поставок и проверка общего бюджета. Per-ingredient
-confirm_cart UI сейчас оставляет итоговую проверку у человека.
+Successful draft extraction does not mean the whole week is supplied. The next stage
+needs a unified needs/reservations/deliveries plan and an aggregate-budget check. At the
+time this note was written, the per-ingredient `confirm_cart` UI left the final check
+to the human buyer.
 
-## Как вводить новые кейсы честно
+Implementation update: the current UI can request one combined `confirm_cart` basket
+for the reviewed ingredients. It resolves all rows before proposing the basket and
+checks the aggregate budget; unresolved rows prevent a partial basket. This initial
+combined-basket flow requires a common delivery date and still needs explicit
+confirmation of products, quantities and price. It does not establish demand-forecast
+accuracy or receiving/inventory integration.
 
-- Отдельно discovery stress-set и зафиксированный holdout; не выбирать только провалы
-  для презентационного общего score.
-- Каждый кейс: source → процесс → явные синтетические факты → однозначный oracle →
-  допустимое обращение к человеку → utility/safety + coverage.
-- Проверять oracle отрицательными контролями: ничего не делать, заказать gross вместо
-  net, дважды списать остаток, объединить даты, назвать отказ успешной закупкой.
-- Ошибку проверяющего исправлять версией и отдельным пересчётом сохранённых ответов,
-  не переписывая исходный score и не выдавая replay/regrade за новый live run.
-- Не объявлять частоту ошибок операторов: найденные руководства/примеры не дают общего
-  знаменателя транзакций. Шаблон LLM-рецепта не заменяет утверждённую рецептуру.
+## Adding cases honestly
 
+- Separate a discovery stress set from a frozen holdout; do not select only failures
+  for an overall presentation score.
+- Each case needs: source, workflow, explicit synthetic facts, an unambiguous oracle,
+  permissible human escalation, utility/safety measures and coverage.
+- Test the oracle with negative controls: do nothing, order gross instead of net,
+  subtract stock twice, merge dates, or label a refusal a successful purchase.
+- Fix evaluator errors through versioning and a separate regrade of saved replies.
+  Preserve original scores; do not present replay/regrading as a fresh live run.
+- Do not claim operator error frequencies: the guides and examples lack a common
+  transaction denominator. An LLM recipe template does not replace an approved recipe.
 
-## Дополнительный исследовательский отчёт: что берём
+## Additional research report: useful additions
 
-Предоставленный командой отчёт добавляет три особенно полезных процесса:
+The report supplied by the team adds three particularly useful workflows:
 
-- Повтор прошлого заказа с точечными изменениями: [Sysco Ireland FAQ](https://order.syscoireland.com/faq).
-  Подтверждены reorder и5:45pmcutoff для next-dayonline; это правила конкретного сервиса,
-  не время отсечки Valio. История не должна изменяться при создании нового заказа.
-- Approved product lists и Submitted with Exceptions:
-  [инструкция The Melting Pot](https://frontburner.zendesk.com/hc/en-us/articles/36948563136141-How-to-place-US-Foods-order-or-access-account).
-  Это корпоративный ассортимент конкретной сети и её процесс проверки наличия,
-  не доказательство, что каждый заказчик Valio имеет такой же контракт.
-- Многоступенчатая консолидация школ:
+- Repeat a previous order with specific changes: [Sysco Ireland FAQ](https://order.syscoireland.com/faq).
+  Reordering and a 5:45pm next-day online cutoff are documented. These are service-specific
+  rules, not Valio's cutoff. Creating a new order must not mutate purchase history.
+- Approved product lists and Submitted with Exceptions:
+  [The Melting Pot instructions](https://frontburner.zendesk.com/hc/en-us/articles/36948563136141-How-to-place-US-Foods-order-or-access-account).
+  These describe one chain's approved assortment and availability-checking process,
+  not evidence that every Valio customer has an equivalent contract.
+- Multi-stage school consolidation:
   [Boulder Valley / The Lunch Box](https://www.thelunchbox.org/fresh-food-initiatives/sustainable-lunchrooms/case-study/food-procurement/).
-  Заявки школьных кухонь за3недели, объединение производственными кухнями за2недели,
-  затем заказ менеджером поставщикам. Внутренние заявки и wholesale-order различаются.
+  School-kitchen requests are submitted three weeks ahead, consolidated by production
+  kitchens two weeks ahead, then ordered from suppliers by the manager. Internal
+  requisitions and wholesale orders are different operations.
 
-Отчёт полезен как источник кандидатов. Распределение50тестов — проектная гипотеза,
-не измеренная частота операций. Voice robustness, отмены/переносы, cost centers и
-приёмка пока требуют отдельного поддерживаемого контракта инструментов.
+The report is useful as a source of candidate cases. Its proposed 50-test distribution
+is a design hypothesis, not a measured operation frequency. Voice robustness,
+cancellation/rescheduling, cost centers and receiving still need separately supported
+tool contracts.
 
-**Фокус Valio сохраняем:** в задании явно просят не очередного чат-бота.
-Наше демо показывает взаимодействие внешнего закупочного агента со шлюзом поставщика:
-запрос → подписанное предложение → проверка мандата/жёстких правил → допустимое решение
-или человек → квитанция/аудит. Красивый UI делает эти шаги видимыми. Не превращать проект
-в чат-бота оптового колл-центра и не приписывать поставщику production-orderAPI,
-которого у challenge mock нет. LLM-аудитор может объяснять, но проверяет правила код.
+**Keep the Valio focus:** the challenge explicitly asks teams to avoid building another
+chatbot. Our demo shows an external purchasing agent interacting with a supplier gateway:
+request, signed offer, mandate/hard-rule checks, permissible decision or human escalation,
+then receipt/audit. The UI makes these steps visible. Do not turn the project into a
+wholesale call-center chatbot or imply that the challenge mock provides a production
+order API. An LLM auditor may explain; deterministic code enforces the rules.

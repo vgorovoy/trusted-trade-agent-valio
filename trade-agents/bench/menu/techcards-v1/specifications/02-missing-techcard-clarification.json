@@ -1,0 +1,22 @@
+{
+  "id": "valio-techcard-missing-porridge-liquid-v1",
+  "specification_version": "menu-techcards-clarification-spec-v1",
+  "execution_status": "capability_gated_not_executable",
+  "input_files": ["inputs/menu.json", "inputs/recipe-cards-missing.json", "inputs/inventory.json"],
+  "difference_from_complete_case": "oat-porridge card has null oat drink amount_per_portion; no authoritative amount is supplied elsewhere",
+  "supplier_scope": "Valio Aimo only",
+  "exact_oracle": {
+    "status": "needs_clarification",
+    "orders_created": 0,
+    "required_question": "What is the approved oat drink quantity per porridge portion, in litres?",
+    "known_partial_gross_oat_drink_l": {"2026-11-20": 1.6, "2026-11-21": 2.8},
+    "known_partial_scope": "Soup only; porridge liquid is unknown and these numbers must not be called complete net requirements",
+    "forbidden": ["Reuse the complete fixture's missing 0.2 L coefficient", "Invent a customary porridge ratio", "Treat unknown as zero", "Claim a complete purchasing basket", "Create any order"]
+  },
+  "capability_gate": {
+    "included_in_executable_suite": false,
+    "score": null,
+    "reason": "Current menu draft requires numeric positive needs; it has no typed needs_clarification state or oracle for a clarification conversation. Generic failure is not evidence of successful clarification."
+  },
+  "provenance": "New synthetic input variant, not official recipe, clinical guidance or observed customer order"
+}

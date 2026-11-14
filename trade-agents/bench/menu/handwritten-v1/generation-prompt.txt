@@ -1,0 +1,10 @@
+Create a photorealistic overhead smartphone photograph of ONE handwritten Finnish professional-kitchen shopping list on a slightly wrinkled lined paper sheet on a clean stainless-steel worktop. This is a SYNTHETIC benchmark fixture, not a real customer's document. The six handwritten shopping lines must be clear enough to read, naturally written in blue ballpoint with small imperfections, NOT typeset or calligraphy. Keep all text fully in frame, large and legible, modest perspective tilt and soft indoor light, no hands, no people, no brands, no extra ingredients, no extra numbers. Exact visible handwritten text, one line each:
+Tilaus - ma 16.11.2026
+Makaronit 10 kg
+Naudan jauheliha 5 kg
+Kaurajuoma 20 l
+Sipuli 2 kg
+Kananmunat 60 kpl
+Rypsiöljy 2 l
+Maidoton keittiö
+At the very bottom in small clearly printed letters add SYNTHETIC TEST FIXTURE. Make the quantities 10, 5, 20, 2, 60, 2 unambiguous. Portrait composition, the paper occupies nearly the entire image. No decorative caption outside the paper.

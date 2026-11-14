@@ -2,46 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#102f28">
-  <title>Live agent bench · Valio Aimo</title>
-  <link rel="stylesheet" href="/live.css">
-  <script src="/live.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <title>Agent bench · Valio Aimo</title>
+  <link rel="stylesheet" href="/live.css?v=dataset-1">
+  <script src="/live.js?v=dataset-1" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/"><span class="brand-mark">V<span>·</span></span><span>Valio Aimo <small>TRUSTED TRADE AGENTS</small></span></a>
-    <nav aria-label="Pages"><a href="/">Exchange</a><a class="active" href="/live" aria-current="page">Live bench</a><a href="/how-it-works">How it works · RU</a></nav>
-    <span class="top-pill"><i></i> LOCAL DEMO</span>
+    <div class="topbar-inner">
+      <a class="brand" href="/">Valio Aimo</a>
+      <nav aria-label="Pages"><a href="/">Exchange</a><a class="active" href="/live" aria-current="page">Agent bench</a><a href="/models">Models</a><a href="/how-it-works">How it works</a></nav>
+    </div>
   </header>
 
   <main>
     <section class="hero">
-      <div class="hero-copy"><div class="eyebrow">LIVE WORKBENCH / BUYER AGENT</div><h1>Watch an agent<br><em>make a decision.</em></h1><p>Run real project scenarios in a safe, isolated world. Watch each tool call as it happens, then inspect the gateway decision and independent pass/fail checks.</p><div class="hero-actions"><a class="hero-link" href="#controls">Choose a test <span>↘</span></a><span>No Valio order. No provider bill.</span></div></div>
-      <div class="hero-diagram" aria-hidden="true"><div class="diagram-card"><b>01</b><span>Buyer request</span><strong>“200 L lactose-free milk”</strong></div><div class="diagram-connector"></div><div class="diagram-card"><b>02</b><span>Agent tools</span><strong>Search → Plan → Order</strong></div><div class="diagram-connector"></div><div class="diagram-card"><b>03</b><span>Gateway + verifier</span><strong>Decision → Evidence</strong></div></div>
+      <h1>Watch an agent make a&nbsp;decision.</h1>
+      <p>Run real scenarios against the gateway in an isolated world. Every tool call streams in as it happens, then independent checks score what actually happened.</p>
+      <div class="hero-actions"><a class="hero-link" href="#controls">Choose a test</a></div>
     </section>
 
-    <section class="explain-strip" aria-label="What runs"><div><span class="strip-icon">◇</span><p><b>Real application code</b><small>BuyerAgent, gateway, policy and verifiers</small></p></div><div><span class="strip-icon">⌁</span><p><b>Frozen synthetic world</b><small>Fixed catalogue, stock, prices and clock</small></p></div><div><span class="strip-icon">◎</span><p><b>Honest score</b><small>Pass, fail and skipped are different outcomes</small></p></div></section>
+    <section class="facts" aria-label="What runs">
+      <div><svg viewBox="0 0 24 24"><path d="M8.5 7.5 4 12l4.5 4.5M15.5 7.5 20 12l-4.5 4.5M13.2 5.5l-2.4 13"/></svg><b>Real application code</b><p>The same buyer agent, gateway, policy and verifiers that run in Exchange.</p></div>
+      <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path d="M12 7.5V12l3 1.8"/></svg><b>Explicit supplier data source</b><p>Choose a captured official mock API snapshot or synthetic safety scenarios. Orders remain simulated in both lanes.</p></div>
+      <div><svg viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></svg><b>Honest score</b><p>Pass, fail and skipped are kept apart. Skipped cases never count as passes.</p></div>
+    </section>
 
-    <section class="workspace" id="controls"><div class="workspace-head"><div><span class="section-kicker">RUN THE SYSTEM</span><h2>Scenario lab</h2><p>Pick one case for a clear walkthrough, or run a tier to see the full benchmark.</p></div><div class="run-count"><strong id="selected-count">0</strong><span>SELECTED<br>SCENARIOS</span></div></div>
-      <div class="workspace-grid"><aside class="panel chooser"><div class="panel-heading"><div><span class="section-kicker">01 / SETUP</span><h3>Choose your run</h3></div></div>
-        <div class="field-label">Agent mode</div><div class="mode-grid" role="group" aria-label="Agent mode"><button id="mode-offline" class="mode active" type="button" data-mode="offline"><b>Offline agent</b><small>Real rule-based agent · all scenarios</small></button><button id="mode-recorded" class="mode" type="button" data-mode="recorded"><b>Recorded Nemotron</b><small>Real saved model replies · 3 cases</small></button></div>
-        <div class="field-label">Quick selection</div><div class="presets"><button type="button" data-preset="one">One example</button><button type="button" data-preset="smoke">Smoke · 12</button><button type="button" data-preset="core">Core · 25</button><button type="button" data-preset="full">Full · 42</button></div>
-        <label class="field-label" for="scenario-search">Scenarios</label><input id="scenario-search" class="search" type="search" placeholder="Search by name, category or request">
+    <section class="workspace" id="controls"><div class="workspace-head"><div><h2>Scenario lab</h2><p>Run one live case, or use offline and replay modes for repeatable checks.</p></div><div class="run-count"><strong id="selected-count">0</strong><span>selected</span></div></div>
+      <div class="workspace-grid"><aside class="panel chooser">
+        <label class="field-label" for="dataset-select">Supplier data</label><select id="dataset-select" class="dataset-select"><option value="synthetic">Loading data sources…</option></select><p id="dataset-scope" class="provider-status" role="status"></p>
+        <div class="field-label">Agent</div><div class="mode-grid" role="group" aria-label="Agent mode"><button id="mode-live" class="mode" type="button" data-mode="live"><b>Live model</b><small>Real provider calls, one scenario</small></button><button id="mode-offline" class="mode active" type="button" data-mode="offline"><b>Offline</b><small>Rule-based, every scenario</small></button><button id="mode-recorded" class="mode" type="button" data-mode="recorded"><b>Replay · Nemotron</b><small>Saved model replies, 3 scenarios</small></button></div>
+        <div id="live-settings" class="live-settings hidden">
+          <label class="field-label" for="provider-select">Hosting provider</label><select id="provider-select"></select>
+          <label class="field-label" for="model-select">Model</label><select id="model-select"></select>
+          <p id="provider-status" class="provider-status" role="status"></p>
+        </div>
+        <div class="field-label">Tier</div><div class="presets"><button type="button" data-preset="one">One</button><button type="button" data-preset="smoke">Smoke</button><button type="button" data-preset="core">Core</button><button type="button" data-preset="full">Full</button></div>
+        <label class="field-label" for="scenario-search">Scenarios</label><input id="scenario-search" class="search" type="search" placeholder="Search">
         <div id="scenario-list" class="scenario-list" aria-label="Available scenarios"></div>
-        <div class="chooser-foot"><button id="run-button" class="run-button" type="button">▶ Run selected scenarios</button><p id="setup-note">Runs locally with temporary data. The page never contacts Valio or a live AI provider.</p></div>
+        <div class="chooser-foot"><button id="run-button" class="run-button" type="button">Run</button><p id="setup-note">Runs locally with temporary data. Offline mode makes no supplier or model provider calls.</p></div>
       </aside>
 
-      <section class="panel monitor" aria-label="Live run"><div class="panel-heading monitor-head"><div><span class="section-kicker">02 / LIVE EXECUTION</span><h3>Agent activity</h3></div><div id="run-state" class="run-state idle"><i></i> READY</div></div>
-        <div class="progress-track" aria-label="Run progress"><div id="progress-bar"></div></div><div class="progress-label"><span id="progress-copy">Choose a scenario to begin.</span><span id="progress-number">0 / 0</span></div>
-        <div id="empty-stage" class="empty-stage"><div class="empty-glyph">↗</div><h4>See the whole exchange unfold</h4><p>The agent searches, plans and places a proposal. The gateway applies rules. The benchmark checks the actual result.</p></div>
+      <section class="panel monitor" aria-label="Live run"><div class="panel-heading"><h3>Activity</h3><div id="run-state" class="run-state idle"><i></i> Ready</div></div>
+        <div class="progress-track" aria-label="Run progress"><div id="progress-bar"></div></div><div class="progress-label"><span id="progress-copy">Choose scenarios, then press Run.</span><span id="progress-number">0 / 0</span></div>
+        <div id="empty-stage" class="empty-stage"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.25"/><path class="fill" d="M10.2 8.7v6.6l5.3-3.3Z"/></svg><h4>Nothing running yet</h4><p>The agent will search, plan and propose an order. The gateway applies the rules, and the benchmark checks the result.</p></div>
+        <p class="trace-note">Public model messages and tool activity appear below. Gateway outcome, human stage and deterministic checks are shown separately. Private reasoning is not displayed.</p>
         <div id="activity" class="activity" role="log" aria-live="polite" aria-relevant="additions"></div>
         <div id="summary" class="summary hidden"></div>
       </section></div>
     </section>
 
-    <section class="lower"><article><span>WHY THIS MATTERS</span><h3>It tests actions, not a nice answer.</h3><p>The score comes from the order, the signed mandate, API scope and audit trail left behind. A model saying “done” does not count if the gateway did something else.</p></article><article><span>ABOUT THE RECORDED MODE</span><h3>Model behavior, replayed safely.</h3><p>The Nemotron option replays saved replies from a previous model run against today's code. It shows that recorded trajectory; it does not evaluate a new model or prompt.</p></article><article><span>YOUR REAL DEMO</span><h3>Separate from live stock.</h3><p>This bench runs in synthetic worlds. For actual mock API prices and stock, use the <a href="/">Exchange</a> screen with the project configured locally.</p></article></section>
+    <section class="lower"><article><h3>It scores actions, not answers.</h3><p>The score comes from the order, the signed mandate, API scope and audit trail left behind. A model saying “done” does not count if the gateway did something else.</p></article><article><h3>Recorded mode replays, it doesn't re-evaluate.</h3><p>The Nemotron option replays saved replies from an earlier model run against today's code. It does not test a new model or prompt.</p></article><article><h3>A capture is not a stock reservation.</h3><p>The official lane captures mock API prices and availability once. Subsequent tools and commit checks read that pinned snapshot, not fresh supplier stock. The synthetic lane runs separate safety scenarios.</p></article></section>
   </main>
-  <footer><span>JUNCTION 2026 · VALIO AIMO AGENT GATEWAY</span><span>Real execution · isolated test data · inspectable checks</span></footer>
+  <footer>Junction 2026. Valio Aimo agent gateway, isolated test data.</footer>
 </body>
 </html>

@@ -11,7 +11,8 @@ import logging
 import math
 from collections.abc import Iterable
 from dataclasses import asdict
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
+from time import time
 from typing import Any, Protocol
 
 from pydantic import BaseModel, Field
@@ -625,6 +626,7 @@ class Gateway:
                 "mandate": mandate.model_dump(mode="json", exclude={"signature"}),
                 "lines": snapshots, "decision": decision.to_dict(), "autonomy": autonomy,
                 "rationale": rationale, "alternatives": alternatives or [], "approvals": [],
+                "received_at_wall": datetime.fromtimestamp(time(), UTC).isoformat(),
             }
             if status in ("proposal", "awaiting_cart_confirmation"):
                 data["cart"] = _cart(snapshots, decision, rationale, alternatives or [])

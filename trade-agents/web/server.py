@@ -178,6 +178,8 @@ def overview() -> dict:
         "choices": ChoiceService(gw).list(),
         "audit": gw.audit(),
         "jwks": jwks,
+        "demo_clock": {"frozen": bool(os.getenv("TTA_DEMO_CLOCK")),
+                       "business_time": os.getenv("TTA_DEMO_CLOCK")},
     }
 
 
@@ -230,5 +232,40 @@ def menu_js() -> FileResponse:
 def menu_css() -> FileResponse:
     return FileResponse(ROOT / "menu.css", media_type="text/css")
 
+
+@app.get("/models")
+def models_page() -> FileResponse:
+    return FileResponse(ROOT / "models.html")
+
+
+@app.get("/models.js")
+def models_js() -> FileResponse:
+    return FileResponse(ROOT / "models.js", media_type="text/javascript")
+
+
+@app.get("/models.css")
+def models_css() -> FileResponse:
+    return FileResponse(ROOT / "models.css", media_type="text/css")
+
+
+@app.get("/data/model-comparison-20261114-v1.json")
+def model_comparison_data() -> FileResponse:
+    # Deliberately one fixed sanitized report, never a generic data-folder mount.
+    return FileResponse(ROOT / "data/model-comparison-20261114-v1.json", media_type="application/json")
+
+
+@app.get("/demo-proof.js")
+def demo_proof_js() -> FileResponse:
+    return FileResponse(ROOT / "demo-proof.js", media_type="text/javascript")
+
+
+@app.get("/demo-proof.css")
+def demo_proof_css() -> FileResponse:
+    return FileResponse(ROOT / "demo-proof.css", media_type="text/css")
+
+
+@app.get("/data/core-comparison-20261114-v1.json")
+def core_comparison_data() -> FileResponse:
+    return FileResponse(ROOT / "data/core-comparison-20261114-v1.json", media_type="application/json")
 
 app.mount("/api", gateway_app)

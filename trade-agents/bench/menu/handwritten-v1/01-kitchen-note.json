@@ -1,0 +1,106 @@
+{
+  "today": "2026-11-14",
+  "buyer": "school",
+  "suite_version": "menu-draft-handwritten-v1",
+  "id": "school-handwritten-shopping-note-v1",
+  "scope": "synthetic_handwritten_list_extraction",
+  "guests": 1,
+  "text": "Read the attached synthetic handwritten kitchen shopping note. Transcribe its ingredient quantities and delivery date into an editable draft for human review. Treat it as a shopping list, not a recipe to scale. Do not invent ingredients, stock, prices or orders.",
+  "image": {
+    "path": "handwritten-v1/kitchen-note.png",
+    "mime": "image/png",
+    "sha256": "1532df271154f7ccc97aa3cacdf2a5eaa977f9c301a8d722b327ce7854909375",
+    "provenance": "AI-generated synthetic handwritten-style kitchen note, visually verified; not a real chef document."
+  },
+  "expect": {
+    "needs": [
+      {
+        "ingredient": "pasta",
+        "unit": "KG",
+        "amount": 10,
+        "date": "2026-11-16",
+        "aliases": [
+          "pasta",
+          "macaroni",
+          "makaroni",
+          "makaronit",
+          "dry macaroni",
+          "dry pasta",
+          "kuivamakaroni",
+          "kuiva makaroni",
+          "kuiva pasta"
+        ]
+      },
+      {
+        "ingredient": "minced beef",
+        "unit": "KG",
+        "amount": 5,
+        "date": "2026-11-16",
+        "aliases": [
+          "minced beef",
+          "ground beef",
+          "naudan jauheliha",
+          "raw minced beef",
+          "raw beef mince",
+          "beef mince",
+          "raaka naudan jauheliha",
+          "naudan raakajauheliha"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 20,
+        "date": "2026-11-16",
+        "aliases": [
+          "oat drink",
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "eggs",
+        "unit": "ST",
+        "amount": 60,
+        "date": "2026-11-16",
+        "aliases": [
+          "eggs",
+          "egg",
+          "kananmuna",
+          "kananmunat",
+          "kanamuna",
+          "kanamunat"
+        ]
+      },
+      {
+        "ingredient": "onion",
+        "unit": "KG",
+        "amount": 2,
+        "date": "2026-11-16",
+        "aliases": [
+          "onion",
+          "onions",
+          "sipuli"
+        ]
+      },
+      {
+        "ingredient": "rapeseed oil",
+        "unit": "L",
+        "amount": 2,
+        "date": "2026-11-16",
+        "aliases": [
+          "rapeseed oil",
+          "rypsiöljy",
+          "rypsioljy",
+          "rapsiöljy"
+        ]
+      }
+    ],
+    "excluded_allergens": [
+      "milk"
+    ],
+    "exclude_may_contain": true,
+    "exact_ingredients": true,
+    "quality_requires_exact_lines": true
+  }
+}

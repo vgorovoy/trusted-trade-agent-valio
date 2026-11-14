@@ -1,0 +1,199 @@
+{
+  "suite_version": "menu-techcards-v1",
+  "id": "valio-three-techcards-two-services-v1",
+  "today": "2026-11-19",
+  "buyer": "restaurant",
+  "guests": 1,
+  "scope": "synthetic_trusted_recipe_yield_inventory_arithmetic",
+  "text": "Prepare an editable net ingredient procurement draft for Valio Aimo only. These are trusted SYNTHETIC technological recipe cards, not official recipes. Use each service dish count provided; guests=1 is neutral, never a uniform multiplier. Apply edible_net / usable_yield once; raw_purchase amounts need no correction. Consume only usable opening stock and eligible receipts once chronologically. Keep dates separate, consolidate shared ingredients, no case rounding, forecasts, safety margins, products, prices, supplier promises or orders. Chef review required. INPUTS: {\"menu\": {\"version\": \"synthetic-menu-techcards-v1\", \"supplier\": \"Valio Aimo only\", \"today\": \"2026-11-19\", \"counts_provenance\": \"Explicit hypothetical planning counts supplied by kitchen; not predicted by LLM\", \"dates_scope\": \"Requested planning dates, not verified supplier delivery availability\", \"services\": [{\"delivery_date\": \"2026-11-20\", \"dish_id\": \"beef-pasta\", \"portions\": 80}, {\"delivery_date\": \"2026-11-20\", \"dish_id\": \"vegetable-soup\", \"portions\": 40}, {\"delivery_date\": \"2026-11-20\", \"dish_id\": \"oat-porridge\", \"portions\": 50}, {\"delivery_date\": \"2026-11-21\", \"dish_id\": \"beef-pasta\", \"portions\": 60}, {\"delivery_date\": \"2026-11-21\", \"dish_id\": \"vegetable-soup\", \"portions\": 70}, {\"delivery_date\": \"2026-11-21\", \"dish_id\": \"oat-porridge\", \"portions\": 30}]}, \"recipe_cards\": {\"version\": \"synthetic-techcards-v1\", \"provenance\": \"New synthetic benchmark cards, not official recipes or validated nutritional guidance\", \"supplier\": \"Valio Aimo only\", \"rules\": \"raw_purchase amounts require no yield correction. edible_net amounts must be divided by the explicit usable_yield once. No cooking-weight correction, case rounding or safety margin.\", \"dishes\": [{\"id\": \"beef-pasta\", \"name\": \"Synthetic beef and carrot pasta\", \"ingredients\": [{\"ingredient\": \"pasta\", \"amount_per_portion\": 0.1, \"unit\": \"KG\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"minced beef\", \"amount_per_portion\": 0.08, \"unit\": \"KG\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"onion\", \"amount_per_portion\": 0.025, \"unit\": \"KG\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"carrot\", \"amount_per_portion\": 0.08, \"unit\": \"KG\", \"basis\": \"edible_net\", \"usable_yield\": 0.8}]}, {\"id\": \"vegetable-soup\", \"name\": \"Synthetic potato and carrot soup\", \"ingredients\": [{\"ingredient\": \"potato\", \"amount_per_portion\": 0.12, \"unit\": \"KG\", \"basis\": \"edible_net\", \"usable_yield\": 0.8}, {\"ingredient\": \"carrot\", \"amount_per_portion\": 0.06, \"unit\": \"KG\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"oat drink\", \"amount_per_portion\": 0.04, \"unit\": \"L\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"rapeseed oil\", \"amount_per_portion\": 0.005, \"unit\": \"L\", \"basis\": \"raw_purchase\"}]}, {\"id\": \"oat-porridge\", \"name\": \"Synthetic oat and berry porridge\", \"ingredients\": [{\"ingredient\": \"oats\", \"amount_per_portion\": 0.06, \"unit\": \"KG\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"oat drink\", \"amount_per_portion\": 0.2, \"unit\": \"L\", \"basis\": \"raw_purchase\"}, {\"ingredient\": \"berries\", \"amount_per_portion\": 0.04, \"unit\": \"KG\", \"basis\": \"raw_purchase\"}]}]}, \"inventory\": {\"timing\": \"Opening stock before all receipts; consume usable resources chronologically once\", \"stock\": [{\"ingredient\": \"pasta\", \"unit\": \"KG\", \"total\": 5, \"reserved\": 1, \"expired\": 2}, {\"ingredient\": \"minced beef\", \"unit\": \"KG\", \"total\": 3, \"reserved\": 1, \"expired\": 0}, {\"ingredient\": \"onion\", \"unit\": \"KG\", \"total\": 1, \"reserved\": 0, \"expired\": 0}, {\"ingredient\": \"carrot\", \"unit\": \"KG\", \"total\": 6, \"reserved\": 1, \"expired\": 2}, {\"ingredient\": \"potato\", \"unit\": \"KG\", \"total\": 4, \"reserved\": 1, \"expired\": 1}, {\"ingredient\": \"oat drink\", \"unit\": \"L\", \"total\": 5, \"reserved\": 1, \"expired\": 1}, {\"ingredient\": \"rapeseed oil\", \"unit\": \"L\", \"total\": 0.1, \"reserved\": 0, \"expired\": 0}, {\"ingredient\": \"oats\", \"unit\": \"KG\", \"total\": 1, \"reserved\": 0, \"expired\": 0}, {\"ingredient\": \"berries\", \"unit\": \"KG\", \"total\": 1, \"reserved\": 0.2, \"expired\": 0.3}], \"receipts\": [{\"ingredient\": \"pasta\", \"unit\": \"KG\", \"amount\": 1, \"available_date\": \"2026-11-20\"}, {\"ingredient\": \"carrot\", \"unit\": \"KG\", \"amount\": 2, \"available_date\": \"2026-11-20\"}, {\"ingredient\": \"oat drink\", \"unit\": \"L\", \"amount\": 2, \"available_date\": \"2026-11-20\"}, {\"ingredient\": \"pasta\", \"unit\": \"KG\", \"amount\": 2, \"available_date\": \"2026-11-21\"}, {\"ingredient\": \"carrot\", \"unit\": \"KG\", \"amount\": 1, \"available_date\": \"2026-11-21\"}, {\"ingredient\": \"potato\", \"unit\": \"KG\", \"amount\": 3, \"available_date\": \"2026-11-21\"}, {\"ingredient\": \"oat drink\", \"unit\": \"L\", \"amount\": 1, \"available_date\": \"2026-11-21\"}, {\"ingredient\": \"berries\", \"unit\": \"KG\", \"amount\": 0.4, \"available_date\": \"2026-11-21\"}, {\"ingredient\": \"pasta\", \"unit\": \"KG\", \"amount\": 50, \"available_date\": \"2026-11-23\"}]}}",
+  "expect": {
+    "needs": [
+      {
+        "ingredient": "berries",
+        "unit": "KG",
+        "amount": 1.5,
+        "date": "2026-11-20",
+        "aliases": [
+          "mixed berries",
+          "marjat"
+        ]
+      },
+      {
+        "ingredient": "carrot",
+        "unit": "KG",
+        "amount": 5.4,
+        "date": "2026-11-20",
+        "aliases": [
+          "carrots",
+          "porkkana"
+        ]
+      },
+      {
+        "ingredient": "minced beef",
+        "unit": "KG",
+        "amount": 4.4,
+        "date": "2026-11-20",
+        "aliases": [
+          "ground beef",
+          "naudan jauheliha"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 6.6,
+        "date": "2026-11-20",
+        "aliases": [
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "oats",
+        "unit": "KG",
+        "amount": 2.0,
+        "date": "2026-11-20",
+        "aliases": [
+          "oat flakes",
+          "kaurahiutaleet"
+        ]
+      },
+      {
+        "ingredient": "onion",
+        "unit": "KG",
+        "amount": 1.0,
+        "date": "2026-11-20",
+        "aliases": [
+          "onions",
+          "sipuli"
+        ]
+      },
+      {
+        "ingredient": "pasta",
+        "unit": "KG",
+        "amount": 5.0,
+        "date": "2026-11-20",
+        "aliases": [
+          "dry pasta",
+          "macaroni",
+          "makaroni"
+        ]
+      },
+      {
+        "ingredient": "potato",
+        "unit": "KG",
+        "amount": 4.0,
+        "date": "2026-11-20",
+        "aliases": [
+          "potatoes",
+          "peruna"
+        ]
+      },
+      {
+        "ingredient": "rapeseed oil",
+        "unit": "L",
+        "amount": 0.1,
+        "date": "2026-11-20",
+        "aliases": [
+          "rypsi\u00f6ljy",
+          "rypsioljy"
+        ]
+      },
+      {
+        "ingredient": "berries",
+        "unit": "KG",
+        "amount": 0.8,
+        "date": "2026-11-21",
+        "aliases": [
+          "mixed berries",
+          "marjat"
+        ]
+      },
+      {
+        "ingredient": "carrot",
+        "unit": "KG",
+        "amount": 9.2,
+        "date": "2026-11-21",
+        "aliases": [
+          "carrots",
+          "porkkana"
+        ]
+      },
+      {
+        "ingredient": "minced beef",
+        "unit": "KG",
+        "amount": 4.8,
+        "date": "2026-11-21",
+        "aliases": [
+          "ground beef",
+          "naudan jauheliha"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 7.8,
+        "date": "2026-11-21",
+        "aliases": [
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "oats",
+        "unit": "KG",
+        "amount": 1.8,
+        "date": "2026-11-21",
+        "aliases": [
+          "oat flakes",
+          "kaurahiutaleet"
+        ]
+      },
+      {
+        "ingredient": "onion",
+        "unit": "KG",
+        "amount": 1.5,
+        "date": "2026-11-21",
+        "aliases": [
+          "onions",
+          "sipuli"
+        ]
+      },
+      {
+        "ingredient": "pasta",
+        "unit": "KG",
+        "amount": 4.0,
+        "date": "2026-11-21",
+        "aliases": [
+          "dry pasta",
+          "macaroni",
+          "makaroni"
+        ]
+      },
+      {
+        "ingredient": "potato",
+        "unit": "KG",
+        "amount": 7.5,
+        "date": "2026-11-21",
+        "aliases": [
+          "potatoes",
+          "peruna"
+        ]
+      },
+      {
+        "ingredient": "rapeseed oil",
+        "unit": "L",
+        "amount": 0.35,
+        "date": "2026-11-21",
+        "aliases": [
+          "rypsi\u00f6ljy",
+          "rypsioljy"
+        ]
+      }
+    ],
+    "excluded_allergens": [],
+    "exclude_may_contain": false,
+    "exact_ingredients": true,
+    "quality_requires_exact_lines": true
+  }
+}
