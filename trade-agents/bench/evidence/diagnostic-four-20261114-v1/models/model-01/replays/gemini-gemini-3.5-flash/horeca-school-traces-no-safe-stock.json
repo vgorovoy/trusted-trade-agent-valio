@@ -1,0 +1,155 @@
+{
+ "45af6607425ad5ba99b8d6cf": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "1401"
+    },
+    "id": "call_6558673577472240446",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   3077,
+   37
+  ]
+ },
+ "5c5afabc53026e539b8741e7": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "1401"
+      ],
+      "summary": "60 x Kaurajuoma 1 l (96.00 EUR excl. VAT)",
+      "total_eur": 96
+     },
+     "dropped_candidates": [],
+     "explanation_for_chef": "The order for 60 litres of Kaurajuoma 1 l was rejected by the system because the product label indicates it 'may contain milk', which violates the strict milk-free mandate for your kitchen. No safe alternative oat drinks without milk cross-contamination warnings were found in the catalogue. Human approval from the kitchen manager is required before this item can be ordered.",
+     "need": {
+      "amount": 60,
+      "constraints": [
+       "milk-free"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "oat drink",
+      "unit": "L"
+     },
+     "status": "rejected"
+    },
+    "id": "call_13528247463477083156",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4653,
+   733
+  ]
+ },
+ "8abb9abf0ea6be052380ea5d": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 60,
+     "product_id": "1401",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call_4646968380524151122",
+    "name": "find_substitutes"
+   }
+  ],
+  "usage": [
+   4109,
+   485
+  ]
+ },
+ "9b42cd43f2767ef41fd837d8": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_2fa52b0cc904",
+       "quantity": 60
+      }
+     ],
+     "rationale": "Selected the sole available milk-free oat drink option for 60 L at 96.00 EUR total."
+    },
+    "id": "call_3328067597874201444",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   3831,
+   216
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash",
+ "a341dca16fc6a4d059fca513": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 60,
+     "product_ids": [
+      "1401"
+     ],
+     "query": "kaurajuoma",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call_13774188953708666415",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3220,
+   222
+  ]
+ },
+ "a61a3f11c2ad65181543d5bc": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "milk"
+     ],
+     "query": "kaura"
+    },
+    "id": "call_5893845287999507810",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2860,
+   104
+  ]
+ },
+ "efa7750594846df569c380ae": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "milk"
+     ],
+     "query": "kaurajuoma"
+    },
+    "id": "call_14629426758874947955",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2535,
+   212
+  ]
+ }
+}

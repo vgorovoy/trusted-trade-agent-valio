@@ -1,0 +1,13 @@
+{
+  "artifacts": {
+    "inputs.json": "d42f79f97372b2f43ac9e1793e6620e05fc3d44062e3af7acc93f7039169c272",
+    "original-inputs.json": "21bc63394ca543e027a4da699394a58c519ada605ed4201e1a6e48bcdfd7f62a",
+    "original-manifest.json": "18a36dc318b4b9d5ef3776daf4b784db84353c444adf5a67d8815c1a56e24d1c",
+    "original-report.json": "53ff45911be923ce127e0a42bbd49969747402df899fcd223f7745b93da80b59",
+    "report.json": "104931ec2624072fced4c8f44a9b8504f99a425b945deaa08093af052781f06a"
+  },
+  "finalized_at": "2026-11-14T11:52:29.212887+00:00",
+  "run_id": "gemini-menu-20261114-v1-alias-rescore-v3",
+  "status": "completed",
+  "version": 1
+}

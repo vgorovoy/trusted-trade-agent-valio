@@ -107,6 +107,14 @@ class BuyerProfile:
             lines.append(f"Required product claims: {', '.join(m.required_claims)}.")
         if m.excluded_allergens:
             lines.append(f"Excluded allergens (hard rule): {', '.join(m.excluded_allergens)}.")
+        if m.excluded_allergens:
+            lines.append("Allergen traces (may_contain): "
+                         + ("excluded by the mandate." if m.exclude_may_contain
+                            else "not excluded by the mandate; contains is still forbidden."))
+        if m.min_delivery_reliability is not None:
+            lines.append(f"Minimum delivery reliability for autonomous ordering: "
+                         f"{m.min_delivery_reliability:g}. Below this requires human approval; "
+                         "missing reliability is unknown, not proof of meeting the threshold.")
         lines.append(f"Substitution policy: {m.substitution_policy}.")
         if self.strictness == "strict":
             # Lenient profiles keep their prompt as it was (recorded bench replays).

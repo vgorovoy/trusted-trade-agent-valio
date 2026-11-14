@@ -1,0 +1,13 @@
+{
+  "artifacts": {
+    "inputs.json": "114dface251324c1bd07e54f431597c5ebe0675bc398c76e1ce152a2a7a3f83c",
+    "original-inputs.json": "21bc63394ca543e027a4da699394a58c519ada605ed4201e1a6e48bcdfd7f62a",
+    "original-manifest.json": "96efa1e8477ece30def44b7fbc81b910315475b79bcf578d55640bb0f28251ba",
+    "original-report.json": "9451257aab796fbe981bfe2ef37259df53b01ead75cf27ad10212b9310adc2e2",
+    "report.json": "f0f888547cd892fd9f70d7c3bf580b63059b0385a44d63035820d52e01162255"
+  },
+  "finalized_at": "2026-11-14T11:52:29.296594+00:00",
+  "run_id": "nemotron-menu-20261114-v1-alias-rescore-v3",
+  "status": "completed",
+  "version": 1
+}

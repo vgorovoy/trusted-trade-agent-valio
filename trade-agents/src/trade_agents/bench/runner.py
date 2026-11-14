@@ -7,13 +7,13 @@ import os
 import re
 import time
 from collections.abc import Callable
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from ..buyer_agent import BuyerAgent, InProcessTransport
-from ..buyer_agent.agent import AgentResult
+from ..buyer_agent.agent import AgentResult, TraceStep
 from ..llm import LLM, LLMResponse, ToolCall, is_provider_error
 from .replay import ReplayLLM, ReplayMiss
 from .scenario import BENCH_DIR, Scenario
@@ -63,6 +63,8 @@ class ScenarioResult:
     live_model_calls: int = 0
     replay_hits: int = 0
     live_tokens: int = 0
+    agent_status: str | None = None  # before any explicitly scripted human action
+    human_action: dict[str, Any] | None = None
 
     @property
     def failed_checks(self) -> list[CheckResult]:
@@ -73,7 +75,7 @@ class ScenarioResult:
         """Did the model report the gateway's decision as it was? None: nothing to report."""
         if self.model_claimed_status is None or self.status in ("no_order", "needs_clarification"):
             return None
-        return self.model_claimed_status == self.status
+        return self.model_claimed_status == (self.agent_status or self.status)
 
 
 @dataclass
@@ -159,6 +161,12 @@ class BenchReport:
                              "fraction": self.coverage},
                 "outcome_breakdown": self.outcome_breakdown(),
                 "safety": self.safety_summary(), "usage": self.usage_summary(),
+                "human_intervention": {
+                    "agent_awaiting_choice": sum(r.agent_status == "awaiting_choice"
+                                                  for r in self.scored),
+                    "scripted_decisions_applied": sum(bool((r.human_action or {}).get("applied"))
+                                                      for r in self.scored),
+                    "scope": "explicit scenario-scripted human decisions, not model autonomy"},
                 "by_category": {c: {"passed": ok, "total": n}
                                 for c, (ok, n) in self.by_category().items()},
                 "results": [{**asdict(r), "honest": r.honest} for r in self.results]}
@@ -194,6 +202,11 @@ class BenchReport:
         for outcome, counts in self.outcome_breakdown().items():
             lines.append(f"  Expected {outcome}: {counts['passed']}/{counts['scored']} passed, "
                          f"{counts['skipped']} skipped")
+        escalations = sum(r.agent_status == "awaiting_choice" for r in self.scored)
+        human_decisions = sum(bool((r.human_action or {}).get("applied")) for r in self.scored)
+        if escalations or human_decisions:
+            lines.append(f"  Human choice: {escalations} agent escalation(s), "
+                         f"{human_decisions} scenario-scripted decision(s); not model autonomy")
         safety, usage = self.safety_summary(), self.usage_summary()
         lines.append(f"  Safety violations: {safety['violations']} "
                      f"({safety['evaluated_scenarios']} scenarios evaluated; limited check scope)")
@@ -209,12 +222,15 @@ def _slug(name: str) -> str:
 
 def run_scenario(sc: Scenario, llm_factory: LLMFactory, *, replay: str = "auto",
                  record_api: bool = False, bench_dir: Path = BENCH_DIR,
-                 max_steps: int = 14) -> ScenarioResult:
+                 max_steps: int = 14,
+                 on_trace: Callable[[TraceStep], None] | None = None) -> ScenarioResult:
     statuses = sc.expect.get("status", [])
     statuses = {statuses} if isinstance(statuses, str) else set(statuses)
     outcome = ("purchase" if "placed" in statuses else
                "refusal" if statuses and statuses <= {"rejected", "no_order"} else
                "clarification" if statuses == {"needs_clarification"} else "safe_resolution")
+    if sc.human or sc.category == "human_choice":
+        outcome = "human_resolution"
     out = ScenarioResult(sc.id, sc.category, sc.title, passed=False, expected_outcome=outcome)
     t0 = time.monotonic()
     try:
@@ -231,7 +247,7 @@ def run_scenario(sc: Scenario, llm_factory: LLMFactory, *, replay: str = "auto",
         world.place_prior_orders(profile)
         api_mark = len(world.api_log.calls)   # setup orders are not the agent's queries
         agent = BuyerAgent(profile, llm, InProcessTransport(world.gateway),
-                           max_steps=max_steps, today=world.today)
+                           max_steps=max_steps, today=world.today, on_trace=on_trace)
         try:
             res = agent.run(sc.request)
         except Exception as e:  # a crashing agent fails the scenario, not the bench
@@ -254,12 +270,38 @@ def run_scenario(sc: Scenario, llm_factory: LLMFactory, *, replay: str = "auto",
             out.status, out.steps, out.tokens = res.status, res.steps, res.tokens
             out.seconds = round(time.monotonic() - t0, 2)
             return out
+        pre_human_orders = world.agent_orders()
+        out.agent_status = res.status
+        choice = getattr(res, "choice", None)
+        if sc.human:
+            out.human_action = {**sc.human, "scripted": True, "applied": False}
+            if choice and res.status == "awaiting_choice":
+                from ..choices import ChoiceService
+
+                choice_service = ChoiceService(world.gateway)
+                selection = None
+                target = sc.human.get("product_id")
+                if sc.human.get("action") == "select":
+                    selection = next((i for i, option in enumerate(choice.get("options", []))
+                                      if any(str(ln.get("product_id")) == str(target)
+                                             for ln in option.get("lines", []))), None)
+                if sc.human.get("action") == "reject" or selection is not None:
+                    approvers = profile.mandate.approvers
+                    if approvers:
+                        choice = choice_service.decide(
+                            choice["choice_id"], approvers[0], selection,
+                            note="Explicit simulated human decision in benchmark scenario")
+                        out.human_action["applied"] = True
+                        order = choice.get("order") or {}
+                        res = replace(res, status=order.get("status") or choice["status"],
+                                      order_id=order.get("order_id"),
+                                      total_eur=order.get("total_eur"))
         orders = world.agent_orders()
         api_products = world.api_log.products(api_mark)
         out.api_calls = len(world.api_log.calls) - api_mark
         out.api_products = len(api_products)
         final = Final(res, orders, profile.mandate, world.gateway.store.verify_audit()[0],
-                      api_products)
+                      api_products, choice, pre_human_orders, out.agent_status)
         out.checks = verify(final, sc.expect)
         out.products = final.product_ids
     out.passed = all(c.ok for c in out.checks)
@@ -274,13 +316,16 @@ def run_scenario(sc: Scenario, llm_factory: LLMFactory, *, replay: str = "auto",
 def run_bench(scenarios: list[Scenario], llm_factory: LLMFactory, *, replay: str = "auto",
               record_api: bool = False, bench_dir: Path = BENCH_DIR, save: bool = True,
               progress: Callable[[ScenarioResult], None] | None = None,
-              baseline: bool = True) -> BenchReport:
+              baseline: bool = True,
+              on_start: Callable[[Scenario], None] | None = None,
+              on_trace: Callable[[Scenario, TraceStep], None] | None = None) -> BenchReport:
     # The bench measures the buyer agent; Valio's review agent would only add model calls.
     old = os.environ.get("TTA_VALIO_REVIEW")
     os.environ["TTA_VALIO_REVIEW"] = "off"
     try:
         return _run_bench(scenarios, llm_factory, replay=replay, record_api=record_api,
-                          bench_dir=bench_dir, save=save, progress=progress, baseline=baseline)
+                          bench_dir=bench_dir, save=save, progress=progress, baseline=baseline,
+                          on_start=on_start, on_trace=on_trace)
     finally:
         if old is None:
             os.environ.pop("TTA_VALIO_REVIEW", None)
@@ -291,12 +336,17 @@ def run_bench(scenarios: list[Scenario], llm_factory: LLMFactory, *, replay: str
 def _run_bench(scenarios: list[Scenario], llm_factory: LLMFactory, *, replay: str,
                record_api: bool, bench_dir: Path, save: bool,
                progress: Callable[[ScenarioResult], None] | None,
-               baseline: bool) -> BenchReport:
+               baseline: bool, on_start: Callable[[Scenario], None] | None,
+               on_trace: Callable[[Scenario, TraceStep], None] | None) -> BenchReport:
     started = datetime.now().isoformat(timespec="seconds")
     results = []
     for sc in scenarios:
+        if on_start:
+            on_start(sc)
         r = run_scenario(sc, llm_factory, replay=replay, record_api=record_api,
-                         bench_dir=bench_dir)
+                         bench_dir=bench_dir,
+                         on_trace=(lambda step, scenario=sc: on_trace(scenario, step))
+                         if on_trace else None)
         results.append(r)
         if progress:
             progress(r)

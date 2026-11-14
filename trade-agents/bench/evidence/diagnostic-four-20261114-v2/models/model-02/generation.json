@@ -1,0 +1,28 @@
+{
+  "adapter_configurations": [
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+      "vision_supported": true
+    },
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+      "vision_supported": true
+    },
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+      "vision_supported": true
+    },
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+      "vision_supported": true
+    }
+  ]
+}

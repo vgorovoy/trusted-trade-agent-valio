@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102f28">
+  <title>Live agent bench · Valio Aimo</title>
+  <link rel="stylesheet" href="/live.css">
+  <script src="/live.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">V<span>·</span></span><span>Valio Aimo <small>TRUSTED TRADE AGENTS</small></span></a>
+    <nav aria-label="Pages"><a href="/">Exchange</a><a class="active" href="/live" aria-current="page">Live bench</a><a href="/how-it-works">How it works · RU</a></nav>
+    <span class="top-pill"><i></i> LOCAL DEMO</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy"><div class="eyebrow">LIVE WORKBENCH / BUYER AGENT</div><h1>Watch an agent<br><em>make a decision.</em></h1><p>Run real project scenarios in a safe, isolated world. Watch each tool call as it happens, then inspect the gateway decision and independent pass/fail checks.</p><div class="hero-actions"><a class="hero-link" href="#controls">Choose a test <span>↘</span></a><span>No Valio order. No provider bill.</span></div></div>
+      <div class="hero-diagram" aria-hidden="true"><div class="diagram-card"><b>01</b><span>Buyer request</span><strong>“200 L lactose-free milk”</strong></div><div class="diagram-connector"></div><div class="diagram-card"><b>02</b><span>Agent tools</span><strong>Search → Plan → Order</strong></div><div class="diagram-connector"></div><div class="diagram-card"><b>03</b><span>Gateway + verifier</span><strong>Decision → Evidence</strong></div></div>
+    </section>
+
+    <section class="explain-strip" aria-label="What runs"><div><span class="strip-icon">◇</span><p><b>Real application code</b><small>BuyerAgent, gateway, policy and verifiers</small></p></div><div><span class="strip-icon">⌁</span><p><b>Frozen synthetic world</b><small>Fixed catalogue, stock, prices and clock</small></p></div><div><span class="strip-icon">◎</span><p><b>Honest score</b><small>Pass, fail and skipped are different outcomes</small></p></div></section>
+
+    <section class="workspace" id="controls"><div class="workspace-head"><div><span class="section-kicker">RUN THE SYSTEM</span><h2>Scenario lab</h2><p>Pick one case for a clear walkthrough, or run a tier to see the full benchmark.</p></div><div class="run-count"><strong id="selected-count">0</strong><span>SELECTED<br>SCENARIOS</span></div></div>
+      <div class="workspace-grid"><aside class="panel chooser"><div class="panel-heading"><div><span class="section-kicker">01 / SETUP</span><h3>Choose your run</h3></div></div>
+        <div class="field-label">Agent mode</div><div class="mode-grid" role="group" aria-label="Agent mode"><button id="mode-offline" class="mode active" type="button" data-mode="offline"><b>Offline agent</b><small>Real rule-based agent · all scenarios</small></button><button id="mode-recorded" class="mode" type="button" data-mode="recorded"><b>Recorded Nemotron</b><small>Real saved model replies · 3 cases</small></button></div>
+        <div class="field-label">Quick selection</div><div class="presets"><button type="button" data-preset="one">One example</button><button type="button" data-preset="smoke">Smoke · 12</button><button type="button" data-preset="core">Core · 25</button><button type="button" data-preset="full">Full · 42</button></div>
+        <label class="field-label" for="scenario-search">Scenarios</label><input id="scenario-search" class="search" type="search" placeholder="Search by name, category or request">
+        <div id="scenario-list" class="scenario-list" aria-label="Available scenarios"></div>
+        <div class="chooser-foot"><button id="run-button" class="run-button" type="button">▶ Run selected scenarios</button><p id="setup-note">Runs locally with temporary data. The page never contacts Valio or a live AI provider.</p></div>
+      </aside>
+
+      <section class="panel monitor" aria-label="Live run"><div class="panel-heading monitor-head"><div><span class="section-kicker">02 / LIVE EXECUTION</span><h3>Agent activity</h3></div><div id="run-state" class="run-state idle"><i></i> READY</div></div>
+        <div class="progress-track" aria-label="Run progress"><div id="progress-bar"></div></div><div class="progress-label"><span id="progress-copy">Choose a scenario to begin.</span><span id="progress-number">0 / 0</span></div>
+        <div id="empty-stage" class="empty-stage"><div class="empty-glyph">↗</div><h4>See the whole exchange unfold</h4><p>The agent searches, plans and places a proposal. The gateway applies rules. The benchmark checks the actual result.</p></div>
+        <div id="activity" class="activity" role="log" aria-live="polite" aria-relevant="additions"></div>
+        <div id="summary" class="summary hidden"></div>
+      </section></div>
+    </section>
+
+    <section class="lower"><article><span>WHY THIS MATTERS</span><h3>It tests actions, not a nice answer.</h3><p>The score comes from the order, the signed mandate, API scope and audit trail left behind. A model saying “done” does not count if the gateway did something else.</p></article><article><span>ABOUT THE RECORDED MODE</span><h3>Model behavior, replayed safely.</h3><p>The Nemotron option replays saved replies from a previous model run against today's code. It shows that recorded trajectory; it does not evaluate a new model or prompt.</p></article><article><span>YOUR REAL DEMO</span><h3>Separate from live stock.</h3><p>This bench runs in synthetic worlds. For actual mock API prices and stock, use the <a href="/">Exchange</a> screen with the project configured locally.</p></article></section>
+  </main>
+  <footer><span>JUNCTION 2026 · VALIO AIMO AGENT GATEWAY</span><span>Real execution · isolated test data · inspectable checks</span></footer>
+</body>
+</html>

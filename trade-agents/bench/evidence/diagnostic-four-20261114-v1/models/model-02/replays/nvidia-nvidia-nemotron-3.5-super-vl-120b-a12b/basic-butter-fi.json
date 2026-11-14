@@ -1,0 +1,108 @@
+{
+ "2a7fec0791b493c395050b3c": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "1202"
+      ],
+      "summary": "2 x Laktoositon voi 10 kg (Finnish, lactose-free), 164.00 EUR excl. VAT",
+      "total_eur": 164.0
+     },
+     "dropped_candidates": [
+      {
+       "name": "Laktoositon voi 500 g",
+       "reason": "184.00 EUR is +12.2 % vs cheapest, exceeds the 5 % premium cap"
+      }
+     ],
+     "explanation_for_chef": "Tilaus on tehty: 20 kg laktoositonta voita (2 x 10 kg, suomalainen) toimitetaan maanantaina 16.11.2026. Hinta on 164,00 EUR alv 0 %. Valinta oli halvin ja luotettavin vaihtoehto, eikä se vaadi erillistä hyväksyntää.",
+     "need": {
+      "amount": 20,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "laktoositon voi",
+      "unit": "KG"
+     },
+     "status": "placed"
+    },
+    "id": "call-4481c81a-a7d0-4a55-aa03-e0077afd9c9d",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4103,
+   338
+  ]
+ },
+ "89f95d11963c11d494b570bc": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "limit": 25,
+     "query": "voi",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call-95b8f3a9-bbe0-42bb-aec7-01a0ca9d02fd",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3082,
+   245
+  ]
+ },
+ "92bdf98c6fc522c8072d91aa": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_592715bd8c68",
+       "quantity": 2
+      }
+     ],
+     "rationale": "Balanced option: 2 x 10 kg lactose-free Finnish butter for 164.00 EUR, cheapest and most reliable, well under the 1000 EUR self-approval limit."
+    },
+    "id": "call-5a193b8f-41a1-4c40-b444-85420a3a6e83",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   3921,
+   161
+  ]
+ },
+ "__model__": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+ "fe8e143a2e69538e42274e9a": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 20,
+     "product_ids": [
+      "1201",
+      "1202"
+     ],
+     "query": "voi",
+     "requested_date": "2026-11-16",
+     "unit": "KG"
+    },
+    "id": "call-6a59a7b8-b686-423e-aec8-7a2d9961ef8c",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3360,
+   229
+  ]
+ }
+}

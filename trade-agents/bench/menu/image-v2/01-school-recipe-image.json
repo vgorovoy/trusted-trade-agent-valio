@@ -1,0 +1,108 @@
+{
+  "suite_version": "menu-draft-image-v2",
+  "today": "2026-11-14",
+  "buyer": "school",
+  "guests": 1000,
+  "scope": "synthetic_image_trusted_recipe_arithmetic",
+  "id": "school-makaronilaatikko-1000-image-v2",
+  "text": "Read the attached synthetic recipe and inventory card. Create a net ingredient purchasing draft for chef review, using the recipe norms, quantities, delivery date and usable stock shown in the image. Do not invent prices, place orders or round to sales cases.",
+  "expect": {
+    "needs": [
+      {
+        "ingredient": "pasta",
+        "unit": "KG",
+        "amount": 52,
+        "date": "2026-11-16",
+        "aliases": [
+          "pasta",
+          "macaroni",
+          "makaroni",
+          "makaronit",
+          "dry macaroni",
+          "dry pasta",
+          "kuivamakaroni"
+        ]
+      },
+      {
+        "ingredient": "minced beef",
+        "unit": "KG",
+        "amount": 50,
+        "date": "2026-11-16",
+        "aliases": [
+          "minced beef",
+          "ground beef",
+          "naudan jauheliha",
+          "jauheliha",
+          "raw minced beef",
+          "raw beef mince",
+          "beef mince",
+          "raaka jauheliha",
+          "raaka naudan jauheliha",
+          "naudan raakajauheliha"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 80,
+        "date": "2026-11-16",
+        "aliases": [
+          "oat drink",
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "eggs",
+        "unit": "ST",
+        "amount": 100,
+        "date": "2026-11-16",
+        "aliases": [
+          "eggs",
+          "egg",
+          "kananmuna",
+          "kananmunat"
+        ]
+      },
+      {
+        "ingredient": "onion",
+        "unit": "KG",
+        "amount": 8,
+        "date": "2026-11-16",
+        "aliases": [
+          "onion",
+          "onions",
+          "sipuli"
+        ]
+      },
+      {
+        "ingredient": "oil",
+        "unit": "L",
+        "amount": 4,
+        "date": "2026-11-16",
+        "aliases": [
+          "oil",
+          "vegetable oil",
+          "rypsiöljy",
+          "öljy",
+          "cooking oil",
+          "ruokaöljy",
+          "ruokaoljy"
+        ]
+      }
+    ],
+    "excluded_allergens": [
+      "milk"
+    ],
+    "exclude_may_contain": true,
+    "exact_ingredients": true
+  },
+  "derived_from_case_id": "school-makaronilaatikko-1000-recipe-v1",
+  "image": {
+    "path": "image-v1/school-recipe.png",
+    "mime": "image/png",
+    "sha256": "b6d37af279a8c229b4da45275d722ad1a4c81f99ff492c64852b9df8c99b959e",
+    "provenance": "Synthetic exact school recipe/inventory fixture, rendered as a readable card; not a real customer photo."
+  },
+  "source_case_id": "school-makaronilaatikko-1000-image-v1"
+}

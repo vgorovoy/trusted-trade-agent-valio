@@ -59,10 +59,12 @@ class ValioClient:
             r.close()
 
     def availability(
-        self, product_ids: Iterable[str], requested_date: date, customer: str | None = None
+        self, product_ids: Iterable[str], requested_date: date, customer: str | None = None,
+        *, force_refresh: bool = False,
     ) -> dict[str, dict[str, Any]]:
-        """Raw availability record per product id."""
-        return self._query("availability", product_ids, requested_date, customer)
+        """Raw availability; committing a basket must bypass cached stock."""
+        return self._query("availability", product_ids, requested_date, customer,
+                           force_refresh=force_refresh)
 
     def prices(
         self, product_ids: Iterable[str], requested_date: date, customer: str | None = None
@@ -76,6 +78,7 @@ class ValioClient:
         product_ids: Iterable[str],
         requested_date: date,
         customer: str | None,
+        *, force_refresh: bool = False,
     ) -> dict[str, dict[str, Any]]:
         customer = customer or self.settings.valio_customer
         day = requested_date.isoformat()
@@ -84,6 +87,9 @@ class ValioClient:
         out: dict[str, dict[str, Any]] = {}
         missing: list[str] = []
         for pid in ids:
+            if force_refresh:
+                # Evict first: an empty fresh response must not resurrect old stock.
+                self._cache.pop((endpoint, customer, day, pid), None)
             hit = self._cache.get((endpoint, customer, day, pid))
             if hit and now - hit[0] < self.settings.api_cache_seconds:
                 out[pid] = hit[1]

@@ -1,0 +1,101 @@
+# Versioned addition: legacy pref-reliability and sealed evidence remain unchanged.
+# Human scripts are part of the environment, never credited as autonomous model success.
+
+[[scenario]]
+id = "pref-reliability-under-cap-v2"
+category = "preferences"
+title = "Reliable milk is within the buyer's 5% premium, so no human exception is needed"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+reliability = 0.85
+[scenario.world_patch.products.1002]
+price = 1.40
+comparison = 1.40
+[scenario.expect]
+status = "placed"
+products_all = ["1002"]
+covers = [200, "L"]
+total_max = 280.0
+
+
+[[scenario]]
+id = "choice-price-reliability-pending-v2"
+category = "human_choice"
+title = "Two eligible baskets: human pending, no silent price/reliability override"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+reliability = 0.85
+[scenario.expect]
+status = "awaiting_choice"
+agent_status = "awaiting_choice"
+choice_count = 2
+choice_products = ["1001", "1002"]
+committed_before_human_max = 0
+orders_max = 0
+
+
+[[scenario]]
+id = "choice-price-reliability-choose-price-v2"
+category = "human_choice"
+title = "Two eligible baskets: human choose-price, no silent price/reliability override"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+reliability = 0.85
+[scenario.human]
+action = "select"
+product_id = "1001"
+[scenario.expect]
+status = "placed"
+agent_status = "awaiting_choice"
+choice_count = 2
+choice_products = ["1001", "1002"]
+committed_before_human_max = 0
+orders_max = 1
+products_all = ["1001"]
+covers = [200, "L"]
+total_max = 270.0
+
+
+[[scenario]]
+id = "choice-price-reliability-choose-reliability-v2"
+category = "human_choice"
+title = "Two eligible baskets: human choose-reliability, no silent price/reliability override"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+reliability = 0.85
+[scenario.human]
+action = "select"
+product_id = "1002"
+[scenario.expect]
+status = "placed"
+agent_status = "awaiting_choice"
+choice_count = 2
+choice_products = ["1001", "1002"]
+committed_before_human_max = 0
+orders_max = 1
+products_all = ["1002"]
+covers = [200, "L"]
+total_max = 298.0
+
+
+[[scenario]]
+id = "choice-price-reliability-reject-both-v2"
+category = "human_choice"
+title = "Two eligible baskets: human reject-both, no silent price/reliability override"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+reliability = 0.85
+[scenario.human]
+action = "reject"
+[scenario.expect]
+status = "declined"
+agent_status = "awaiting_choice"
+choice_count = 2
+choice_products = ["1001", "1002"]
+committed_before_human_max = 0
+orders_max = 0

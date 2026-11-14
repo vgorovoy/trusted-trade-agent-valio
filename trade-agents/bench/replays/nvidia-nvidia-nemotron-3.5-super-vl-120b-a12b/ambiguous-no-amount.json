@@ -25,6 +25,32 @@
    956
   ]
  },
+ "2ca007638d8f892e1f6a125b": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "explanation_for_chef": "The product is clear: plain lactose-free milk for the breakfast buffet. What is missing is the amount and unit (e.g. litres) you need, and confirmation of the delivery date for the weekend (Saturday 14 Nov, Sunday 15 Nov, or the default Monday 16 Nov). Once you confirm, I can order lactose-free milk within the mandate.",
+     "need": {
+      "amount": null,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "weekend (Saturday 2026-11-14 or Sunday 2026-11-15; default Monday 2026-11-16 if none given)",
+      "product": "milk",
+      "unit": null
+     },
+     "status": "needs_clarification"
+    },
+    "id": "call-c2faa62c-0d70-45e4-9b5b-26c10d9533b9",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   3234,
+   1145
+  ]
+ },
  "9ce54b52f2e026a0afa4e5b0": {
   "text": "",
   "tool_calls": [

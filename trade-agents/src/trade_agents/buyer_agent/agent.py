@@ -11,6 +11,7 @@ the gateway's answer, not from what the model claims.
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from typing import Any
@@ -38,7 +39,14 @@ plain products in the size class a kitchen uses.
 4. plan_need with the product_ids you kept, the amount, unit and date.
 5. plan_need returns up to three options (good / better / best), already ranked by the \
 buyer's preference, each with objectives and a trade_off against the cheapest. Normally take \
-the first option; take another only for a clear reason from the request. Call place_order \
+the first option that meets the request and mandate, not blindly the first ranked option.
+Before ordering, inspect every selected product's contains and may_contain allergens (the
+latter are forbidden when the mandate excludes traces), required claims and delivery
+reliability. Use get_product if details are missing. Prefer an otherwise suitable option
+meeting the reliability threshold within the buyer's price/premium limits over one needing
+approval for low reliability. Unknown data is not evidence of compliance. If every candidate
+is unsafe, do not call place_order to test the guard: find a safe substitute, or finish with
+no_order / needs_clarification and explain why. Never relax a mandate to achieve an order. Call place_order \
 ONCE with that option's offer_ids and quantities exactly as planned, plus a one-sentence \
 rationale that names the trade-off. List the other options as alternatives in finish, with \
 their trade_off as why_not, and mention them in the explanation for the chef.
@@ -88,6 +96,8 @@ class AgentResult:
     error_type: str | None = None    # class name of that exception, e.g. "RateLimitError"
     provider_error: bool = False     # the model's service failed (429 / 5xx / network)
     explanation: str = ""
+    choice_id: str | None = None
+    choice: dict[str, Any] | None = None
     order_id: str | None = None
     order_number: str | None = None
     total_eur: float | None = None
@@ -110,13 +120,15 @@ class AgentResult:
 class BuyerAgent:
     def __init__(self, profile: BuyerProfile, llm: LLM | None = None,
                  transport: Transport | None = None, *, max_steps: int = 14,
-                 max_tokens: int = 200_000, today: date | None = None) -> None:
+                 max_tokens: int = 200_000, today: date | None = None,
+                 on_trace: Callable[[TraceStep], None] | None = None) -> None:
         self.profile = profile
         self.llm = llm or get_llm()
         self.transport = transport or default_transport()
         self.max_steps = max_steps
         self.max_tokens = max_tokens
         self.today = today
+        self.on_trace = on_trace
 
     def run(self, request: str) -> AgentResult:
         tools = AgentTools(self.transport, self.profile)
@@ -155,12 +167,16 @@ class BuyerAgent:
                     final = tc.args
                     res.trace.append(TraceStep(step, "finish", tc.args,
                                                str(tc.args.get("status"))))
+                    if self.on_trace:
+                        self.on_trace(res.trace[-1])
                     self._tool_reply(messages, tc, {"ok": True})
                     continue
                 t0 = time.monotonic()
                 out = tools.call(tc.name, dict(tc.args))
                 res.trace.append(TraceStep(step, tc.name, _short_args(tc.args), out.summary,
                                            out.error, int((time.monotonic() - t0) * 1000)))
+                if self.on_trace:
+                    self.on_trace(res.trace[-1])
                 self._tool_reply(messages, tc, out.for_model)
             if final is not None:
                 break
@@ -187,7 +203,13 @@ class BuyerAgent:
             res.chosen = final.get("chosen")
             res.alternatives = final.get("alternatives") or []
             res.dropped_candidates = final.get("dropped_candidates") or []
-        if tools.order is not None:
+        if tools.choice is not None:
+            res.choice = tools.choice
+            res.choice_id = tools.choice["choice_id"]
+            res.status = "awaiting_choice"
+            if not res.explanation:
+                res.explanation = "Choose between the cheaper and more reliable basket; no order placed."
+        elif tools.order is not None:
             # The gateway's decision is the truth, whatever the model wrote.
             o = compact_order(tools.order)
             res.status = o["status"]

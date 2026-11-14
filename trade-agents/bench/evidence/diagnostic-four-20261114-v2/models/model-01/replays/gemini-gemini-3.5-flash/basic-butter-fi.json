@@ -1,0 +1,123 @@
+{
+ "1b1a1f42db1ed6a03b48f55d": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_592715bd8c68",
+       "quantity": 2
+      }
+     ],
+     "rationale": "Valittu edullisin ja luotettavin laktoositon voi 10 kg suurpakkauksessa (2 kpl / 20 kg, yhteensä 164,00 € alv 0 %), toimitusvarmuus 0.97."
+    },
+    "id": "call_813706432506599545",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   4154,
+   226
+  ]
+ },
+ "26ff69ff8b2bcea99b26a021": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "voi",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call_18280540739950877675",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2652,
+   219
+  ]
+ },
+ "3fe3954c12e1f51d59eb6cbd": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "1202"
+    },
+    "id": "call_14940808329057438652",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   3816,
+   226
+  ]
+ },
+ "41239d08350b84b2ef161595": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "1202"
+      ],
+      "summary": "2 kpl Laktoositon voi 10 kg (yhteensä 20 kg, 164,00 € alv 0 %)",
+      "total_eur": 164
+     },
+     "dropped_candidates": [
+      {
+       "name": "Laktoositon voi 500 g",
+       "reason": "Yli 5 % kalliimpi kuin 10 kg suurpakkaus (184,00 € eli +12,2 %)"
+      }
+     ],
+     "explanation_for_chef": "Tilaus 20 kg laktoositonta voita (2 x 10 kg pakkaus) on vahvistettu maanantaille 16.11.2026. Tuotteen kokonaishinta on 164,00 € (alv 0 %) ja toimitusvarmuus on korkea (97 %). Pienempi 500 g pakkauskoko jätettiin valitsematta sen kalliimman kilonhinnan vuoksi.",
+     "need": {
+      "amount": 20,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "laktoositon voi",
+      "unit": "KG"
+     },
+     "status": "placed"
+    },
+    "id": "call_12175164024710709743",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4448,
+   635
+  ]
+ },
+ "8ea52641aa42e7518a48c207": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 20,
+     "product_ids": [
+      "1201",
+      "1202"
+     ],
+     "query": "laktoositon voi",
+     "requested_date": "2026-11-16",
+     "unit": "KG"
+    },
+    "id": "call_1414835273765369911",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3097,
+   230
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash"
+}

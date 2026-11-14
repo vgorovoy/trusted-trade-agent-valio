@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "events.jsonl": "c694ca93b46d140e8e8d20cb5aab2f89797cde6ce5c6fd8c4d61b06e469fab61",
+    "inputs.json": "21bc63394ca543e027a4da699394a58c519ada605ed4201e1a6e48bcdfd7f62a",
+    "replies/case-01.json": "d40db2ebf501faee9c085a0a6b2179393f73985c9680422e427f14a3468b3c2a",
+    "replies/case-02.json": "c8e6dbf3af828e2f6d5994277c4cc2718a7a2caadef2d2da03920844df8dffa1",
+    "replies/case-03.json": "8ef094e677a8af932cde78017d7257e715d0769f1aca552258ac394532352c1d",
+    "report.json": "53ff45911be923ce127e0a42bbd49969747402df899fcd223f7745b93da80b59"
+  },
+  "finalized_at": "2026-11-14T10:30:59.227066+00:00",
+  "run_id": "gemini-menu-20261114-v1",
+  "status": "completed",
+  "version": 1
+}

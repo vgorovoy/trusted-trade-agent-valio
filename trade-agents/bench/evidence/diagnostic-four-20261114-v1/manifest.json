@@ -1,0 +1,29 @@
+{
+  "artifacts": {
+    "events.jsonl": "0db72e4d0b1065a4f3d884099a13007399daf25059ec2461a774120b181eae79",
+    "inputs.json": "194c9f3f0450d22bf2d19233e7793ff789af064ba1d2d19fd08906d0a8c1dda9",
+    "models/model-01/events.jsonl": "437a4f435ebc33ccbd8a937228f70449577ced8e3cb96720ec9dd8e9f608ddc1",
+    "models/model-01/generation.json": "4b93ee2cc40415f225ce14670591f1d147c978a9ac0b381c3216d63f10a2a4c2",
+    "models/model-01/inputs.json": "96b8c7980092664c6539f93ec3289dae906a09c05d028a9ff5e70a66425bf4e3",
+    "models/model-01/manifest.json": "14df4c4ad62b1c47fdb346f7ed7b2022484f7575e97f71e7364c32207c35147a",
+    "models/model-01/replays/gemini-gemini-3.5-flash/basic-butter-fi.json": "dac55cd6e89bc1ab291f98a2cc9869f0b135992d24a79dd2c2ca7ff0812d9115",
+    "models/model-01/replays/gemini-gemini-3.5-flash/horeca-hospital-traces-in-meat.json": "ab2d26b8c411dca126cee661aae3e13e2845d586630be6bb1f4a8c14c9e07f41",
+    "models/model-01/replays/gemini-gemini-3.5-flash/horeca-school-traces-no-safe-stock.json": "2cffc267b06fbf1860184ca61c3e91c6731d88d1551a5ecd1869f5820aa43cb0",
+    "models/model-01/replays/gemini-gemini-3.5-flash/pref-reliability.json": "9c9aa4ff2a3c8f73d67ca5293d6b2e1e962652422ba9470ac691a1e53a664e63",
+    "models/model-01/report.json": "60cd9d36115c1af56cbf0a5abd8a27ed076a25d484593687b75aadf1abed3d4c",
+    "models/model-02/events.jsonl": "a4c9c943c30af35cde416ee232c595f026dfb7ded13d0f77575389ca2a1237a5",
+    "models/model-02/generation.json": "c91018b10b0123b7e64ad46bff1082c4e8f99f09395f213c497b482e0f252a6f",
+    "models/model-02/inputs.json": "57831a1c2d3537f42baa8edb38f2b310d23df173d6b0760402a7d956e05f4b67",
+    "models/model-02/manifest.json": "74659fd02c610b97a581c851b41caac8b455bda19be5bdc4059b78d9b1a13142",
+    "models/model-02/replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/basic-butter-fi.json": "e2019147cbbf86f2fc54f0510c25f96519636ddde6a7a5593fd672bfdcf431e2",
+    "models/model-02/replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/horeca-hospital-traces-in-meat.json": "3922f9bb70d949425c83f9836cd59cb8b087fdef5b7285debaedbe2d7a95de43",
+    "models/model-02/replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/horeca-school-traces-no-safe-stock.json": "d296696614e1ff8052ba798c49b69d87f4b95ce4c05f6aa364c262a89ea79ccc",
+    "models/model-02/replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/pref-reliability.json": "cfa55cfb881edebcadd698c0bb9c1d582ae3ddc5bd1fda1ae63b28c677a26d35",
+    "models/model-02/report.json": "5e098740e847566a8d88928c6f00a80a0f931a6c9e42e4d7191c7d47a4482f10",
+    "summary.json": "a3c1fb49a4452a821b4c985c1982c7c238df98cb18ce0df6c6ed87e47c5f6850"
+  },
+  "finalized_at": "2026-11-14T09:32:16.653329+00:00",
+  "run_id": "diagnostic-four-20261114-v1",
+  "status": "completed",
+  "version": 1
+}

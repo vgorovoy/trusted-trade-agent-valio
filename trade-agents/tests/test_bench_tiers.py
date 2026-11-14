@@ -16,7 +16,7 @@ from trade_agents.llm import LLMResponse, ScriptedLLM, ToolCall, Usage, last_too
 
 def test_tiers_are_fixed_nested_and_deterministic():
     smoke, core, full = [load_scenarios(tier=t) for t in ('smoke', 'core', 'full')]
-    assert (len(smoke), len(core), len(full)) == (12, 25, 37)
+    assert (len(smoke), len(core), len(full)) == (12, 25, 42)
     assert {s.id for s in smoke} < {s.id for s in core} < {s.id for s in full}
     assert [s.id for s in smoke] == [s.id for s in load_scenarios(tier='smoke')]
     assert load_scenarios() == full

@@ -1,0 +1,297 @@
+{
+  "revision": "Only accepted ingredient aliases were extended",
+  "source": {
+    "code_files": {
+      "pyproject.toml": "6a068ea50411ee16d74e17155984267f6c7805ef4c0a5a801c5e3c238b269a3e",
+      "scripts/compare_models.py": "099357480dafdd40b224fb3d4cd660a5b107a9ba5573a3d8a153f88541562c61",
+      "scripts/demo_offline.py": "918a8ec53aceb481c83aa14979e7bf21b9407f9dd63df74f318e9d7d88cedfe2",
+      "scripts/demo_scenarios.py": "db5a075b22d0f1bc4306f5e694630ad958aa15257704a8d4b36d216d68569ebc",
+      "scripts/evaluate_menus.py": "20024b75d77e990c3d2bd06799faa702f03b8ab386f501cbf538a40273756898",
+      "scripts/serve_choice_demo.py": "8b1eb5588dd7ed7c47ad1c929bdf05cc6ad3bc84ba4a521caaf827f3d6bc901b",
+      "src/trade_agents/__init__.py": "9e7468acc6b4f5864b4f176f16b8bf1eb224a295df995ac40be4dd3b697a9983",
+      "src/trade_agents/api.py": "f0b382bf1cdf6764491bd0290d54eb6f3b951616c71ec10d2eb4965812ed6c9c",
+      "src/trade_agents/bench/__init__.py": "63042a2c864f424e4cc189c55a3f042fc3ff7ea09d53a65feb6777b10a83c807",
+      "src/trade_agents/bench/menu_eval.py": "a20c4ffb7fd12f839f7e820e2bc376582244a45c8884191675f5504785ba33d2",
+      "src/trade_agents/bench/menu_rescore.py": "272e5a82ed4b5648fe1db919d4157381f0a489ac8b93ca48909fccc5bd5f6a1e",
+      "src/trade_agents/bench/records.py": "138eccf1e3397a9512fad6049ed7826875439224c5f5d1c8d782ed619c502d01",
+      "src/trade_agents/bench/replay.py": "afcfd1771f17fd9c365b94cc9dcc9b0ee95842ff47b6c75b67e9a4ce3918dd4e",
+      "src/trade_agents/bench/runner.py": "335e623173e6116f5667f1d5ad96150c425d1abedfeb0e36bb1f906073dec526",
+      "src/trade_agents/bench/scenario.py": "4a97df82758385a50b26d10ccf993c3ca2e4153cefbe759a2bcf819420e58de0",
+      "src/trade_agents/bench/verify.py": "8ac1c3cfe12920498910dd209bc62662f21e6ecbc9c797cee1fde145c8149561",
+      "src/trade_agents/bench/world.py": "ea53a1113a1419045a85cd11d332394b6225619fbf266723ff93f6d5d0efa0c7",
+      "src/trade_agents/buyer_agent/__init__.py": "4a91f83cb5fa2ef2b1462d40f43dfcea8ecb3ce3d8fa65b501ef9a2fe1f44548",
+      "src/trade_agents/buyer_agent/agent.py": "b58fb52b36c89514cd061d1f934f00a431118886bee6233a4a68a84fdf6a1339",
+      "src/trade_agents/buyer_agent/menu.py": "80f97f545b59958cd25885fb9e09710fdb7a4e1feb9bf2de783c440e28f017cf",
+      "src/trade_agents/buyer_agent/menu_draft.py": "39a4e2720b8b497a437ad50f4a52e4414df7f41c4a5de5273adecab2316e637d",
+      "src/trade_agents/buyer_agent/offline.py": "d3c55fd558b2f1aaee4778f789431fefaf7dd37f93c6e90afa1d4469c0359ee8",
+      "src/trade_agents/buyer_agent/profiles.py": "8326652ea07882bc21d545ff1bf98740ae26f200e92258266e3b762b21f309dd",
+      "src/trade_agents/buyer_agent/tools.py": "f02a163a9b83f6716171c7f0abc757893f6099042bc7d2ef9482a42eeaa6a2dd",
+      "src/trade_agents/catalog.py": "82e6b429d4ebd8b751acd36908e8f23f247ceebb7feb47559c062a69f3c4b8eb",
+      "src/trade_agents/choices.py": "83a71e15c8ace6ef6b5255dccd1595bd31775d277f55de7984aa1a4cddd23627",
+      "src/trade_agents/cli.py": "ea2c89558e5ff7df02ffc624a4483fe066caf745f936f54e0065191ff5b8b872",
+      "src/trade_agents/clock.py": "072dbc8f361093c89c59eaf5db39153e70fb808c3264d464f91eaa7a06e9f165",
+      "src/trade_agents/config.py": "b2bc044934bb635d8e702cd584c681ed740179830bc246f8672efe378bbf2db2",
+      "src/trade_agents/drift.py": "909340e34167ffaa3c2cfc4e1a896c53d15f4714931af4fa3bbed88d77652fe2",
+      "src/trade_agents/llm.py": "b9c15141f2d93e023d098879c27f0fca430b056667171aa9042b33648eb9a1fe",
+      "src/trade_agents/mcp_server.py": "dfff778818d745aefa3c54d140efa3653f7b50e566bba7873ff90a7425e55839",
+      "src/trade_agents/offers.py": "e32d4ecbc909ad5beef4548fe3e08be0fac5f467594358c8d3316c3e0ac3c903",
+      "src/trade_agents/policy.py": "d23d8a7f9e9862ec663861859609e95490a321dfd5c3d92a584b3c62855ae57e",
+      "src/trade_agents/protocol.py": "4fbb5a486b2dbaf2d019a504aaa09dd5db89df5ef17032996aa3e18a35b05514",
+      "src/trade_agents/service.py": "d19220262dc288cbf2a5c4e67ffbb043729f204da2dad36e15137468ae757eb2",
+      "src/trade_agents/signing.py": "5e027912c710779ea8c2482af39de622d3f579f251ca226b1f43af4d8240443c",
+      "src/trade_agents/store.py": "c6d5ff3b04c0f7bb8856f7706054a5ad74bb0c9e0d293bfad9d0a9b36c3a2f28",
+      "src/trade_agents/store_pg.py": "cafd1b72be8d25da160410dc1507e414262aede5497e9d200e89404f5917af22",
+      "src/trade_agents/valio_agent/__init__.py": "245e8eee70f667a15206133d228d3f97765b18b42e6c06a4409c939233b56fe5",
+      "src/trade_agents/valio_agent/checks.py": "e33a30f8a6bba9cb2384ced7beb12a9698546214d8449203e084c0983791f997",
+      "src/trade_agents/valio_client.py": "cb63210d8bf6a3eff39ab6d9ea3cbe0266c1ea7b3961608928f21e4983f48b84",
+      "uv.lock": "b2142fd30ad71cde9e7fabb851b601f3a57fa50405288e7b14014412eb389f2e"
+    },
+    "code_sha256": "35d9b0f7fd3d3ec4e8a146e552bf201a379609b01c6a449b415ee47cbcf9247e",
+    "dirty": true,
+    "git_sha": "7a630fb2ef78bfe4501f5b2effa0589c667d4ec5"
+  },
+  "source_manifest_artifacts": {
+    "events.jsonl": "64fca16b252d5014213a5e4c6c7dc4512baa5f54ca5d374c0626556edaa05f61",
+    "inputs.json": "21bc63394ca543e027a4da699394a58c519ada605ed4201e1a6e48bcdfd7f62a",
+    "replies/case-01.json": "6a05028d1415943cbd000fa21a865f0321594ede965c4f24ca28edc246e1e388",
+    "replies/case-02.json": "bc677d4fd352843dad4c0b0abdd608ceee03c648dd92541486dd1a696454e56a",
+    "replies/case-03.json": "df50fac2eba5529ad204c26a6caaadd3f88e1c52bd8332bacc610e9959137177",
+    "report.json": "9451257aab796fbe981bfe2ef37259df53b01ead75cf27ad10212b9310adc2e2"
+  },
+  "source_manifest_sha256": "96efa1e8477ece30def44b7fbc81b910315475b79bcf578d55640bb0f28251ba",
+  "source_run_id": "nemotron-menu-20261114-v1",
+  "suite": [
+    {
+      "buyer": "school",
+      "expect": {
+        "exact_ingredients": true,
+        "exclude_may_contain": true,
+        "excluded_allergens": [
+          "milk"
+        ],
+        "needs": [
+          {
+            "aliases": [
+              "pasta",
+              "macaroni",
+              "makaroni",
+              "makaronit"
+            ],
+            "amount": 52,
+            "date": "2026-11-16",
+            "ingredient": "pasta",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "minced beef",
+              "ground beef",
+              "naudan jauheliha",
+              "jauheliha"
+            ],
+            "amount": 50,
+            "date": "2026-11-16",
+            "ingredient": "minced beef",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "oat drink",
+              "oat milk",
+              "kaurajuoma"
+            ],
+            "amount": 80,
+            "date": "2026-11-16",
+            "ingredient": "oat drink",
+            "unit": "L"
+          },
+          {
+            "aliases": [
+              "eggs",
+              "egg",
+              "kananmuna",
+              "kananmunat"
+            ],
+            "amount": 100,
+            "date": "2026-11-16",
+            "ingredient": "eggs",
+            "unit": "ST"
+          },
+          {
+            "aliases": [
+              "onion",
+              "onions",
+              "sipuli"
+            ],
+            "amount": 8,
+            "date": "2026-11-16",
+            "ingredient": "onion",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "oil",
+              "vegetable oil",
+              "rypsiöljy",
+              "öljy",
+              "cooking oil",
+              "ruokaöljy",
+              "ruokaoljy"
+            ],
+            "amount": 4,
+            "date": "2026-11-16",
+            "ingredient": "oil",
+            "unit": "L"
+          }
+        ]
+      },
+      "guests": 1000,
+      "id": "school-makaronilaatikko-1000-recipe-v2",
+      "scope": "trusted_recipe_arithmetic",
+      "source_case_id": "school-makaronilaatikko-1000-recipe-v1",
+      "suite_version": "menu-draft-v2",
+      "text": "Plan ingredients for milk-free makaronilaatikko (macaroni casserole) for 1000 school children. This is a draft for chef review, not an order. Deliver all ingredients 2026-11-16. Chef-supplied recipe per 100 portions: dry macaroni 6 KG, raw minced beef 6 KG, oat drink 10 L, eggs 10 ST, onion 1 KG, oil 0.5 L. These are synthetic approved fixture norms, not a claimed official recipe. Use exactly these six ingredients; no additions. Current usable unreserved inventory allocated to this meal: dry pasta 8 KG, beef 10 KG, oat drink 20 L, eggs 0 ST, onion 2 KG, oil 1 L. Calculate net purchasing amounts for each ingredient; do not round to cases or invent prices. All products must be milk-free including traces. Preserve recipe uncertainty and human review.",
+      "today": "2026-11-14"
+    },
+    {
+      "buyer": "school",
+      "expect": {
+        "exclude_may_contain": true,
+        "excluded_allergens": [
+          "milk"
+        ],
+        "gap_topics": {
+          "inventory": [
+            "inventory",
+            "stock",
+            "varasto",
+            "saldo"
+          ],
+          "recipe": [
+            "recipe",
+            "resepti",
+            "portion",
+            "annos",
+            "norm"
+          ]
+        },
+        "information_gap": true,
+        "needs_any": [
+          "pasta",
+          "macaroni",
+          "makaroni",
+          "makaronit"
+        ]
+      },
+      "guests": 1000,
+      "id": "school-makaronilaatikko-1000-unspecified-v2",
+      "scope": "review_protocol_only",
+      "source_case_id": "school-makaronilaatikko-1000-unspecified-v1",
+      "suite_version": "menu-draft-v2",
+      "text": "Makarooni lattikko for 1000 kids on 2026-11-16. We have not supplied an approved recipe, portion/yield norms or usable inventory. Make an editable ingredient draft, explicitly list missing facts/assumptions, and ask for chef review. Do not claim an official recipe or that anything has been bought. The buyer's milk-free including traces mandate still applies.",
+      "today": "2026-11-14"
+    },
+    {
+      "buyer": "restaurant",
+      "expect": {
+        "exact_ingredients": true,
+        "exclude_may_contain": true,
+        "excluded_allergens": [
+          "milk"
+        ],
+        "needs": [
+          {
+            "aliases": [
+              "pasta",
+              "dry pasta",
+              "macaroni",
+              "makaroni"
+            ],
+            "amount": 12,
+            "date": "2026-11-16",
+            "ingredient": "pasta",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "minced beef",
+              "ground beef",
+              "jauheliha",
+              "naudan jauheliha"
+            ],
+            "amount": 10,
+            "date": "2026-11-16",
+            "ingredient": "minced beef",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "oat drink",
+              "oat milk",
+              "kaurajuoma"
+            ],
+            "amount": 5,
+            "date": "2026-11-16",
+            "ingredient": "oat drink",
+            "unit": "L"
+          },
+          {
+            "aliases": [
+              "carrot",
+              "carrots",
+              "porkkana"
+            ],
+            "amount": 15,
+            "date": "2026-11-18",
+            "ingredient": "carrot",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "potato",
+              "potatoes",
+              "peruna"
+            ],
+            "amount": 20,
+            "date": "2026-11-18",
+            "ingredient": "potato",
+            "unit": "KG"
+          },
+          {
+            "aliases": [
+              "oat drink",
+              "oat milk",
+              "kaurajuoma"
+            ],
+            "amount": 6,
+            "date": "2026-11-18",
+            "ingredient": "oat drink",
+            "unit": "L"
+          },
+          {
+            "aliases": [
+              "oil",
+              "vegetable oil",
+              "rypsiöljy",
+              "öljy",
+              "cooking oil",
+              "ruokaöljy",
+              "ruokaoljy"
+            ],
+            "amount": 0.5,
+            "date": "2026-11-18",
+            "ingredient": "oil",
+            "unit": "L"
+          }
+        ]
+      },
+      "guests": 150,
+      "id": "restaurant-weekly-dates-stock-v2",
+      "scope": "trusted_recipe_arithmetic",
+      "source_case_id": "restaurant-weekly-dates-stock-v1",
+      "suite_version": "menu-draft-v2",
+      "text": "Draft all purchasing ingredients for a restaurant's four services. The guests field is contextual only; use the explicit attendance for each service below, never multiply every meal by the same guest count. Delivery batch 2026-11-16 covers Monday 80 portions and Tuesday 60 portions of pasta with beef sauce. Per portion: dry pasta 0.10 KG, raw beef mince 0.08 KG, oat drink 0.05 L. Delivery batch 2026-11-18 covers Wednesday 100 portions and Thursday 50 portions of vegetable soup. Per portion: carrot 0.12 KG, potato 0.15 KG, oat drink 0.04 L, oil 0.005 L. These trusted synthetic recipe inputs already use raw purchase quantities; do not apply an invented cooking yield. Current stock ledger: pasta 6 KG total, of which 2 KG expire Sunday before either meal and 2 KG are reserved for another job, leaving 2 KG usable; beef 1.2 KG usable; oat drink 2 L usable; carrots 6 KG total, 3 KG expire Sunday, leaving 3 KG usable; potatoes 2.5 KG usable; oil 0.25 L usable. Apply usable stock to the first chronological batch that needs it, once only. No incoming receipts. Aggregate repeated ingredients within each batch, keep different delivery dates separate, and return net purchase needs for exactly the listed ingredients, no case rounding, added safety margins, prices or orders. This menu is milk-free including traces and requires chef review.",
+      "today": "2026-11-14"
+    }
+  ]
+}

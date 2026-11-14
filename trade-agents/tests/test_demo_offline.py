@@ -37,7 +37,7 @@ def test_protocol_demo_offline_and_isolated(demo, monkeypatch, tmp_path):
     assert all(hotel[key] for key in ('buyer_mandate_verified', 'signed_offer_verified',
                                       'signed_cart_confirmation_accepted', 'signed_receipt_verified',
                                       'audit_chain_valid'))
-    assert hotel['audit_events'][-2:] == ['approval.granted', 'order.placed']
+    assert hotel['audit_events'][-3:] == ['approval.granted', 'order.revalidated', 'order.placed']
     assert hotel['mock_api_calls'] > 0
     assert len(hotel['audit_head']['hash']) == 64
     assert [case['allergen_source'] for case in result['school']] == ['contains', 'may_contain']

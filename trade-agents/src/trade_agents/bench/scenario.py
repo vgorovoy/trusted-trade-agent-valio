@@ -65,6 +65,7 @@ class Scenario:
     passport: str | None = "autonomous"  # max_mode of the agent's passport; None = no passport
     prior_orders: list[dict[str, Any]] = field(default_factory=list)
     source: str = ""
+    human: dict[str, Any] = field(default_factory=dict)  # explicit simulated human decision
 
 
 def load_world(name: str, patch: dict[str, Any] | None = None,
@@ -100,7 +101,7 @@ def load_scenarios(bench_dir: Path = BENCH_DIR, only: list[str] | None = None,
                 world=load_world(s.get("world", "dairy"), s.get("world_patch"), bench_dir),
                 expect=s["expect"], mandate=s.get("mandate", {}),
                 passport=None if passport == "none" else passport,
-                prior_orders=s.get("prior_orders", []), source=path.name,
+                prior_orders=s.get("prior_orders", []), source=path.name, human=s.get("human", {}),
             ))
     selectors = set(only or [])
     known = {s.id for s in out} | {s.category for s in out}

@@ -32,6 +32,9 @@ class Final:
     mandate: Mandate                      # what the buyer signed
     audit_ok: bool
     api_products: set[str] = field(default_factory=set)   # ids sent to price / availability
+    choice: dict[str, Any] | None = None
+    pre_human_orders: list[dict[str, Any]] = field(default_factory=list)
+    agent_status: str | None = None
 
     @property
     def order(self) -> dict[str, Any] | None:
@@ -155,12 +158,36 @@ def _delivery_date(f: Final, v: str) -> tuple[bool, str]:
     return dates == [v], f"delivery {dates or 'none'}, want {v}"
 
 
+def _choice_products(f: Final, v: Any) -> tuple[bool, str]:
+    options = (f.choice or {}).get("options", [])
+    got = {str(line.get("product_id")) for option in options
+           for line in option.get("lines", [])}
+    want = set(_ids(v))
+    return got == want, f"choice products {sorted(got)}, want {sorted(want)}"
+
+
+def _choice_count(f: Final, v: int) -> tuple[bool, str]:
+    count = len((f.choice or {}).get("options", []))
+    return count == v, f"choice has {count} option(s), want {v}"
+
+
+def _committed_before_human_max(f: Final, v: int) -> tuple[bool, str]:
+    count = sum(o.get("status") == "placed" for o in f.pre_human_orders)
+    return count <= v, f"{count} committed order(s) before human decision, max {v}"
+
+
+def _agent_status(f: Final, v: Any) -> tuple[bool, str]:
+    return f.agent_status in _list(v), f"agent ended with {f.agent_status}, want {v}"
+
+
 CHECKS: dict[str, Callable[[Final, Any], tuple[bool, str]]] = {
     "status": _status, "orders_max": _orders_max, "products_all": _products_all,
     "products_any": _products_any, "products_none": _products_none, "covers": _covers,
     "covers_max": _covers_max, "total_max": _total_max, "allergen_free": _allergen_free,
     "substitution": _substitution, "flagged": _flagged, "reasons_any": _reasons_any,
-    "delivery_date": _delivery_date,
+    "delivery_date": _delivery_date, "choice_products": _choice_products,
+    "choice_count": _choice_count, "committed_before_human_max": _committed_before_human_max,
+    "agent_status": _agent_status,
 }
 
 

@@ -559,12 +559,16 @@ class Gateway:
             # Re-check availability right before committing; the price stays locked.
             try:
                 rec = self.client.availability([offer.product_id],
-                                               date.fromisoformat(offer.requested_date))
+                                               date.fromisoformat(offer.requested_date),
+                                               force_refresh=True)
                 offer.delivery = assess_delivery(rec.get(offer.product_id),
                                                  date.fromisoformat(offer.requested_date),
                                                  ln.quantity)
-            except Exception as e:  # keep the quoted state, but say so
-                offer.delivery.notes.append(f"availability re-check failed: {e}")
+            except Exception:
+                # A quote does not reserve stock. Never submit stale availability or
+                # expose provider diagnostics in a proposed order, response or audit.
+                raise GatewayError("current availability could not be verified; "
+                                   "retry with fresh offers") from None
             # Provenance: an offer locked with the original's price (find_substitutes) is a
             # substitute whether or not the agent says so; a plain quote() offer is not.
             ref_pid = (data.get("price_reference") or {}).get("product_id")
@@ -735,8 +739,107 @@ class Gateway:
                              if passport else None),
                 "reason": why}
 
+    def _revalidate_held_order(self, order: dict[str, Any], actor: str) -> dict[str, Any]:
+        """Human approval holds the quoted price, not supplier stock or delivery cutoffs.
+
+        The signed mandate was verified when this held order was created. Its persisted
+        snapshot deliberately omits the signature: do not feed that snapshot back through
+        signature evaluation or expire the original 60-minute offer during a 24-hour hold.
+        """
+        data = order["data"]
+        checks, deliveries = [], []
+        expired = False
+
+        def block(rule: str, detail: str, line: int | None = None) -> None:
+            checks.append({"rule": rule, "outcome": "block", "detail": detail, "line": line})
+
+        def check_windows() -> None:
+            nonlocal expired
+            at = now()
+            if at > datetime.fromisoformat(data["mandate"]["valid_until"]):
+                expired = True
+                block("commit.mandate.validity", "mandate expired while waiting for human approval")
+            if order["hold_until"] and at > datetime.fromisoformat(order["hold_until"]):
+                expired = True
+                block("commit.hold.validity", "human approval price hold expired; request new offers")
+
+        check_windows()
+        if not checks:
+            by_date: dict[str, list[str]] = {}
+            for line in data["lines"]:
+                offer = line["offer"]
+                by_date.setdefault(offer["requested_date"], []).append(offer["product_id"])
+            current: dict[tuple[str, str], Any] = {}
+            for requested, ids in by_date.items():
+                ids = list(dict.fromkeys(ids))
+                try:
+                    records = self.client.availability(ids, date.fromisoformat(requested), force_refresh=True)
+                    for pid in ids:
+                        current[(requested, pid)] = records.get(pid)
+                except Exception:
+                    # An SDK/HTTP diagnostic can contain sensitive request information.
+                    block("commit.availability.unverified",
+                          "current availability could not be verified; request fresh offers before ordering")
+            if not checks:
+                for i, line in enumerate(data["lines"]):
+                    offer = line["offer"]
+                    try:
+                        fresh = assess_delivery(current[(offer["requested_date"], offer["product_id"])],
+                                                date.fromisoformat(offer["requested_date"]),
+                                                line["quantity"], now=now())
+                    except Exception:
+                        block("commit.availability.unverified", "current delivery data is invalid", i)
+                        continue
+                    deliveries.append({"product_id": offer["product_id"], "quantity": line["quantity"],
+                                       "requested_date": offer["requested_date"], "delivery": asdict(fresh)})
+                    if fresh.status in BLOCKING or fresh.status == "partial":
+                        block("commit.delivery." + fresh.status,
+                              f"{offer['product_id']}: current delivery is {fresh.status}; "
+                              "the approved basket cannot be fulfilled", i)
+                    elif fresh.available_amount is not None and not math.isfinite(fresh.available_amount):
+                        block("commit.availability.unverified", "current stock amount is invalid", i)
+                    elif fresh.available_amount is not None and line["quantity"] > fresh.available_amount:
+                        # assess_delivery classifies an unavailable requested date as late
+                        # before considering quantity. An approved late date never waives stock.
+                        block("commit.delivery.partial", f"{offer['product_id']}: only "
+                              f"{fresh.available_amount:g} available of {line['quantity']:g} requested", i)
+                    elif fresh.status == "late" and (
+                            offer["delivery"]["status"] != "late"
+                            or fresh.earliest_date != offer["delivery"]["earliest_date"]):
+                        block("commit.delivery.changed", f"{offer['product_id']}: delivery moved to "
+                              f"{fresh.earliest_date}; request a new proposal instead of "
+                              "silently rescheduling", i)
+            check_windows()  # Network latency can cross the cutoff/mandate/hold boundary.
+        data["commit_revalidation"] = {"at": now().isoformat(),
+                                       "status": "blocked" if checks else "verified",
+                                       "checks": checks, "deliveries": deliveries}
+        if checks:
+            reasons = [c["detail"] for c in checks]
+            data["decision"] = {**data["decision"], "outcome": "rejected", "reasons": reasons,
+                                "checks": [*data["decision"]["checks"], *checks]}
+            order = self.store.update_order(order["order_id"], status="expired" if expired else "rejected",
+                                            data=data, hold_until=None)
+            self.store.audit("policy-engine", "order.commit_blocked", order["order_id"],
+                             "; ".join(reasons), data["commit_revalidation"])
+        else:
+            order = self.store.update_order(order["order_id"], data=data)
+            self.store.audit(actor, "order.revalidated", order["order_id"],
+                             "fresh stock and delivery cutoff checked before committing held basket",
+                             data["commit_revalidation"])
+        return order
+
     def _commit(self, order: dict[str, Any], actor: str) -> dict[str, Any]:
         with self.store.lock:  # read-modify-write of order.data
+            # Never submit a stale copy twice after a concurrent/repeated callback.
+            order = self.order(order["order_id"])
+            if order.get("order_number") or order["data"].get("receipt"):
+                return order
+            if order["status"] in ("pending_approval", "awaiting_cart_confirmation"):
+                order = self._revalidate_held_order(order, actor)
+                if order["status"] in ("rejected", "expired"):
+                    return order
+            elif order["status"] != "placed":
+                raise GatewayError(f"order {order['order_id']} is not eligible for commitment")
             number = self.backend.submit(order)
             order = self.store.update_order(order["order_id"], status="placed",
                                             order_number=number, hold_until=None)
@@ -856,7 +959,8 @@ class Gateway:
     def approve(self, order_id: str, approver: str, note: str = "") -> dict[str, Any]:
         with self.store.lock:
             order = self._approve(order_id, approver, note)
-        self._valio_review(order, "order.placed")  # never under the lock
+        event = "order.placed" if order["status"] == "placed" else "order.commit_blocked"
+        self._valio_review(order, event)  # never under the lock
         return order
 
     def _approve(self, order_id: str, approver: str, note: str) -> dict[str, Any]:

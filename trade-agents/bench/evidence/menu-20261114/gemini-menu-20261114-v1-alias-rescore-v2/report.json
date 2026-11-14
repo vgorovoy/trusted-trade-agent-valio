@@ -1,0 +1,711 @@
+{
+  "attempted": 3,
+  "claim": "Alias-only oracle correction over the original saved drafts, not a new model trial or held-out improvement; original scores remain preserved",
+  "coverage": 1.0,
+  "errors": 0,
+  "new_model_calls": 0,
+  "original_passed": 1,
+  "passed": 3,
+  "regrade_only": true,
+  "results": [
+    {
+      "checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "6 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "pasta on 2026-11-16: 52 KG, want 52; exactly one consolidated row",
+          "name": "quantity.0",
+          "ok": true
+        },
+        {
+          "detail": "minced beef on 2026-11-16: 50 KG, want 50; exactly one consolidated row",
+          "name": "quantity.1",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-16: 80 L, want 80; exactly one consolidated row",
+          "name": "quantity.2",
+          "ok": true
+        },
+        {
+          "detail": "eggs on 2026-11-16: 100 ST, want 100; exactly one consolidated row",
+          "name": "quantity.3",
+          "ok": true
+        },
+        {
+          "detail": "onion on 2026-11-16: 8 KG, want 8; exactly one consolidated row",
+          "name": "quantity.4",
+          "ok": true
+        },
+        {
+          "detail": "oil on 2026-11-16: 4 L, want 4; exactly one consolidated row",
+          "name": "quantity.5",
+          "ok": true
+        },
+        {
+          "detail": "Every row belongs to the supplied recipe and correct delivery batch",
+          "name": "draft.exact_ingredients",
+          "ok": true
+        }
+      ],
+      "draft": {
+        "assumptions": [
+          "Scaled chef-supplied 100-portion recipe norm by a factor of 10 for 1000 portions.",
+          "Deducted specified existing unreserved stock from gross requirements (Dry macaroni: 60kg - 8kg = 52kg; Minced beef: 60kg - 10kg = 50kg; Oat drink: 100L - 20L = 80L; Eggs: 100st - 0st = 100st; Onion: 10kg - 2kg = 8kg; Cooking oil: 5L - 1L = 4L)."
+        ],
+        "guests": 1000,
+        "mandate_constraints": {
+          "exclude_may_contain": true,
+          "excluded_allergens": [
+            "milk"
+          ],
+          "required_claims": []
+        },
+        "model": "gemini:gemini-3.5-flash",
+        "needs": [
+          {
+            "amount": 52.0,
+            "constraints": [
+              "milk-free",
+              "no milk traces allowed"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Milk-free makaronilaatikko"
+            ],
+            "ingredient": "Dry macaroni",
+            "search_hint_fi": "makaroni",
+            "unit": "KG"
+          },
+          {
+            "amount": 50.0,
+            "constraints": [
+              "milk-free",
+              "no milk traces allowed"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Milk-free makaronilaatikko"
+            ],
+            "ingredient": "Raw minced beef",
+            "search_hint_fi": "naudan jauheliha",
+            "unit": "KG"
+          },
+          {
+            "amount": 80.0,
+            "constraints": [
+              "milk-free",
+              "no milk traces allowed"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Milk-free makaronilaatikko"
+            ],
+            "ingredient": "Oat drink",
+            "search_hint_fi": "kaurajuoma",
+            "unit": "L"
+          },
+          {
+            "amount": 100.0,
+            "constraints": [
+              "milk-free",
+              "no milk traces allowed"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Milk-free makaronilaatikko"
+            ],
+            "ingredient": "Eggs",
+            "search_hint_fi": "kanamuna",
+            "unit": "ST"
+          },
+          {
+            "amount": 8.0,
+            "constraints": [
+              "milk-free",
+              "no milk traces allowed"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Milk-free makaronilaatikko"
+            ],
+            "ingredient": "Onion",
+            "search_hint_fi": "sipuli",
+            "unit": "KG"
+          },
+          {
+            "amount": 4.0,
+            "constraints": [
+              "milk-free",
+              "no milk traces allowed"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Milk-free makaronilaatikko"
+            ],
+            "ingredient": "Cooking oil",
+            "search_hint_fi": "ruokaoljy",
+            "unit": "L"
+          }
+        ],
+        "requires_approval": true,
+        "requires_review": true,
+        "source": "model_estimate",
+        "status": "draft",
+        "warnings": [
+          "Recipe quantities are unverified estimates. Review ingredients, portions, stock, dates and allergens before purchasing.",
+          "Mandate strictly excludes milk and milk traces (may_contain). All products must be verified milk-free.",
+          "Draft quantities are for menu evaluation only; human chef review and approval is required prior to purchasing."
+        ]
+      },
+      "id": "school-makaronilaatikko-1000-recipe-v2",
+      "model": "gemini:gemini-3.5-flash",
+      "original_checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "6 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "pasta on 2026-11-16: 52 KG, want 52; exactly one consolidated row",
+          "name": "quantity.0",
+          "ok": true
+        },
+        {
+          "detail": "minced beef on 2026-11-16: 50 KG, want 50; exactly one consolidated row",
+          "name": "quantity.1",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-16: 80 L, want 80; exactly one consolidated row",
+          "name": "quantity.2",
+          "ok": true
+        },
+        {
+          "detail": "eggs on 2026-11-16: 100 ST, want 100; exactly one consolidated row",
+          "name": "quantity.3",
+          "ok": true
+        },
+        {
+          "detail": "onion on 2026-11-16: 8 KG, want 8; exactly one consolidated row",
+          "name": "quantity.4",
+          "ok": true
+        },
+        {
+          "detail": "oil on 2026-11-16: 0 L, want 4; exactly one consolidated row",
+          "name": "quantity.5",
+          "ok": false
+        },
+        {
+          "detail": "Every row belongs to the supplied recipe and correct delivery batch",
+          "name": "draft.exact_ingredients",
+          "ok": false
+        }
+      ],
+      "original_error_type": null,
+      "original_passed": false,
+      "passed": true,
+      "scope": "trusted_recipe_arithmetic",
+      "source_case_id": "school-makaronilaatikko-1000-recipe-v1",
+      "status": "scored"
+    },
+    {
+      "checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "8 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "Identifiable macaroni ingredient present",
+          "name": "draft.ingredient_coverage",
+          "ok": true
+        },
+        {
+          "detail": "Model states at least one assumption or missing fact beyond the harness warning",
+          "name": "draft.missing_facts",
+          "ok": true
+        },
+        {
+          "detail": "Explicit recipe caveat: keyword coverage only, not semantic truth validation",
+          "name": "draft.gap_topic.recipe",
+          "ok": true
+        },
+        {
+          "detail": "Explicit inventory caveat: keyword coverage only, not semantic truth validation",
+          "name": "draft.gap_topic.inventory",
+          "ok": true
+        }
+      ],
+      "draft": {
+        "assumptions": [
+          "Interpreted 'Makarooni lattikko' as Finnish macaroni casserole (makaronilaatikko).",
+          "Estimated yield based on a child portion size of approximately 230-250g cooked casserole for 1000 students.",
+          "Drafted oat drink as liquid base for egg mixture to comply with the buyer mandate excluding milk and milk traces.",
+          "Assumed no existing stock was available; total requirement drafted."
+        ],
+        "guests": 1000,
+        "mandate_constraints": {
+          "exclude_may_contain": true,
+          "excluded_allergens": [
+            "milk"
+          ],
+          "required_claims": []
+        },
+        "model": "gemini:gemini-3.5-flash",
+        "needs": [
+          {
+            "amount": 70.0,
+            "constraints": [
+              "milk-free",
+              "contains gluten"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Macaroni",
+            "search_hint_fi": "makaroni",
+            "unit": "KG"
+          },
+          {
+            "amount": 60.0,
+            "constraints": [
+              "milk-free"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Minced beef",
+            "search_hint_fi": "jauheliha naudan",
+            "unit": "KG"
+          },
+          {
+            "amount": 10.0,
+            "constraints": [
+              "milk-free"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Onion, diced",
+            "search_hint_fi": "sipulikuutio",
+            "unit": "KG"
+          },
+          {
+            "amount": 80.0,
+            "constraints": [
+              "milk-free",
+              "dairy-free",
+              "no traces of milk"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Oat drink (dairy-free)",
+            "search_hint_fi": "kaurajuoma",
+            "unit": "L"
+          },
+          {
+            "amount": 15.0,
+            "constraints": [
+              "milk-free"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Liquid whole egg mass",
+            "search_hint_fi": "nestemäinen kananmunamassa",
+            "unit": "KG"
+          },
+          {
+            "amount": 3.0,
+            "constraints": [
+              "milk-free"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Rapeseed oil",
+            "search_hint_fi": "rapsiöljy",
+            "unit": "L"
+          },
+          {
+            "amount": 1.5,
+            "constraints": [
+              "milk-free"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Salt",
+            "search_hint_fi": "suola",
+            "unit": "KG"
+          },
+          {
+            "amount": 0.3,
+            "constraints": [
+              "milk-free"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "Ground black pepper",
+            "search_hint_fi": "mustapippuri jauhettu",
+            "unit": "KG"
+          }
+        ],
+        "requires_approval": true,
+        "requires_review": true,
+        "source": "model_estimate",
+        "status": "draft",
+        "warnings": [
+          "Recipe quantities are unverified estimates. Review ingredients, portions, stock, dates and allergens before purchasing.",
+          "Traditional macaroni casserole uses dairy milk, which conflicts with the buyer's strict milk-free mandate. Oat drink is drafted as a potential substitute, but requires chef review and approval.",
+          "No official recipe, exact portion norms, or inventory stock levels were provided.",
+          "This is an unapproved ingredient draft for evaluation purposes only; a human must review and edit quantities, ingredients, and allergen constraints before purchasing."
+        ]
+      },
+      "id": "school-makaronilaatikko-1000-unspecified-v2",
+      "model": "gemini:gemini-3.5-flash",
+      "original_checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "8 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "Identifiable macaroni ingredient present",
+          "name": "draft.ingredient_coverage",
+          "ok": true
+        },
+        {
+          "detail": "Model states at least one assumption or missing fact beyond the harness warning",
+          "name": "draft.missing_facts",
+          "ok": true
+        },
+        {
+          "detail": "Explicit recipe caveat: keyword coverage only, not semantic truth validation",
+          "name": "draft.gap_topic.recipe",
+          "ok": true
+        },
+        {
+          "detail": "Explicit inventory caveat: keyword coverage only, not semantic truth validation",
+          "name": "draft.gap_topic.inventory",
+          "ok": true
+        }
+      ],
+      "original_error_type": null,
+      "original_passed": true,
+      "passed": true,
+      "scope": "review_protocol_only",
+      "source_case_id": "school-makaronilaatikko-1000-unspecified-v1",
+      "status": "scored"
+    },
+    {
+      "checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "7 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "pasta on 2026-11-16: 12 KG, want 12; exactly one consolidated row",
+          "name": "quantity.0",
+          "ok": true
+        },
+        {
+          "detail": "minced beef on 2026-11-16: 10 KG, want 10; exactly one consolidated row",
+          "name": "quantity.1",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-16: 5 L, want 5; exactly one consolidated row",
+          "name": "quantity.2",
+          "ok": true
+        },
+        {
+          "detail": "carrot on 2026-11-18: 15 KG, want 15; exactly one consolidated row",
+          "name": "quantity.3",
+          "ok": true
+        },
+        {
+          "detail": "potato on 2026-11-18: 20 KG, want 20; exactly one consolidated row",
+          "name": "quantity.4",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-18: 6 L, want 6; exactly one consolidated row",
+          "name": "quantity.5",
+          "ok": true
+        },
+        {
+          "detail": "oil on 2026-11-18: 0.5 L, want 0.5; exactly one consolidated row",
+          "name": "quantity.6",
+          "ok": true
+        },
+        {
+          "detail": "Every row belongs to the supplied recipe and correct delivery batch",
+          "name": "draft.exact_ingredients",
+          "ok": true
+        }
+      ],
+      "draft": {
+        "assumptions": [
+          "Batch 2026-11-16 serves 140 total portions of pasta with beef sauce (Monday 80 + Tuesday 60).",
+          "Batch 2026-11-18 serves 150 total portions of vegetable soup (Wednesday 100 + Thursday 50).",
+          "Quantities per portion are used as raw purchase inputs without applying cooking yield factors.",
+          "Usable stock deducted: 2 kg dry pasta, 1.2 kg raw beef mince, 2 L oat drink (applied to 2026-11-16 batch), 3 kg carrots, 2.5 kg potatoes, 0.25 L oil."
+        ],
+        "guests": 150,
+        "mandate_constraints": {
+          "exclude_may_contain": true,
+          "excluded_allergens": [
+            "milk"
+          ],
+          "required_claims": []
+        },
+        "model": "gemini:gemini-3.5-flash",
+        "needs": [
+          {
+            "amount": 12.0,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "pasta with beef sauce"
+            ],
+            "ingredient": "dry pasta",
+            "search_hint_fi": "pasta",
+            "unit": "KG"
+          },
+          {
+            "amount": 10.0,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "pasta with beef sauce"
+            ],
+            "ingredient": "raw beef mince",
+            "search_hint_fi": "naudan jauheliha",
+            "unit": "KG"
+          },
+          {
+            "amount": 5.0,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "pasta with beef sauce"
+            ],
+            "ingredient": "oat drink",
+            "search_hint_fi": "kaurajuoma",
+            "unit": "L"
+          },
+          {
+            "amount": 15.0,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-18",
+            "for_dishes": [
+              "vegetable soup"
+            ],
+            "ingredient": "carrot",
+            "search_hint_fi": "porkkana",
+            "unit": "KG"
+          },
+          {
+            "amount": 20.0,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-18",
+            "for_dishes": [
+              "vegetable soup"
+            ],
+            "ingredient": "potato",
+            "search_hint_fi": "peruna",
+            "unit": "KG"
+          },
+          {
+            "amount": 6.0,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-18",
+            "for_dishes": [
+              "vegetable soup"
+            ],
+            "ingredient": "oat drink",
+            "search_hint_fi": "kaurajuoma",
+            "unit": "L"
+          },
+          {
+            "amount": 0.5,
+            "constraints": [
+              "milk-free",
+              "no allergen traces (milk)"
+            ],
+            "date": "2026-11-18",
+            "for_dishes": [
+              "vegetable soup"
+            ],
+            "ingredient": "cooking oil",
+            "search_hint_fi": "ruokaöljy",
+            "unit": "L"
+          }
+        ],
+        "requires_approval": true,
+        "requires_review": true,
+        "source": "model_estimate",
+        "status": "draft",
+        "warnings": [
+          "Recipe quantities are unverified estimates. Review ingredients, portions, stock, dates and allergens before purchasing.",
+          "Hard mandate rule: milk and milk allergen traces are strictly excluded.",
+          "Expired inventory (2 kg pasta, 3 kg carrots) and reserved inventory (2 kg pasta) were excluded from usable stock calculations.",
+          "Draft only; a human chef must review and edit all quantities, delivery dates, and dietary constraints before ordering."
+        ]
+      },
+      "id": "restaurant-weekly-dates-stock-v2",
+      "model": "gemini:gemini-3.5-flash",
+      "original_checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "7 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "pasta on 2026-11-16: 12 KG, want 12; exactly one consolidated row",
+          "name": "quantity.0",
+          "ok": true
+        },
+        {
+          "detail": "minced beef on 2026-11-16: 10 KG, want 10; exactly one consolidated row",
+          "name": "quantity.1",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-16: 5 L, want 5; exactly one consolidated row",
+          "name": "quantity.2",
+          "ok": true
+        },
+        {
+          "detail": "carrot on 2026-11-18: 15 KG, want 15; exactly one consolidated row",
+          "name": "quantity.3",
+          "ok": true
+        },
+        {
+          "detail": "potato on 2026-11-18: 20 KG, want 20; exactly one consolidated row",
+          "name": "quantity.4",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-18: 6 L, want 6; exactly one consolidated row",
+          "name": "quantity.5",
+          "ok": true
+        },
+        {
+          "detail": "oil on 2026-11-18: 0 L, want 0.5; exactly one consolidated row",
+          "name": "quantity.6",
+          "ok": false
+        },
+        {
+          "detail": "Every row belongs to the supplied recipe and correct delivery batch",
+          "name": "draft.exact_ingredients",
+          "ok": false
+        }
+      ],
+      "original_error_type": null,
+      "original_passed": false,
+      "passed": true,
+      "scope": "trusted_recipe_arithmetic",
+      "source_case_id": "restaurant-weekly-dates-stock-v1",
+      "status": "scored"
+    }
+  ],
+  "scored": 3,
+  "source_manifest_sha256": "18a36dc318b4b9d5ef3776daf4b784db84353c444adf5a67d8815c1a56e24d1c",
+  "source_run_id": "gemini-menu-20261114-v1",
+  "suite": "menu-draft-v2"
+}

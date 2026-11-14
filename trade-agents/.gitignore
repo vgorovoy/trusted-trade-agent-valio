@@ -3,3 +3,7 @@ data/
 .env
 __pycache__/
 *.pyc
+bench/runs/
+bench/results/
+.pytest_cache/
+.ruff_cache/

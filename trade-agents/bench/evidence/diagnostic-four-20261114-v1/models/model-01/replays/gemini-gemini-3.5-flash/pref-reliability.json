@@ -1,0 +1,123 @@
+{
+ "594e78a22cf6f31b1db46ca2": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "maito",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call_1570827976978329215",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2483,
+   176
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash",
+ "b655c73d8ec68086a35f4884": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_1b8979a51dff",
+       "quantity": 200
+      }
+     ],
+     "rationale": "Selecting the cheapest balanced option for lactose-free milk for delivery on 2026-11-16."
+    },
+    "id": "call_7663913442522538939",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   4152,
+   309
+  ]
+ },
+ "e6b9088e96cba0e6a5f2018a": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "1001"
+      ],
+      "summary": "200 ST (200 L) Laktoositon kevytmaitojuoma 1 l",
+      "total_eur": 270
+     },
+     "dropped_candidates": [
+      {
+       "name": "Laktoositon kahvimaito 1 l",
+       "reason": "Coffee milk, not plain drinking milk"
+      },
+      {
+       "name": "Laktoositon maito-kaakaojuoma 1 l",
+       "reason": "Flavoured cocoa drink, not plain drinking milk"
+      },
+      {
+       "name": "Laktoositon maustamaton jogurtti 10 kg",
+       "reason": "Yoghurt, not milk"
+      },
+      {
+       "name": "Laktoositon mansikka jogurtti 10 kg",
+       "reason": "Yoghurt, not milk"
+      },
+      {
+       "name": "Laktoositon täysmaitojuoma 1 l",
+       "reason": "Ruled out by system plan: price (+10.4 %) exceeds maximum premium percentage (5 %) over cheapest option"
+      }
+     ],
+     "explanation_for_chef": "Tilaus 200 litralle laktoositonta kevytmaitojuomaa maaanantaiksi 16.11.2026 on tehty (yhteensä 270,00 € alv 0 %). Tilaus siirtyi hyväksyntäjonoon (pending_approval), koska tuotteen toimitusvarmuus (85 %) alittaa 90 % automaattisen hyväksynnän kynnyksen. Tilaus (id: ord_f4ca600b2eed) odottaa esihenkilön hyväksyntää.",
+     "need": {
+      "amount": 200,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "lactose-free milk",
+      "unit": "L"
+     },
+     "status": "pending_approval"
+    },
+    "id": "call_9344119467345815318",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4572,
+   1088
+  ]
+ },
+ "f044f6bd626277a6c69a24c1": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 200,
+     "product_ids": [
+      "1001",
+      "1002"
+     ],
+     "query": "laktoositon maito",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call_17251585923271498720",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3337,
+   303
+  ]
+ }
+}

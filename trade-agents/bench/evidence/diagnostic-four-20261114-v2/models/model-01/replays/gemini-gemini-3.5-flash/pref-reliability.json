@@ -1,0 +1,198 @@
+{
+ "18c8f618fce77b75b645c8c5": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "maito",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call_9963078261082590377",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2645,
+   304
+  ]
+ },
+ "203cc3cffbcf1a206c54082c": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_1b8979a51dff",
+       "quantity": 200
+      }
+     ],
+     "rationale": "Valittu edullisin laktoositon kevytmaitojuoma 1 l (270,00 € alv 0 %), jolla täytetään 200 litran tarve."
+    },
+    "id": "call_13120522890969238431",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   7177,
+   512
+  ]
+ },
+ "29c6732ebb29f108fc7742dd": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "1002"
+    },
+    "id": "call_16604093076462196534",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   7007,
+   41
+  ]
+ },
+ "414f7a879aa50cb855f114b9": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "1001"
+    },
+    "id": "call_4231231734164130306",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   5881,
+   1010
+  ]
+ },
+ "498883f4c1c090dfd06d2d0d": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 200,
+     "product_ids": [
+      "1001",
+      "1002"
+     ],
+     "query": "maito",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call_6831421322135742311",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   4071,
+   215
+  ]
+ },
+ "677790d2574d3b34ae03712a": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [
+      {
+       "summary": "200 ST Laktoositon täysmaitojuoma 1 l",
+       "total_eur": 298,
+       "why_not": "Ylittää 5 % maksimihinta-eron edullisimpaan vaihtoehtoon verrattuna (+10,4 %)."
+      }
+     ],
+     "chosen": {
+      "product_ids": [
+       "1001"
+      ],
+      "summary": "200 ST Laktoositon kevytmaitojuoma 1 l",
+      "total_eur": 270
+     },
+     "dropped_candidates": [
+      {
+       "name": "Laktoositon kahvimaito 1 l",
+       "reason": "Kahvimaito ei sovellu perusmaidon tilaukseen."
+      },
+      {
+       "name": "Laktoositon maito-kaakaojuoma 1 l",
+       "reason": "Maustettu juoma ei sovellu perusmaidon tilaukseen."
+      },
+      {
+       "name": "Laktoositon maustamaton jogurtti 10 kg",
+       "reason": "Ei ole maito."
+      },
+      {
+       "name": "Laktoositon mansikka jogurtti 10 kg",
+       "reason": "Ei ole maito."
+      }
+     ],
+     "explanation_for_chef": "Tilauksesta tehtiin varaus 200 litralle laktoositonta kevytmaitojuomaa maananantaihin 16.11.2026 mennessä kokonaishintaan 270,00 € (alv 0 %). Tilaus vaatii ihmisen hyväksynnän, koska tuotteen toimitusvarmuus (0,85) alittaa automaattisen hyväksynnän kynnyksen (0,90). Vaihtoehtoinen laktoositon täysmaitojuoma (298,00 €) oli yli 5 % kalliimpi, joten sitä ei valittu.",
+     "need": {
+      "amount": 200,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "Laktoositon maito",
+      "unit": "L"
+     },
+     "status": "pending_approval"
+    },
+    "id": "call_13716324452397230303",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   7802,
+   1236
+  ]
+ },
+ "8170456dc53285fc65b6cb5b": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "maitojuoma",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call_5575204540642029526",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3627,
+   200
+  ]
+ },
+ "8dccfa3c9e18546b4f3fa2f7": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 200,
+     "product_ids": [
+      "1002"
+     ],
+     "query": "maito",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call_3097292920092654840",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   4794,
+   651
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash"
+}

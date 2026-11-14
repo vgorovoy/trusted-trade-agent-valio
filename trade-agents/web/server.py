@@ -7,6 +7,7 @@ The API is mounted at /api so the browser stays on one origin.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -21,9 +22,13 @@ from trade_agents.buyer_agent.profiles import PROFILES, get_profile, sign_mandat
 from trade_agents.buyer_agent.tools import InProcessTransport
 from trade_agents.config import get_settings
 from trade_agents.signing import SignatureError, verify_offer, verify_receipt
+from web.live import router as live_router
+from web.menu import router as menu_router
 
 ROOT = Path(__file__).parent
 app = FastAPI(title="Valio Aimo human window")
+app.include_router(live_router)
+app.include_router(menu_router)
 
 
 class AgentRequest(BaseModel):
@@ -81,6 +86,36 @@ async def run_agent(body: AgentRequest) -> dict:
         raise HTTPException(400, str(exc)) from exc
 
 
+class ChoiceDecision(BaseModel):
+    approver: str = Field(min_length=1, max_length=200)
+    selection: int | None = Field(default=None, ge=0, le=1, strict=True)
+    note: str = Field(default="", max_length=2000)
+
+
+@app.post("/ui/choices/{choice_id}/decision")
+def decide_choice(choice_id: str, body: ChoiceDecision) -> dict:
+    """Human demo wallet only; never a tool callable by the purchasing model."""
+    if os.getenv("TTA_DEMO_WALLET") != "1":
+        raise HTTPException(404, "demo wallet is disabled (set TTA_DEMO_WALLET=1)")
+    from trade_agents.choices import ChoiceService
+    from trade_agents.service import GatewayError
+
+    try:
+        gw = gateway()
+        choice = ChoiceService(gw).decide(choice_id, body.approver, body.selection, body.note)
+        if choice.get("order"):
+            document, _ = gw.store.get_offer(choice_id)
+            selected = choice["options"][choice["selection"]]
+            evidence = {"mandate": document["mandate"], "offers": {
+                line["offer_id"]: line for line in selected["lines"]}}
+            path = get_settings().state_dir / "web_evidence" / f"{choice['order']['order_id']}.json"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(evidence, ensure_ascii=False))
+        return choice
+    except GatewayError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+
 def _verification(order: dict, jwks: dict) -> dict:
     data = order["data"]
     evidence_path = get_settings().state_dir / "web_evidence" / f"{order['order_id']}.json"
@@ -125,11 +160,22 @@ def _verification(order: dict, jwks: dict) -> dict:
 
 @app.get("/ui/overview")
 def overview() -> dict:
+    settings = get_settings()
+    if not settings.catalog_db.is_file():
+        return {
+            "orders": [], "choices": [], "audit": {"entries": [], "chain_valid": None}, "jwks": {},
+            "setup_required": "The product catalogue is not installed. Run `tta ingest` "
+                              "after configuring the Valio API key to use Exchange. "
+                              "Live bench works without the catalogue.",
+        }
     gw = gateway()
+    from trade_agents.choices import ChoiceService
+
     orders = gw.store.list_orders()
     jwks = gw.jwks()
     return {
         "orders": [{**order, "verification": _verification(order, jwks)} for order in orders],
+        "choices": ChoiceService(gw).list(),
         "audit": gw.audit(),
         "jwks": jwks,
     }
@@ -140,6 +186,31 @@ def index() -> FileResponse:
     return FileResponse(ROOT / "index.html")
 
 
+@app.get("/index.html")
+def index_file() -> FileResponse:
+    return FileResponse(ROOT / "index.html")
+
+
+@app.get("/how-it-works")
+def how_it_works() -> FileResponse:
+    return FileResponse(ROOT / "how-it-works.html")
+
+
+@app.get("/live")
+def live() -> FileResponse:
+    return FileResponse(ROOT / "live.html")
+
+
+@app.get("/live.css")
+def live_css() -> FileResponse:
+    return FileResponse(ROOT / "live.css", media_type="text/css")
+
+
+@app.get("/live.js")
+def live_js() -> FileResponse:
+    return FileResponse(ROOT / "live.js", media_type="text/javascript")
+
+
 @app.get("/app.css")
 def css() -> FileResponse:
     return FileResponse(ROOT / "app.css", media_type="text/css")
@@ -148,6 +219,16 @@ def css() -> FileResponse:
 @app.get("/app.js")
 def js() -> FileResponse:
     return FileResponse(ROOT / "app.js", media_type="text/javascript")
+
+
+@app.get("/menu.js")
+def menu_js() -> FileResponse:
+    return FileResponse(ROOT / "menu.js", media_type="text/javascript")
+
+
+@app.get("/menu.css")
+def menu_css() -> FileResponse:
+    return FileResponse(ROOT / "menu.css", media_type="text/css")
 
 
 app.mount("/api", gateway_app)

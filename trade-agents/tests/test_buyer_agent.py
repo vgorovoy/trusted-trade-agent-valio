@@ -363,3 +363,34 @@ def test_with_retries_retries_transient_only(monkeypatch):
 
     with pytest.raises(Bad):
         llm._with_retries(bad)
+
+
+@pytest.mark.parametrize("exclude_traces", [True, False])
+def test_model_receives_trace_policy_and_reliability(gw, hotel, exclude_traces):
+    """The real model input must expose rules previously visible only to the gateway."""
+    profile = replace(hotel, mandate=hotel.mandate.model_copy(update={
+        "excluded_allergens": ["milk"], "exclude_may_contain": exclude_traces,
+        "min_delivery_reliability": 0.93}))
+    seen = []
+
+    class InspectLLM:
+        name = "inspect-context"
+
+        def chat(self, messages, tools, *, system):
+            seen.append(messages[0]["content"])
+            return call("finish", status="no_order", explanation="No safe purchase.")
+
+    result = BuyerAgent(profile, InspectLLM(), InProcessTransport(gw), today=TODAY).run(
+        "Need milk-free breakfast ingredients")
+    assert result.status == "no_order"
+    assert "Excluded allergens (hard rule): milk" in seen[0]
+    assert "Minimum delivery reliability for autonomous ordering: 0.93" in seen[0]
+    assert "missing reliability is unknown" in seen[0]
+    expected = ("may_contain): excluded by the mandate" if exclude_traces else
+                "may_contain): not excluded by the mandate")
+    assert expected in seen[0]
+
+
+def test_profile_does_not_invent_reliability_threshold(hotel):
+    profile = replace(hotel, mandate=hotel.mandate.model_copy(update={"min_delivery_reliability": None}))
+    assert "Minimum delivery reliability" not in profile.context(TODAY)

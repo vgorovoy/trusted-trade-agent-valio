@@ -1,0 +1,188 @@
+{
+ "1504377c1aa5047e6d96a6b5": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "gluten"
+     ],
+     "query": "nauta jauheliha"
+    },
+    "id": "call_12469854003006521872",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2719,
+   182
+  ]
+ },
+ "6c85f792ac0b37d4d3d0aedd": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_fd79e56d7f19",
+       "quantity": 20
+      }
+     ],
+     "rationale": "Valittu gluteenittomaan keittiöön soveltuva Luomu naudan jauheliha 10 % (248,00 € alv 0 %), sillä tavanomainen naudan jauheliha sisältää vehnäjäämäriskin."
+    },
+    "id": "call_10813872616268299597",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   5063,
+   225
+  ]
+ },
+ "8b1ca14179844f66c4f194fe": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "2002"
+      ],
+      "summary": "20 KG Luomu naudan jauheliha 10 % (248,00 € alv 0 %)",
+      "total_eur": 248
+     },
+     "dropped_candidates": [
+      {
+       "name": "Naudan jauheliha 10 % (tuote 2001)",
+       "reason": "Tuote saattaa sisältää vehnää (allergens_may_contain: wheat), joten se ei sovellu gluteenittoman keittiön rajoituksiin."
+      }
+     ],
+     "explanation_for_chef": "Tilattu 20 kg Luomu naudan jauhelihaa 10 % maanantain 16.11.2026 potilasaterioita varten (yhteensä 248,00 € alv 0 %). Tavanomainen naudan jauheliha hylättiin, koska se saattaa sisältää vehnäjäämiä, mikä on kielletty gluteenittomassa keittiössä. Valittu tuote täyttää allergeenivaatimukset ja toimitusvarmuus on korkea (98 %).",
+     "need": {
+      "amount": 20,
+      "constraints": [
+       "gluteeniton",
+       "ei gluteenijäämiä (may_contain)"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "nauta jauheliha",
+      "unit": "KG"
+     },
+     "status": "placed"
+    },
+    "id": "call_10723357631092283958",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   5356,
+   768
+  ]
+ },
+ "9525c791974ed887b61b16fc": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 20,
+     "product_ids": [
+      "2002"
+     ],
+     "query": "nauta jauheliha",
+     "requested_date": "2026-11-16",
+     "unit": "KG"
+    },
+    "id": "call_12582316320530255775",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3862,
+   322
+  ]
+ },
+ "9cd8d356d3180825e7ed52f9": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "2002"
+    },
+    "id": "call_9710254739185481540",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   3130,
+   212
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash",
+ "b73effaa6ba2bd44fc396b3a": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "2001"
+    },
+    "id": "call_11130885591907750978",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   3414,
+   46
+  ]
+ },
+ "cbdf7992e4c8c54f4c6254b9": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "jauheliha"
+    },
+    "id": "call_4808053341595004554",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2916,
+   62
+  ]
+ },
+ "e967aaa39370143d5156eb47": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "note": "Tuote 2001 (Naudan jauheliha 10 %) jätettiin pois valinnasta, koska se saattaa sisältää vehnää (gluteenijäämä-riski), mikä on kielletty sairaalan gluteenittomassa keittiössä. Valittu luomuvaihtoehto (tuote 2002), joka täyttää kaikki allergeenivaatimukset.",
+     "subject": "Gluteeniton jauhelihavalinta"
+    },
+    "id": "call_5005859860367876931",
+    "name": "add_note"
+   }
+  ],
+  "usage": [
+   4590,
+   461
+  ]
+ },
+ "f86b8ac224dd8e1f7545b623": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "naudan"
+    },
+    "id": "call_2598826045807216173",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3541,
+   117
+  ]
+ }
+}

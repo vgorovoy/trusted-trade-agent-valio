@@ -25,6 +25,9 @@ def _norm(m: dict[str, Any]) -> dict[str, Any]:
     out: dict[str, Any] = {"role": m["role"]}
     content = m.get("content")
     out["content"] = content if isinstance(content, str) else repr(content)
+    if m.get("images"):
+        out["images"] = [{"sha256": hashlib.sha256(data).hexdigest(), "mime": mime}
+                         for data, mime in m["images"]]
     if m.get("tool_calls"):
         out["tool_calls"] = [[tc.name, tc.args] for tc in m["tool_calls"]]
     if m.get("name"):

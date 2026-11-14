@@ -1,0 +1,174 @@
+{
+ "030a0d4e28a8243184070cdb": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "milk"
+     ],
+     "query": "kaurajuoma"
+    },
+    "id": "call_11133640125532075028",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2712,
+   238
+  ]
+ },
+ "393406122085525b1ebb03c6": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "dropped_candidates": [
+      {
+       "name": "Kaurajuoma 1 l (1401)",
+       "reason": "Saattaa sisältää maidon jäämiä (allergens_may_contain: ['milk']), mikä on kielletty mandaatissa."
+      }
+     ],
+     "explanation_for_chef": "Maanantain 16.11.2026 aamupalaa varten pyydettyä kaurajuomaa (60 l) ei voitu tilata, koska valikoimassa oleva kaurajuoma saattaa sisältää maidon jäämiä. Keittiön tiukan mandaatin mukaisesti maidon jäämät on ehdottomasti kielletty maitoallergisille oppilaille. Valikoimasta ei löytynyt muuta täysin maidotonta ja jäämätöntä vaihtoehtoa, joten tilausta ei voitu toteuttaa.",
+     "need": {
+      "amount": 60,
+      "constraints": [
+       "maidoton",
+       "ei maidon jäämiä"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "kaurajuoma",
+      "unit": "L"
+     },
+     "status": "no_order"
+    },
+    "id": "call_17845729916456430543",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   5206,
+   849
+  ]
+ },
+ "5b3a458516acbd532afc3912": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "note": "Tuote 1401 (Kaurajuoma 1 l) sisältää maidon jäämiä (allergens_may_contain: ['milk']), joten se ei täytä mandaatin tiukkaa maidotonta vaatimusta eikä maidon jäämien kieltoa. Valikoimasta ei löytynyt muuta turvallista kasvipohjaista juomaa.",
+     "subject": "Kaurajuoman turvallisuus/maidon jäämät"
+    },
+    "id": "call_4934984866773449447",
+    "name": "add_note"
+   }
+  ],
+  "usage": [
+   4694,
+   500
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash",
+ "a61bb01dbcb7824b24b86bc4": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "milk"
+     ],
+     "query": "kaura"
+    },
+    "id": "call_8635836718079754717",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3063,
+   134
+  ]
+ },
+ "b7f997747ccff144525c170e": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "oat"
+    },
+    "id": "call_4318396962410060099",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3382,
+   25
+  ]
+ },
+ "d0c271eac662bc24f8150a2f": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "kasvijuoma"
+    },
+    "id": "call_3602096943808184356",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3310,
+   57
+  ]
+ },
+ "d3aa34915e06a9da5eecd5ff": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 60,
+     "product_id": "1401",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call_16366232978803340802",
+    "name": "find_substitutes"
+   }
+  ],
+  "usage": [
+   4378,
+   257
+  ]
+ },
+ "ddd05684e604f23ca8e5dcff": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "1401"
+    },
+    "id": "call_1544817883022976922",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   4196,
+   76
+  ]
+ },
+ "eb9f83c912f106fa21c839cb": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "juoma"
+    },
+    "id": "call_17051386253531001954",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3615,
+   34
+  ]
+ }
+}

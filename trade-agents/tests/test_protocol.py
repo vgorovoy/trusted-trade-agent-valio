@@ -77,7 +77,8 @@ def test_confirm_cart_over_limit_still_needs_approval(gateway, mandate, sign):
     assert done["status"] == "placed"
     events = [e["event"] for e in gateway.audit(o["order_id"])["entries"]]
     assert events == ["order.received", "policy.needs_approval", "cart.awaiting_confirmation",
-                      "cart.confirmed", "approval.required", "approval.granted", "order.placed"]
+                      "cart.confirmed", "approval.required", "approval.granted",
+                      "order.revalidated", "order.placed"]
 
 
 def test_decline_cart(gateway, mandate, sign):

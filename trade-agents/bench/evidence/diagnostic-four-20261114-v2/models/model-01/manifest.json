@@ -1,0 +1,16 @@
+{
+  "artifacts": {
+    "events.jsonl": "d0f7ddecb04bfdc16c7ee92c0051c56102ba932236b3b119f7ac29e3911bb2d4",
+    "generation.json": "4b93ee2cc40415f225ce14670591f1d147c978a9ac0b381c3216d63f10a2a4c2",
+    "inputs.json": "e2f6254426b1755b83e43fe9f0893bae1997dbc782b3199b9b4c1814a3830827",
+    "replays/gemini-gemini-3.5-flash/basic-butter-fi.json": "0ee1cb372ad456e25733b34aca51edb38086da277544fb04bd4730ff6fece587",
+    "replays/gemini-gemini-3.5-flash/horeca-hospital-traces-in-meat.json": "9bb0014603f4f3974430e5aa4ccbe75af62dbb840ff4a8f8f957cf2b93ed820e",
+    "replays/gemini-gemini-3.5-flash/horeca-school-traces-no-safe-stock.json": "cc892ba3686876f3dcc52f1999c7e944dca09e308da61a0fd6fa01971168a6af",
+    "replays/gemini-gemini-3.5-flash/pref-reliability.json": "50a2772497fbf1d971bbd7f9d74fed72c78d6caa25a7eb7ded78763c6f84dea0",
+    "report.json": "708bf998e4a2ca88257e62786e123dd9bd2a0ad11475a0dfa09764697be17895"
+  },
+  "finalized_at": "2026-11-14T09:46:41.211586+00:00",
+  "run_id": "model-01",
+  "status": "completed",
+  "version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "artifacts": {
+    "events.jsonl": "a4c9c943c30af35cde416ee232c595f026dfb7ded13d0f77575389ca2a1237a5",
+    "generation.json": "c91018b10b0123b7e64ad46bff1082c4e8f99f09395f213c497b482e0f252a6f",
+    "inputs.json": "57831a1c2d3537f42baa8edb38f2b310d23df173d6b0760402a7d956e05f4b67",
+    "replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/basic-butter-fi.json": "e2019147cbbf86f2fc54f0510c25f96519636ddde6a7a5593fd672bfdcf431e2",
+    "replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/horeca-hospital-traces-in-meat.json": "3922f9bb70d949425c83f9836cd59cb8b087fdef5b7285debaedbe2d7a95de43",
+    "replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/horeca-school-traces-no-safe-stock.json": "d296696614e1ff8052ba798c49b69d87f4b95ce4c05f6aa364c262a89ea79ccc",
+    "replays/nvidia-nvidia-nemotron-3.5-super-vl-120b-a12b/pref-reliability.json": "cfa55cfb881edebcadd698c0bb9c1d582ae3ddc5bd1fda1ae63b28c677a26d35",
+    "report.json": "5e098740e847566a8d88928c6f00a80a0f931a6c9e42e4d7191c7d47a4482f10"
+  },
+  "finalized_at": "2026-11-14T09:32:16.649733+00:00",
+  "run_id": "model-02",
+  "status": "completed",
+  "version": 1
+}

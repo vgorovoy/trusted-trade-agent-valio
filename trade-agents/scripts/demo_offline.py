@@ -88,7 +88,8 @@ def _hotel() -> dict[str, Any]:
         events = [entry["event"] for entry in audit["entries"]]
         _require(audit["chain_valid"], "SHA-256 audit chain")
         _require(events == ["order.received", "policy.needs_approval", "cart.awaiting_confirmation",
-                            "cart.confirmed", "approval.required", "approval.granted", "order.placed"],
+                            "cart.confirmed", "approval.required", "approval.granted",
+                            "order.revalidated", "order.placed"],
                  "complete cart-confirmation and approval audit sequence")
         return {
             "clock": world.spec.now.isoformat(), "product_id": "1001", "quantity_litres": 400,

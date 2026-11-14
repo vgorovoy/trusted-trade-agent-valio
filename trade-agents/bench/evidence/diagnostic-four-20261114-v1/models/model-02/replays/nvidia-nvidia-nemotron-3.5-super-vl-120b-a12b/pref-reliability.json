@@ -1,0 +1,109 @@
+{
+ "03f9ce508f3480dfc5984edf": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [
+      {
+       "summary": "200 x 1 L Laktoositon täysmaitojuoma 1 l (lactose-free whole milk drink), 298.00 EUR excl. VAT",
+       "total_eur": 298.0,
+       "why_not": "10.4 % above the cheapest, exceeding the 5 % premium cap for the balanced ranking."
+      }
+     ],
+     "chosen": {
+      "product_ids": [
+       "1001"
+      ],
+      "summary": "200 x 1 L Laktoositon kevytmaitojuoma 1 l (lactose-free light milk drink), 270.00 EUR excl. VAT",
+      "total_eur": 270.0
+     },
+     "dropped_candidates": "[{\"name\": \"Laktoositon kahvimaito 1 l\", \"reason\": coffee milk, not plain buffet milk\"}, {\"name\": \"Laktoositon maito-kaakaojuoma 1 l\", \"reason\": flavoured cocoa drink\"}, {\"name\": \"Laktoositon maustamaton jogurtti 10 kg\", \"reason\": yoghurt, not milk\"}, {\"name\": \"Laktoositon mansikka jogurtti 10 kg\", \"reason\": flavoured yoghurt, not milk\"}]",
+     "explanation_for_chef": "I ordered 200 litres of lactose-free light milk (Laktoositon kevytmaitojuoma 1 l) for delivery Monday 2026-11-16 at 270.00 EUR excl. VAT. The order is pending approval because the product's delivery reliability (0.85) falls below the 0.90 threshold; a human will sign off. A whole-milk alternative was available at 298.00 EUR but exceeded the 5 % premium cap.",
+     "need": {
+      "amount": 200,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "lactose-free milk",
+      "unit": "L"
+     },
+     "status": "pending_approval"
+    },
+    "id": "call-d045ab43-e1d2-4487-98d7-063d017867a9",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4600,
+   564
+  ]
+ },
+ "594e78a22cf6f31b1db46ca2": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "limit": 25,
+     "query": "maito",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call-cf89c95c-1ab0-4ed5-89ca-d10294b7e2ab",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3075,
+   229
+  ]
+ },
+ "997f86f1435a755a9d02d59b": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 200,
+     "product_ids": [
+      "1002",
+      "1001"
+     ],
+     "query": "maito",
+     "requested_date": "2026-11-16",
+     "unit": "L"
+    },
+    "id": "call-9b6b62a5-24c9-4608-b0a8-a5ddcf89efff",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3789,
+   487
+  ]
+ },
+ "__model__": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+ "a2b1c3b8bcf37c1ea9c77d96": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_269a0c341e86",
+       "quantity": 200
+      }
+     ],
+     "rationale": "Cheapest balanced option at 270.00 EUR for 200 L lactose-free light milk; trade-off is lower delivery reliability (0.85) versus the pricier whole milk alternative."
+    },
+    "id": "call-aba0094f-b559-474c-8632-276da8b6b7ca",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   4374,
+   293
+  ]
+ }
+}

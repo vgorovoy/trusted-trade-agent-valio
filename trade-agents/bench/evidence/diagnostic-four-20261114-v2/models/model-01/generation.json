@@ -1,0 +1,28 @@
+{
+  "adapter_configurations": [
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "gemini:gemini-3.5-flash",
+      "vision_supported": true
+    },
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "gemini:gemini-3.5-flash",
+      "vision_supported": true
+    },
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "gemini:gemini-3.5-flash",
+      "vision_supported": true
+    },
+    {
+      "final_temperature": 0.0,
+      "initial_temperature": 0.0,
+      "name": "gemini:gemini-3.5-flash",
+      "vision_supported": true
+    }
+  ]
+}

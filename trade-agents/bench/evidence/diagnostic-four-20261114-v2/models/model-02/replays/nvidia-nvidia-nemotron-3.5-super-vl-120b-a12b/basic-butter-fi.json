@@ -1,0 +1,130 @@
+{
+ "26ff69ff8b2bcea99b26a021": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "limit": 25,
+     "query": "voi",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call-6ea1c348-5250-4784-bf25-bec0a77c46e2",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3244,
+   301
+  ]
+ },
+ "__model__": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+ "b343fc3aeb9ed7af90892f12": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 20,
+     "product_ids": [
+      "1201",
+      "1202"
+     ],
+     "query": "voi",
+     "requested_date": "2026-11-16",
+     "unit": "KG"
+    },
+    "id": "call-cb46ca06-6228-45b4-bc13-a387db0fcef6",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3522,
+   185
+  ]
+ },
+ "e38b458d8a707671b1ec777e": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [
+      {
+       "summary": "Laktoositon voi 500 g × 40 ST (20 kg), 184.00 EUR",
+       "total_eur": 184.0,
+       "why_not": "12.2 % above the cheapest option, exceeding the 5 % premium limit"
+      }
+     ],
+     "chosen": {
+      "product_ids": [
+       "1202"
+      ],
+      "summary": "Laktoositon voi 10 kg × 2 ST (20 kg), Finnish origin, reliability 0.97, FREE_FROM_LACTOSE",
+      "total_eur": 164.0
+     },
+     "dropped_candidates": [
+      {
+       "name": "Laktoositon voi 500 g",
+       "reason": "184.00 EUR is +12.2 % vs the cheapest 164.00 EUR, over the 5 % max premium"
+      }
+     ],
+     "explanation_for_chef": "Tilasin 20 kg laktoositonta voita (2 × 10 kg) maanantaille 16.11. toimitukseen. Tuote on suomalainen, laktoositon ja toimitusvarmuus on 0,97. Hinta on 164,00 € alv 0 %.",
+     "need": {
+      "amount": 20,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "laktoositon voi",
+      "unit": "KG"
+     },
+     "status": "placed"
+    },
+    "id": "call-91136e4c-49b4-4a1d-903c-b3038c37d306",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4397,
+   413
+  ]
+ },
+ "f3002ee69a761ae5cc18a541": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_592715bd8c68",
+       "quantity": 2
+      }
+     ],
+     "rationale": "Laktoositon voi 10 kg, Finnish, reliability 0.97, cheapest compliant option at 164 EUR for 20 kg."
+    },
+    "id": "call-0c4905cf-739f-4197-b56d-65f0ae39b7b0",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   4225,
+   193
+  ]
+ },
+ "fd74d176c4b7ac6dfae987df": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "1202"
+    },
+    "id": "call-522ddd04-72b6-4d4d-a111-cae903592f41",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   4083,
+   191
+  ]
+ }
+}

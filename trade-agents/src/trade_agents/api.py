@@ -320,3 +320,23 @@ def valio_review(order_id: str, gw: Gateway = Depends(gateway)) -> dict[str, Any
         return review_order(gw, order_id, trigger="manual")
     except ValueError as e:
         raise HTTPException(404, str(e)) from e
+
+
+class ChoiceCreateIn(BaseModel):
+    mandate: Mandate
+    options: list[dict[str, Any]] = Field(min_length=2, max_length=3)
+    idempotency_key: str = Field(min_length=1, max_length=200)
+    passport: str | None = None
+    max_premium_pct: float | None = Field(default=None, ge=0)
+
+
+@app.post("/v1/choices", tags=["human choices"])
+def create_human_choice(body: ChoiceCreateIn, gw: Gateway = Depends(gateway)) -> dict:
+    from .buyer_agent.profiles import BuyerProfile
+    from .choices import ChoiceService
+    profile = BuyerProfile("external", body.mandate.buyer_name, body.mandate,
+                           passport=body.passport, max_premium_pct=body.max_premium_pct)
+    try:
+        return ChoiceService(gw).create(profile, body.options, body.idempotency_key)
+    except (GatewayError, ValueError) as exc:
+        raise _err(exc) from exc

@@ -1,0 +1,98 @@
+{
+  "suite_version": "menu-draft-v1",
+  "today": "2026-11-14",
+  "buyer": "restaurant",
+  "guests": 150,
+  "scope": "trusted_recipe_arithmetic",
+  "id": "restaurant-weekly-dates-stock-v1",
+  "text": "Draft all purchasing ingredients for a restaurant's four services. The guests field is contextual only; use the explicit attendance for each service below, never multiply every meal by the same guest count. Delivery batch 2026-11-16 covers Monday 80 portions and Tuesday 60 portions of pasta with beef sauce. Per portion: dry pasta 0.10 KG, raw beef mince 0.08 KG, oat drink 0.05 L. Delivery batch 2026-11-18 covers Wednesday 100 portions and Thursday 50 portions of vegetable soup. Per portion: carrot 0.12 KG, potato 0.15 KG, oat drink 0.04 L, oil 0.005 L. These trusted synthetic recipe inputs already use raw purchase quantities; do not apply an invented cooking yield. Current stock ledger: pasta 6 KG total, of which 2 KG expire Sunday before either meal and 2 KG are reserved for another job, leaving 2 KG usable; beef 1.2 KG usable; oat drink 2 L usable; carrots 6 KG total, 3 KG expire Sunday, leaving 3 KG usable; potatoes 2.5 KG usable; oil 0.25 L usable. Apply usable stock to the first chronological batch that needs it, once only. No incoming receipts. Aggregate repeated ingredients within each batch, keep different delivery dates separate, and return net purchase needs for exactly the listed ingredients, no case rounding, added safety margins, prices or orders. This menu is milk-free including traces and requires chef review.",
+  "expect": {
+    "needs": [
+      {
+        "ingredient": "pasta",
+        "unit": "KG",
+        "amount": 12,
+        "date": "2026-11-16",
+        "aliases": [
+          "pasta",
+          "dry pasta",
+          "macaroni",
+          "makaroni"
+        ]
+      },
+      {
+        "ingredient": "minced beef",
+        "unit": "KG",
+        "amount": 10,
+        "date": "2026-11-16",
+        "aliases": [
+          "minced beef",
+          "ground beef",
+          "jauheliha",
+          "naudan jauheliha"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 5,
+        "date": "2026-11-16",
+        "aliases": [
+          "oat drink",
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "carrot",
+        "unit": "KG",
+        "amount": 15,
+        "date": "2026-11-18",
+        "aliases": [
+          "carrot",
+          "carrots",
+          "porkkana"
+        ]
+      },
+      {
+        "ingredient": "potato",
+        "unit": "KG",
+        "amount": 20,
+        "date": "2026-11-18",
+        "aliases": [
+          "potato",
+          "potatoes",
+          "peruna"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 6,
+        "date": "2026-11-18",
+        "aliases": [
+          "oat drink",
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "oil",
+        "unit": "L",
+        "amount": 0.5,
+        "date": "2026-11-18",
+        "aliases": [
+          "oil",
+          "vegetable oil",
+          "rypsiöljy",
+          "öljy"
+        ]
+      }
+    ],
+    "excluded_allergens": [
+      "milk"
+    ],
+    "exclude_may_contain": true,
+    "exact_ingredients": true
+  }
+}

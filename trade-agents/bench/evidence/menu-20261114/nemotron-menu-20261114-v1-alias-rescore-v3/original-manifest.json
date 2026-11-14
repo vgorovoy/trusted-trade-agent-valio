@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "events.jsonl": "64fca16b252d5014213a5e4c6c7dc4512baa5f54ca5d374c0626556edaa05f61",
+    "inputs.json": "21bc63394ca543e027a4da699394a58c519ada605ed4201e1a6e48bcdfd7f62a",
+    "replies/case-01.json": "6a05028d1415943cbd000fa21a865f0321594ede965c4f24ca28edc246e1e388",
+    "replies/case-02.json": "bc677d4fd352843dad4c0b0abdd608ceee03c648dd92541486dd1a696454e56a",
+    "replies/case-03.json": "df50fac2eba5529ad204c26a6caaadd3f88e1c52bd8332bacc610e9959137177",
+    "report.json": "9451257aab796fbe981bfe2ef37259df53b01ead75cf27ad10212b9310adc2e2"
+  },
+  "finalized_at": "2026-11-14T10:32:44.062205+00:00",
+  "run_id": "nemotron-menu-20261114-v1",
+  "status": "completed",
+  "version": 1
+}

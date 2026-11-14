@@ -1,0 +1,88 @@
+{
+  "suite_version": "menu-draft-v1",
+  "today": "2026-11-14",
+  "buyer": "school",
+  "guests": 1000,
+  "scope": "trusted_recipe_arithmetic",
+  "id": "school-makaronilaatikko-1000-recipe-v1",
+  "text": "Plan ingredients for milk-free makaronilaatikko (macaroni casserole) for 1000 school children. This is a draft for chef review, not an order. Deliver all ingredients 2026-11-16. Chef-supplied recipe per 100 portions: dry macaroni 6 KG, raw minced beef 6 KG, oat drink 10 L, eggs 10 ST, onion 1 KG, oil 0.5 L. These are synthetic approved fixture norms, not a claimed official recipe. Use exactly these six ingredients; no additions. Current usable unreserved inventory allocated to this meal: dry pasta 8 KG, beef 10 KG, oat drink 20 L, eggs 0 ST, onion 2 KG, oil 1 L. Calculate net purchasing amounts for each ingredient; do not round to cases or invent prices. All products must be milk-free including traces. Preserve recipe uncertainty and human review.",
+  "expect": {
+    "needs": [
+      {
+        "ingredient": "pasta",
+        "unit": "KG",
+        "amount": 52,
+        "date": "2026-11-16",
+        "aliases": [
+          "pasta",
+          "macaroni",
+          "makaroni",
+          "makaronit"
+        ]
+      },
+      {
+        "ingredient": "minced beef",
+        "unit": "KG",
+        "amount": 50,
+        "date": "2026-11-16",
+        "aliases": [
+          "minced beef",
+          "ground beef",
+          "naudan jauheliha",
+          "jauheliha"
+        ]
+      },
+      {
+        "ingredient": "oat drink",
+        "unit": "L",
+        "amount": 80,
+        "date": "2026-11-16",
+        "aliases": [
+          "oat drink",
+          "oat milk",
+          "kaurajuoma"
+        ]
+      },
+      {
+        "ingredient": "eggs",
+        "unit": "ST",
+        "amount": 100,
+        "date": "2026-11-16",
+        "aliases": [
+          "eggs",
+          "egg",
+          "kananmuna",
+          "kananmunat"
+        ]
+      },
+      {
+        "ingredient": "onion",
+        "unit": "KG",
+        "amount": 8,
+        "date": "2026-11-16",
+        "aliases": [
+          "onion",
+          "onions",
+          "sipuli"
+        ]
+      },
+      {
+        "ingredient": "oil",
+        "unit": "L",
+        "amount": 4,
+        "date": "2026-11-16",
+        "aliases": [
+          "oil",
+          "vegetable oil",
+          "rypsiöljy",
+          "öljy"
+        ]
+      }
+    ],
+    "excluded_allergens": [
+      "milk"
+    ],
+    "exclude_may_contain": true,
+    "exact_ingredients": true
+  }
+}

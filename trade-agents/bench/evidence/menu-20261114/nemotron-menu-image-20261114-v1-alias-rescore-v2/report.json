@@ -1,0 +1,251 @@
+{
+  "attempted": 1,
+  "claim": "Alias-only oracle correction over the original saved drafts, not a new model trial or held-out improvement; original scores remain preserved",
+  "coverage": 1.0,
+  "errors": 0,
+  "new_model_calls": 0,
+  "original_passed": 0,
+  "passed": 1,
+  "regrade_only": true,
+  "results": [
+    {
+      "checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "6 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "pasta on 2026-11-16: 52 KG, want 52; exactly one consolidated row",
+          "name": "quantity.0",
+          "ok": true
+        },
+        {
+          "detail": "minced beef on 2026-11-16: 50 KG, want 50; exactly one consolidated row",
+          "name": "quantity.1",
+          "ok": true
+        },
+        {
+          "detail": "oat drink on 2026-11-16: 80 L, want 80; exactly one consolidated row",
+          "name": "quantity.2",
+          "ok": true
+        },
+        {
+          "detail": "eggs on 2026-11-16: 100 ST, want 100; exactly one consolidated row",
+          "name": "quantity.3",
+          "ok": true
+        },
+        {
+          "detail": "onion on 2026-11-16: 8 KG, want 8; exactly one consolidated row",
+          "name": "quantity.4",
+          "ok": true
+        },
+        {
+          "detail": "oil on 2026-11-16: 4 L, want 4; exactly one consolidated row",
+          "name": "quantity.5",
+          "ok": true
+        },
+        {
+          "detail": "Every row belongs to the supplied recipe and correct delivery batch",
+          "name": "draft.exact_ingredients",
+          "ok": true
+        }
+      ],
+      "draft": {
+        "assumptions": [
+          "1,000 portions equals 10 times the 100-portion recipe norm",
+          "Usable inventory is unreserved and allocated to this meal; net need equals recipe need minus stock",
+          "Delivery date 2026-11-16 per request",
+          "Only the six specified ingredients are included; no salt, seasoning, or other additions"
+        ],
+        "guests": 1000,
+        "mandate_constraints": {
+          "exclude_may_contain": true,
+          "excluded_allergens": [
+            "milk"
+          ],
+          "required_claims": []
+        },
+        "model": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+        "needs": [
+          {
+            "amount": 52,
+            "constraints": [
+              "milk-free including traces",
+              "recipe norm 6 KG per 100 portions",
+              "stock 8 KG deducted"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "dry macaroni",
+            "search_hint_fi": "kuivamakaroni",
+            "unit": "KG"
+          },
+          {
+            "amount": 50,
+            "constraints": [
+              "milk-free including traces",
+              "recipe norm 6 KG per 100 portions",
+              "stock 10 KG deducted"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "raw minced beef",
+            "search_hint_fi": "raaka jauheliha",
+            "unit": "KG"
+          },
+          {
+            "amount": 80,
+            "constraints": [
+              "milk-free including traces",
+              "recipe norm 10 L per 100 portions",
+              "stock 20 L deducted"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "oat drink",
+            "search_hint_fi": "kaurajuoma",
+            "unit": "L"
+          },
+          {
+            "amount": 100,
+            "constraints": [
+              "milk-free including traces",
+              "recipe norm 10 ST per 100 portions",
+              "stock 0 ST deducted"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "eggs",
+            "search_hint_fi": "kananmunat",
+            "unit": "ST"
+          },
+          {
+            "amount": 8,
+            "constraints": [
+              "milk-free including traces",
+              "recipe norm 1 KG per 100 portions",
+              "stock 2 KG deducted"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "onion",
+            "search_hint_fi": "sipuli",
+            "unit": "KG"
+          },
+          {
+            "amount": 4,
+            "constraints": [
+              "milk-free including traces",
+              "recipe norm 0.5 L per 100 portions",
+              "stock 1 L deducted"
+            ],
+            "date": "2026-11-16",
+            "for_dishes": [
+              "Makaronilaatikko"
+            ],
+            "ingredient": "oil",
+            "search_hint_fi": "öljy",
+            "unit": "L"
+          }
+        ],
+        "requires_approval": true,
+        "requires_review": true,
+        "source": "model_estimate",
+        "status": "draft",
+        "warnings": [
+          "Recipe quantities are unverified estimates. Review ingredients, portions, stock, dates and allergens before purchasing.",
+          "Synthetic fixture norms, not a claimed official recipe; human chef review required before purchasing",
+          "All products must be milk-free including traces; verify supplier allergen documentation",
+          "Buyer mandate permits 0 EUR self-order per order; any purchase above that requires human approval",
+          "No prices, product IDs, availability, or case rounding included in this draft"
+        ]
+      },
+      "id": "school-makaronilaatikko-1000-image-v2",
+      "model": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b",
+      "original_checks": [
+        {
+          "detail": "Editable estimate requires human review",
+          "name": "draft.review_boundary",
+          "ok": true
+        },
+        {
+          "detail": "Fixture mandate survives model output",
+          "name": "draft.mandate",
+          "ok": true
+        },
+        {
+          "detail": "6 ingredient rows",
+          "name": "draft.nonempty",
+          "ok": true
+        },
+        {
+          "detail": "pasta on 2026-11-16: 52 KG, want 52; exactly one consolidated row",
+          "name": "quantity.0",
+          "ok": true
+        },
+        {
+          "detail": "minced beef on 2026-11-16: 0 KG, want 50; exactly one consolidated row",
+          "name": "quantity.1",
+          "ok": false
+        },
+        {
+          "detail": "oat drink on 2026-11-16: 80 L, want 80; exactly one consolidated row",
+          "name": "quantity.2",
+          "ok": true
+        },
+        {
+          "detail": "eggs on 2026-11-16: 100 ST, want 100; exactly one consolidated row",
+          "name": "quantity.3",
+          "ok": true
+        },
+        {
+          "detail": "onion on 2026-11-16: 8 KG, want 8; exactly one consolidated row",
+          "name": "quantity.4",
+          "ok": true
+        },
+        {
+          "detail": "oil on 2026-11-16: 4 L, want 4; exactly one consolidated row",
+          "name": "quantity.5",
+          "ok": true
+        },
+        {
+          "detail": "Every row belongs to the supplied recipe and correct delivery batch",
+          "name": "draft.exact_ingredients",
+          "ok": false
+        }
+      ],
+      "original_error_type": null,
+      "original_passed": false,
+      "passed": true,
+      "scope": "synthetic_image_trusted_recipe_arithmetic",
+      "source_case_id": "school-makaronilaatikko-1000-image-v1",
+      "status": "scored"
+    }
+  ],
+  "scored": 1,
+  "source_manifest_sha256": "3dbcddbae2a847dd09569986727853c683c4c1f1b0729d09b4c88eaea4d13d23",
+  "source_run_id": "nemotron-menu-image-20261114-v1",
+  "source_suite": "menu-draft-image-v1",
+  "suite": "menu-draft-image-v2"
+}

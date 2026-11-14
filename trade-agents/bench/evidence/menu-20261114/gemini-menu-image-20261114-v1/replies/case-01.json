@@ -1,0 +1,11 @@
+{
+ "49548e9ebeba7ab8d28065ba": {
+  "text": "{\"needs\":[{\"ingredient\":\"dry macaroni\",\"search_hint_fi\":\"makaroni\",\"amount\":52.0,\"unit\":\"KG\",\"date\":\"2026-11-16\",\"for_dishes\":[\"Makaronilaatikko\"],\"constraints\":[\"milk-free\",\"no milk traces\"]},{\"ingredient\":\"raw minced beef\",\"search_hint_fi\":\"naudan jauheliha\",\"amount\":50.0,\"unit\":\"KG\",\"date\":\"2026-11-16\",\"for_dishes\":[\"Makaronilaatikko\"],\"constraints\":[\"milk-free\",\"no milk traces\"]},{\"ingredient\":\"oat drink\",\"search_hint_fi\":\"kaurajuoma\",\"amount\":80.0,\"unit\":\"L\",\"date\":\"2026-11-16\",\"for_dishes\":[\"Makaronilaatikko\"],\"constraints\":[\"milk-free\",\"no milk traces\"]},{\"ingredient\":\"eggs\",\"search_hint_fi\":\"kanamuna\",\"amount\":100.0,\"unit\":\"ST\",\"date\":\"2026-11-16\",\"for_dishes\":[\"Makaronilaatikko\"],\"constraints\":[\"milk-free\",\"no milk traces\"]},{\"ingredient\":\"onion\",\"search_hint_fi\":\"sipuli kuorittu\",\"amount\":8.0,\"unit\":\"KG\",\"date\":\"2026-11-16\",\"for_dishes\":[\"Makaronilaatikko\"],\"constraints\":[\"milk-free\",\"no milk traces\"]},{\"ingredient\":\"cooking oil\",\"search_hint_fi\":\"ruokaöljy\",\"amount\":4.0,\"unit\":\"L\",\"date\":\"2026-11-16\",\"for_dishes\":[\"Makaronilaatikko\"],\"constraints\":[\"milk-free\",\"no milk traces\"]}],\"assumptions\":[\"Calculated gross recipe requirements for 1,000 portions by multiplying 100-portion norms by 10: macaroni 60 kg, minced beef 60 kg, oat drink 100 L, eggs 100 st, onion 10 kg, cooking oil 5 L.\",\"Calculated net requirements by subtracting usable unreserved inventory: pasta -8 kg, beef -10 kg, oat drink -20 L, eggs -0 st, onion -2 kg, oil -1 L.\"],\"warnings\":[\"All ingredients and quantities are drafts and must be reviewed and confirmed by a human chef prior to purchasing.\",\"Strict buyer mandate constraint: milk and milk traces are strictly prohibited. Products must be verified milk-free with no 'may contain milk' traces.\"]}",
+  "tool_calls": [],
+  "usage": [
+   1787,
+   1962
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash"
+}

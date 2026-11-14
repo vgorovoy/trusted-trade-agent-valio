@@ -43,6 +43,8 @@ class Transport(Protocol):
     def place_order(self, mandate: dict[str, Any], lines: list[dict[str, Any]],
                     idempotency_key: str, rationale: str,
                     agent_passport: str | None = None) -> dict[str, Any]: ...
+    def propose_choice(self, profile: BuyerProfile, options: list[dict[str, Any]],
+                       idempotency_key: str) -> dict[str, Any]: ...
     def order(self, order_id: str) -> dict[str, Any]: ...
     def note(self, agent_id: str, subject: str, note: str,
              order_id: str | None = None) -> dict[str, Any]: ...
@@ -73,6 +75,10 @@ class InProcessTransport:
                             require_claims=require_claims, exclude_allergens=exclude_allergens,
                             product_ids=product_ids, agent_id=agent_id, optimize=optimize,
                             max_premium_pct=max_premium_pct)
+
+    def propose_choice(self, profile, options, idempotency_key):
+        from ..choices import ChoiceService
+        return ChoiceService(self.gw).create(profile, options, idempotency_key)
 
     def substitutes(self, product_id, constraints, requested_date, amount, unit, agent_id):
         return self.gw.substitutes(
@@ -129,6 +135,12 @@ class RestTransport:
             "require_claims": require_claims, "exclude_allergens": exclude_allergens,
             "product_ids": product_ids, "agent_id": agent_id, "optimize": optimize,
             "max_premium_pct": max_premium_pct}))
+
+    def propose_choice(self, profile, options, idempotency_key):
+        return self._ok(self.http.post("/v1/choices", json={
+            "mandate": profile.mandate.model_dump(mode="json"),
+            "options": options, "idempotency_key": idempotency_key,
+            "passport": profile.passport, "max_premium_pct": profile.max_premium_pct}))
 
     def substitutes(self, product_id, constraints, requested_date, amount, unit, agent_id):
         if constraints.get("substitution_policy") == "never":  # the REST call has no mandate
@@ -398,6 +410,7 @@ class AgentTools:
     profile: BuyerProfile
     session: str = field(default_factory=lambda: uuid.uuid4().hex[:12])
     order: dict[str, Any] | None = None           # the one order of this request
+    choice: dict[str, Any] | None = None
     plans: list[dict[str, Any]] = field(default_factory=list)
     searched: dict[str, dict[str, Any]] = field(default_factory=dict)  # product_id -> summary
     flagged: dict[str, list[str]] = field(default_factory=dict)        # product_id -> texts
@@ -482,8 +495,35 @@ class AgentTools:
                                    list(product_ids), self.agent_id,
                                    optimize=self.profile.optimize,
                                    max_premium_pct=self.profile.max_premium_pct)
+        if self.choice is None and self.order is None and m.autonomy_mode != "advise":
+            threshold = m.min_delivery_reliability
+            premium = self.profile.max_premium_pct
+            options = plan.get("options", [])
+            def reliable(option):
+                values = [line.get("delivery_reliability") for line in option.get("lines", [])]
+                return bool(values) and all(v is not None and v >= threshold for v in values)
+            if threshold is not None and options:
+                eligible = [option for option in options if reliable(option)]
+                if eligible:
+                    # Prefer autonomous-compliant options within the existing price cap.
+                    plan = {**plan, "options": eligible + [o for o in options if o not in eligible]}
+                elif premium is not None:
+                    unrestricted = self.transport.plan(
+                        query, float(amount), unit, requested_date,
+                        list(m.required_claims), list(m.excluded_allergens), list(product_ids),
+                        self.agent_id, optimize="reliability", max_premium_pct=None)
+                    dependable = [o for o in unrestricted.get("options", []) if reliable(o)]
+                    if dependable:
+                        cheap = min(options, key=lambda o: o["total_eur"])
+                        better = min(dependable, key=lambda o: o["total_eur"])
+                        if better["total_eur"] > cheap["total_eur"] * (1 + premium / 100):
+                            self.choice = self.transport.propose_choice(
+                                self.profile, [cheap, better], f"choice-{self.agent_id}-{self.session}")
         self.plans.append(plan)
         c = _compact_plan(plan)
+        if self.choice is not None:
+            c["human_choice"] = self.choice
+            c["instruction"] = "Human must select a basket or decline both. Do not place_order."
         best = c["options"][0]["total_eur"] if c["options"] else None
         return ToolOutcome(c, f"{len(c['options'])} option(s) over {len(product_ids)} "
                               f"candidate(s), {len(c['ruled_out'])} ruled out"
@@ -509,6 +549,10 @@ class AgentTools:
 
     def _t_place_order(self, lines: list[dict[str, Any]], rationale: str = "",
                        **ignored: Any) -> ToolOutcome:
+        if self.choice is not None:
+            return ToolOutcome({"status": "awaiting_choice", "human_choice": self.choice,
+                                "instruction": "Only a human may choose; call finish."},
+                               "awaiting_choice: human must choose a basket")
         if self.order is not None:
             o = compact_order(self.order)
             return ToolOutcome(

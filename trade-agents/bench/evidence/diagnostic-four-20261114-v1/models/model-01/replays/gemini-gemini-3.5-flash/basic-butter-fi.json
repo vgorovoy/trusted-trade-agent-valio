@@ -1,0 +1,107 @@
+{
+ "1223c40db74f075daa09a9b6": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "1202"
+      ],
+      "summary": "2 ST Laktoositon voi 10 kg (yht. 20 kg)",
+      "total_eur": 164
+     },
+     "dropped_candidates": [
+      {
+       "name": "Laktoositon voi 500 g",
+       "reason": "12,2 % kalliimpi kuin 10 kg pakkaus (ylittää 5 % hinta-rajan)"
+      }
+     ],
+     "explanation_for_chef": "Tilasimme 20 kg laktoositonta voita maanantaiksi 16.11.2026. Tilaukseen valittiin kaksi 10 kg suurpakkausta (Laktoositon voi 10 kg) kokonaishintaan 164,00 € (alv 0 %). Pienempi 500 g pakkauskoko jätettiin pois sen selkeästi korkeamman kilohinnan vuoksi.",
+     "need": {
+      "amount": 20,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "laktoositon voi",
+      "unit": "KG"
+     },
+     "status": "placed"
+    },
+    "id": "call_8190845134496089396",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   3939,
+   581
+  ]
+ },
+ "427b372684c3cc4c094420b5": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 20,
+     "product_ids": [
+      "1201",
+      "1202"
+     ],
+     "query": "laktoositon voi",
+     "requested_date": "2026-11-16",
+     "unit": "KG"
+    },
+    "id": "call_2733471828356689183",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   2926,
+   191
+  ]
+ },
+ "89f95d11963c11d494b570bc": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "query": "voi",
+     "require_claims": [
+      "FREE_FROM_LACTOSE"
+     ]
+    },
+    "id": "call_9690869688227880795",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2490,
+   210
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash",
+ "c46c6fa5a36565f3fe45d200": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_592715bd8c68",
+       "quantity": 2
+      }
+     ],
+     "rationale": "Valittu edullisin ja tarpeeseen sopiva laktoositon voi 10 kg suurpakkauksessa."
+    },
+    "id": "call_4960704395977364319",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   3606,
+   265
+  ]
+ }
+}

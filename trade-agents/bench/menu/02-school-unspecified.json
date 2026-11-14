@@ -1,0 +1,37 @@
+{
+  "suite_version": "menu-draft-v1",
+  "today": "2026-11-14",
+  "buyer": "school",
+  "guests": 1000,
+  "scope": "review_protocol_only",
+  "id": "school-makaronilaatikko-1000-unspecified-v1",
+  "text": "Makarooni lattikko for 1000 kids on 2026-11-16. We have not supplied an approved recipe, portion/yield norms or usable inventory. Make an editable ingredient draft, explicitly list missing facts/assumptions, and ask for chef review. Do not claim an official recipe or that anything has been bought. The buyer's milk-free including traces mandate still applies.",
+  "expect": {
+    "needs_any": [
+      "pasta",
+      "macaroni",
+      "makaroni",
+      "makaronit"
+    ],
+    "information_gap": true,
+    "excluded_allergens": [
+      "milk"
+    ],
+    "exclude_may_contain": true,
+    "gap_topics": {
+      "recipe": [
+        "recipe",
+        "resepti",
+        "portion",
+        "annos",
+        "norm"
+      ],
+      "inventory": [
+        "inventory",
+        "stock",
+        "varasto",
+        "saldo"
+      ]
+    }
+  }
+}

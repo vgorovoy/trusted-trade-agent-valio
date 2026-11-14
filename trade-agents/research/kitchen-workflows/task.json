@@ -1,0 +1,8 @@
+{
+  "id": "kitchen-workflows",
+  "objective": "Ground professional-kitchen procurement workflow and benchmark design in primary operator, supplier, government and research sources; distinguish cadence, lead time and transaction boundaries.",
+  "status": "partial",
+  "scope": "Finland-focused institutional and commercial kitchens; explicit Canada/Sweden evidence boundaries.",
+  "data_limit": "No real kitchen attendance, usable inventory, transaction-error denominator or procurement history obtained.",
+  "layout_note": "Project-local adaptation of the open-source research-internet document format; not a managed ARF task lifecycle."
+}

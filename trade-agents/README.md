@@ -45,6 +45,54 @@ uv run tta mcp                  # MCP server on stdio for an agent
 uv run pytest                   # offline tests (mocked API)
 ```
 
+### One UI, different tasks
+
+| Audience / purpose | Screen | What is ready | Dependencies |
+|---|---|---|---|
+| Buyer / chef | `/` (Exchange) | Kitchen request, cart, confirmation/approval inbox, signed documents, order status and audit | Static catalogue + Valio mock API key; a model API key for LLM purchasing |
+| Jury: procurement demonstration | Same Exchange | Show the proposal, human decision, receipt and audit; demo wallet stands in for the buyer signing device | Same as Exchange; no production webshop orders |
+| Jury: interactive benchmark | `/live` | Select scenarios; stream tool steps/checks and show a measured report | No catalogue ingestion or API credentials for offline/replay |
+| Team: system explanation | `/how-it-works` | Standalone explanatory page; browser example only | No model or order execution |
+
+A single local server serves these screens and mounts gateway REST at `/api`. The demo
+UI/wallet has no production authentication; bind it to localhost. `tta serve` starts the
+REST API only, **not** this web UI.
+
+```bash
+# Exchange and human approval (requires .env with Valio + chosen model credentials)
+cd trade-agents
+uv sync --dev
+uv run tta ingest
+TTA_LOCAL=1 TTA_DEMO_WALLET=1 uv run uvicorn web.server:app --host 127.0.0.1 --port 8000
+# http://127.0.0.1:8000/ ; same server: /live and /how-it-works
+```
+
+For a benchmark-only demonstration, skip ingestion and credentials:
+
+```bash
+TTA_LOCAL=1 uv run uvicorn web.server:app --host 127.0.0.1 --port 8000
+# open http://127.0.0.1:8000/live
+```
+
+The UI's benchmark modes are **offline** (rule-based baseline) and **recorded Nemotron**
+(replay). They are animated real verifier/tool executions, not live model evaluations.
+Live model runs are currently CLI-only; use explicit provider/model flags, e.g.
+`tta bench basic-milk --provider nvidia --model nvidia/nemotron-3.5-super-vl-120b-a12b --replay record`.
+A recording file may be stale: its existence does not guarantee complete replay coverage.
+Always inspect scored/selected and skips.
+
+Benchmark execution uses a separate **spawned process**, not an ASGI worker thread.
+Temporary benchmark environment, clocks, UUIDs, keys and SQLite cannot alter the Exchange
+process. A monitor thread only receives events/report through IPC. One run is allowed
+per server process; failed or timed-out children are terminated/reaped and release the slot.
+The default worker limit is 120 seconds for these offline/replay runs. A force-killed
+child may leave synthetic temporary files for OS cleanup; no parent state is used.
+
+The primary demo should be an actual buyer-agent workflow; the deterministic script below
+is a separately labelled protocol walkthrough and a reproducible fallback. Do not equate
+an offline score with model quality, or claim a general external-agent SDK or broad
+real-world vision evaluation from a single synthetic recipe image.
+
 ### Human window (stream U)
 
 ```bash
@@ -58,6 +106,21 @@ Without an Agent Passport the gateway caps the agent at `confirm_cart`, so the
 `autonomous` choice ends in a cart confirmation and the screen says why. To show the
 autonomous path locally, add `TTA_DEMO_SELF_ISSUE=1` (demo only, see Agent Passport
 below) or set `TTA_AGENT_PASSPORT` from `tta passport issue`.
+
+The standalone Russian explainer is at `http://127.0.0.1:8000/how-it-works` or
+`web/how-it-works.html` opened directly. Its interactive example runs entirely in the
+browser and never places an order.
+
+The English live benchmark is at `http://127.0.0.1:8000/live`. It runs the current
+buyer agent and gateway against isolated benchmark worlds, streams tool calls and
+independent checks, and offers one case or the 12/25/37-scenario tiers. Offline mode
+uses the rule-based agent; Recorded Nemotron mode replays three saved model trajectories
+through today's code. Neither mode calls a live model, the Valio API, or the production
+state store. The page needs the local web server and cannot run as a standalone file.
+To show this page without catalogue ingestion or API credentials, start the server with
+`TTA_LOCAL=1 uv run uvicorn web.server:app --port 8000` from `trade-agents/`.
+If `uv` is not on your PATH but the project `.venv` already exists, use
+`TTA_LOCAL=1 .venv/bin/python -m uvicorn web.server:app --port 8000` instead.
 
 The web screen shows the agent ↔ Valio exchange, signed documents, policy outcome,
 approval inbox, and buyer/Valio audit perspectives. It starts the existing buyer
@@ -572,13 +635,14 @@ issues order numbers today, a real Valio order API plugs in by implementing `sub
 
 ## Agent bench
 
-`uv run tta bench` runs 25 fixed buyer requests in frozen synthetic worlds (catalogue,
+`uv run tta bench` runs 37 fixed buyer requests in frozen synthetic worlds (catalogue,
 prices, stock, cut-offs at Fri 13.11 20:00) and checks the gateway's final state
 deterministically: status, products, quantity covered, total, allergens, substitution
 marks, flagged injections, plus invariants (one order per request, mandate unchanged,
 audit chain intact, price / availability asked only for the agent's own candidates). It prints accuracy per category (basic, cut-off, partial stock,
 budget, allergens, substitution, preferences, autonomy modes, ambiguity, attacks); model
-replies are recorded so a run repeats exactly. Offline baseline: 23 / 25 (do-nothing 4 / 25). Format and checks:
+replies can be recorded so a run repeats exactly. The smoke and core subsets contain
+12 and 25 scenarios respectively. Format and checks:
 [`bench/README.md`](bench/README.md).
 
 ## Assumptions about the mock API
@@ -613,9 +677,54 @@ Each interpretation is also returned to agents in `offer.assumptions`.
 
 ## Next steps
 
-- Approval inbox and audit timeline UI (buyer view and Valio view).
+- Production authentication and role enforcement for the existing approval/audit UI.
 - Recipe-aware substitution (school/hospital kitchens: allergens + nutrition), standing
   order drift detection.
 - W3C Verifiable Credential envelope for mandates and passports, key rotation and
   revocation (status list), passport issuance from a bench score; per-buyer customer numbers,
   rate-limit aware batching.
+
+## Research and planned hard cases
+
+See [research notes and primary references](research/README.md) and the
+[hard-case / harness-contribution blueprint](research/hard-case-design.md). These distinguish
+implemented transaction/text-menu/synthetic-image coverage from proposed complete
+yield, inventory, multi-item purchasing and receipt tasks. Demand
+forecasting remains future work because no real consumption/attendance history was supplied.
+
+UI testing handoff: [screens, launch commands and checklist](docs/ui-testing.md).
+Actual diagnostic model comparison: [curated immutable-run evidence](bench/evidence/README.md).
+
+
+### Synthetic price/reliability choice demo
+
+`uv run python -m scripts.serve_choice_demo` starts Exchange on http://127.0.0.1:8000
+with two ready baskets (EUR270 / EUR298). Open Action inbox, select one or decline both.
+No order exists before selection. Restart to reset. This standalone temporary synthetic
+world fixes its own process clock, uses no Valio/provider network calls and disables
+background model reviews. It is distinct from the live-provider Exchange setup above.
+Human selection retains hard policy guards and signed cart confirmation requirements.
+
+Full suite now has42versioned scenarios; smoke/core remain12/25. New human-resolution
+cases report scripted human actions separately from the agent's autonomous outcome.
+
+### Dish / weekly menu / photo → reviewed ingredient draft
+
+In Exchange, choose **A dish, recipe or menu image**. Enter the portion count and text,
+or attach a JPEG/PNG up to5MB. A configured model creates an editable draft with assumptions
+and warnings. Recipe quantities are estimates unless the request supplies trusted recipe,
+yield and usable-inventory facts; this is not demand forecasting. Offline rules cannot
+interpret menu images or estimate recipes.
+
+Review each ingredient, amount, unit, delivery date and dietary constraint. One explicit chef-review checkbox covers the entire draft. Any edit clears that review.
+Each ingredient still has its own **confirm-cart** request; extraction itself creates
+no orders and never purchases the entire menu automatically. After edits, review must be
+repeated. Requests may partially fail: inspect individual results and existing carts before
+retrying. A complete multi-ingredient budget/supply optimization is future work.
+
+Separate text-menu evaluation: [bench/menu/README.md](bench/menu/README.md), including
+school makaronilaatikko for1000children and a restaurant's weekly delivery batches.
+Text cases score draft arithmetic/review. The separate synthetic-image slice sends
+recipe facts only as PNG bytes. Neither proves completed purchasing, clinical diet safety
+or robustness to real photographs. See [menu evidence](bench/evidence/menu-20261114/README.md)
+for raw grades, lexical oracle corrections and zero-call rescoring.

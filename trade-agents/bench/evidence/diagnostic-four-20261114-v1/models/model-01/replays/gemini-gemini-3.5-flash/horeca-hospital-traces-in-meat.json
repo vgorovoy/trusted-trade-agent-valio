@@ -1,0 +1,171 @@
+{
+ "4f2a7905f97b6781d62ccb06": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "amount": 20,
+     "product_ids": [
+      "2002"
+     ],
+     "query": "naudan jauheliha",
+     "requested_date": "2026-11-16",
+     "unit": "KG"
+    },
+    "id": "call_3692716760443210324",
+    "name": "plan_need"
+   }
+  ],
+  "usage": [
+   3905,
+   237
+  ]
+ },
+ "__model__": "gemini:gemini-3.5-flash",
+ "a19d9da1195a8324a3442652": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "product_id": "2001"
+    },
+    "id": "call_14840730595680457441",
+    "name": "get_product"
+   },
+   {
+    "args": {
+     "product_id": "2002"
+    },
+    "id": "call_14840730595680458500",
+    "name": "get_product"
+   }
+  ],
+  "usage": [
+   2908,
+   215
+  ]
+ },
+ "b8339786ca027557a517ff72": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "gluten"
+     ],
+     "query": "naudan jauheliha"
+    },
+    "id": "call_17342157141453566903",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   2541,
+   215
+  ]
+ },
+ "c674aa79269c7d044420c60b": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "gluten"
+     ],
+     "query": "jauheliha"
+    },
+    "id": "call_12288413741046320286",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3274,
+   199
+  ]
+ },
+ "d008b4470602385195fa2e84": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "lines": [
+      {
+       "offer_id": "of_fd79e56d7f19",
+       "quantity": 20
+      }
+     ],
+     "rationale": "Selected 20 kg of Luomu naudan jauheliha 10 %, which is the cheapest and only option meeting the gluten-free diet requirement with no wheat traces."
+    },
+    "id": "call_13277158132584068571",
+    "name": "place_order"
+   }
+  ],
+  "usage": [
+   4548,
+   260
+  ]
+ },
+ "ddce0c73c1e67673eec80933": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [
+       "2002"
+      ],
+      "summary": "20 KG Luomu naudan jauheliha 10 % (248.00 EUR excl. VAT)",
+      "total_eur": 248
+     },
+     "dropped_candidates": [
+      {
+       "name": "Naudan jauheliha 10 % (2001)",
+       "reason": "Sisältää tuotetietojen mukaan saattaa sisältää -merkinnän vehnästä (gluteeni), mikä on kielletty gluteenittomassa keittiössä."
+      },
+      {
+       "name": "Naudan paisti (2101)",
+       "reason": "Tuote on paisti, ei jauheliha."
+      }
+     ],
+     "explanation_for_chef": "Tilasimme maanantaille 16.11.2026 20 kg Luomu naudan jauhelihaa 10 % (tuote 2002) yhteensä 248,00 eurolla (alv 0 %). Tavallinen naudan jauheliha (tuote 2001) hylättiin, koska sen tuotetiedoissa on merkintä vehnäjäämistä, mitä ei voida hyväksyä gluteenittomassa keittiössä. Luomujauheliha täyttää kaikki ruokavaliovaatimukset ja tilaus vahvistettiin suoraan.",
+     "need": {
+      "amount": 20,
+      "constraints": [
+       "gluteeniton"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "naudan jauheliha",
+      "unit": "KG"
+     },
+     "status": "placed"
+    },
+    "id": "call_6251896893664750134",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   4876,
+   984
+  ]
+ },
+ "f153e42fffc6eb85b3095686": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "exclude_allergens": [
+      "gluten"
+     ],
+     "query": "naudan"
+    },
+    "id": "call_15042658060965227255",
+    "name": "search_products"
+   }
+  ],
+  "usage": [
+   3625,
+   76
+  ]
+ }
+}
