@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:valio-aimo:trade-agents:schema:buyer-mandate:v1",
+  "x-jws-typ": "valio.mandate.v1",
+  "description": "Buyer Mandate (AP2 Intent Mandate): what the buyer organisation lets its agent do. Signed by the buyer with a detached JWS in `signature` over the canonical JSON of all other fields.",
+  "properties": {
+    "mandate_id": {
+      "title": "Mandate Id",
+      "type": "string"
+    },
+    "buyer_id": {
+      "title": "Buyer Id",
+      "type": "string"
+    },
+    "buyer_name": {
+      "title": "Buyer Name",
+      "type": "string"
+    },
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "valid_until": {
+      "format": "date-time",
+      "title": "Valid Until",
+      "type": "string"
+    },
+    "auto_order_limit_eur": {
+      "description": "Orders up to this total (excl. VAT) may be placed without a human.",
+      "title": "Auto Order Limit Eur",
+      "type": "number"
+    },
+    "hard_limit_eur": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Orders above this are refused even with approval.",
+      "title": "Hard Limit Eur"
+    },
+    "excluded_allergens": {
+      "description": "GS1 codes or names, e.g. 'AM' or 'milk'. Hard rule.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Excluded Allergens",
+      "type": "array"
+    },
+    "exclude_may_contain": {
+      "default": false,
+      "description": "Also refuse 'may contain' traces of excluded allergens.",
+      "title": "Exclude May Contain",
+      "type": "boolean"
+    },
+    "required_claims": {
+      "description": "e.g. FREE_FROM_LACTOSE; missing claim needs approval.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Claims",
+      "type": "array"
+    },
+    "substitution_policy": {
+      "default": "approval",
+      "description": "official_auto: Valio's own substitution list may be used without a human if every other rule passes.",
+      "enum": [
+        "never",
+        "approval",
+        "official_auto"
+      ],
+      "title": "Substitution Policy",
+      "type": "string"
+    },
+    "max_substitute_price_increase_pct": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": 10,
+      "description": "A line that replaces another product (substitute, or a second product topping up a partial stock) may cost at most this many % more per kg / litre (per sales unit if neither has a comparison unit) than the original, else a human approves, whatever substitution_policy says. The original's price comes from Valio (a signed offer or the gateway's own quote), never from the agent. None: no check.",
+      "title": "Max Substitute Price Increase Pct"
+    },
+    "min_delivery_reliability": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Min Delivery Reliability"
+    },
+    "allow_late_delivery": {
+      "default": false,
+      "title": "Allow Late Delivery",
+      "type": "boolean"
+    },
+    "approvers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Approvers",
+      "type": "array"
+    },
+    "autonomy_mode": {
+      "default": "autonomous",
+      "description": "advise: the agent may only recommend (place_order returns a proposal); confirm_cart: every cart waits for the buyer's signed confirmation; autonomous: the agent orders on its own within the guardrails. Capped by the Agent Passport.",
+      "enum": [
+        "advise",
+        "confirm_cart",
+        "autonomous"
+      ],
+      "title": "Autonomy Mode",
+      "type": "string"
+    },
+    "signature": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Signature"
+    }
+  },
+  "required": [
+    "mandate_id",
+    "buyer_id",
+    "buyer_name",
+    "agent_id",
+    "valid_until",
+    "auto_order_limit_eur"
+  ],
+  "title": "Mandate",
+  "type": "object"
+}

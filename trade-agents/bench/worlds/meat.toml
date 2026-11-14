@@ -1,0 +1,38 @@
+# Synthetic meat slice for the Valio mentors' strict-mode case: the kitchen needs 100 kg of
+# minced beef, only 50 kg of the asked-for product is in stock, the rest would have to come
+# from a dearer product. Prices are EUR excl. VAT per kg (sales unit KG).
+
+now = "2026-11-13T20:00:00+02:00"
+delivery = "2026-11-16"
+cutoff = "2026-11-14T12:00:00+0200"
+
+[products.2001]
+name_fi = "Naudan jauheliha 10 %"
+name_en = "Minced beef 10 %"
+unit = "KG"
+ingredients = "NAUDANLIHA"
+price = 8.90
+comparison = 8.90
+comparison_unit = "KG"
+reliability = 0.97
+stock = 50
+
+[products.2002]
+name_fi = "Luomu naudan jauheliha 10 %"
+name_en = "Organic minced beef 10 %"
+unit = "KG"
+ingredients = "NAUDANLIHA"
+price = 12.40
+comparison = 12.40
+comparison_unit = "KG"
+reliability = 0.98
+
+[products.2101]
+name_fi = "Naudan paisti"
+name_en = "Beef roast"
+unit = "KG"
+ingredients = "NAUDANLIHA"
+price = 15.90
+comparison = 15.90
+comparison_unit = "KG"
+reliability = 0.97

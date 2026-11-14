@@ -1,0 +1,26 @@
+# Choosing well beyond the price.
+
+[[scenario]]
+id = "pref-reliability"
+category = "preferences"
+title = "Cheapest milk has 85 % delivery reliability, below the mandate's 90 %"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+reliability = 0.85
+[scenario.expect]
+status = "placed"
+products_all = ["1002"]
+covers = [200, "L"]
+
+[[scenario]]
+id = "pref-plain-yoghurt"
+category = "preferences"
+title = "Plain yoghurt asked; strawberry is cheaper per kilo"
+buyer = "hotel"
+request = "40 kg of plain yoghurt for Monday"
+[scenario.expect]
+status = "placed"
+products_all = ["1301"]
+covers = [40, "KG"]
+total_max = 152.00

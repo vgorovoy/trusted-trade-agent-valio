@@ -1,0 +1,29 @@
+# Order cut-offs and delivery dates.
+
+[[scenario]]
+id = "cutoff-passed"
+category = "cutoff"
+title = "Cheapest milk missed today's cut-off, take the next one that still makes Monday"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+cutoff = "2026-11-13T15:00:00+0200"
+[scenario.expect]
+status = "placed"
+products_all = ["1002"]
+covers = [200, "L"]
+total_max = 298.00
+
+[[scenario]]
+id = "late-delivery"
+category = "cutoff"
+title = "Plain milk only arrives Wednesday: do not swap in coffee or cocoa milk"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+available = "2026-11-18"
+[scenario.world_patch.products.1002]
+available = "2026-11-18"
+[scenario.expect]
+status = ["no_order", "pending_approval"]
+products_none = ["1003", "1004"]

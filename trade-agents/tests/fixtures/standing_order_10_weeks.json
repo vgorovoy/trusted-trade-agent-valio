@@ -1,0 +1,262 @@
+[
+  {
+    "week": "2026-09-14",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 100,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 100,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 100,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-09-21",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 102,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 102,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 102,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-09-28",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 104,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 104,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 104,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-10-05",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 106,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 106,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 106,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-10-12",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 108,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 108,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 108,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-10-19",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 110,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 110,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 110,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-10-26",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 112,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 112,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 112,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-11-02",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 114,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 114,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 114,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-11-09",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 116,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 116,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460394",
+        "name": "Spice Up! Kookosmaito 2900ml",
+        "unit": "PRK",
+        "quantity": 116,
+        "unit_price_eur": 1.4
+      }
+    ]
+  },
+  {
+    "week": "2026-11-16",
+    "lines": [
+      {
+        "product_id": "460032",
+        "name": "Valio Eila® vähälaktoosinen rasvaton maitojauhe 25 kg",
+        "unit": "SK",
+        "quantity": 190,
+        "unit_price_eur": 1.4
+      },
+      {
+        "product_id": "460105",
+        "name": "Kinder Bueno 43g maitosuklaapäällysteinen vohveli maitoisalla hasselpähkinätäytteellä x 30",
+        "unit": "KI",
+        "quantity": 118,
+        "unit_price_eur": 1.8
+      },
+      {
+        "product_id": "460396",
+        "name": "Valio vapaan lehmän rasvaton maito 10 l novobox",
+        "unit": "CS",
+        "quantity": 20,
+        "unit_price_eur": 2.0
+      }
+    ]
+  }
+]

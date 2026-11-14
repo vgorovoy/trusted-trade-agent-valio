@@ -1,0 +1,82 @@
+const state = {orders: [], audit: {entries: [], chain_valid: false}, jwks: {}, selected: null, view: 'exchange', perspective: 'buyer', busy: false};
+const $ = id => document.getElementById(id);
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = value => new Intl.NumberFormat('en-FI', {style:'currency',currency:'EUR'}).format(Number(value || 0));
+const date = value => value ? new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value)) : '—';
+const short = value => value ? String(value).slice(0, 13) + '…' : '—';
+const statusText = {placed:'Placed',pending_approval:'Needs approval',awaiting_cart_confirmation:'Confirm cart',proposal:'Proposal only',rejected:'Rejected',cart_declined:'Cart declined',expired:'Expired'};
+const api = async (path, options = {}) => {
+  const response = await fetch(path,{...options,headers:{'Content-Type':'application/json',...options.headers}});
+  const data = await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : `Request failed (${response.status})`);
+  return data;
+};
+let toastTimer;
+function toast(message, error=false){const el=$('toast');el.textContent=message;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),4500)}
+function humanStatus(order){return `<span class="status ${escapeHtml(order.status)}">${escapeHtml(statusText[order.status] || order.status)}</span>`}
+function validBadge(value){return value === true ? '<span class="verified">✓ VERIFIED</span>' : value === false ? '<span class="unverified">✕ INVALID</span>' : '<span class="not-yet">NO EVIDENCE / PENDING</span>'}
+function buyerName(id){return ({'hotel-chain-001': 'Hotel kitchen', 'school-espoo-001': 'School kitchen', 'hospital-espoo-001': 'Hospital kitchen'})[id] || id}
+function orderName(order){const lines=order.data?.cart?.lines || order.data?.lines || [];const first=lines[0];return first?.name || first?.offer?.name || `Order ${order.order_id}`}
+
+async function refresh(silent=false){
+  try{
+    const data=await api('/ui/overview');Object.assign(state,data);
+    if(!state.selected || !state.orders.some(o=>o.order_id===state.selected)) state.selected=state.orders[0]?.order_id || null;
+    $('updated').textContent=`Updated ${new Intl.DateTimeFormat('en-GB',{timeStyle:'short'}).format(new Date())}`;
+    $('metric-orders').textContent=state.orders.length;$('exchange-count').textContent=state.orders.length;
+    const pending=state.orders.filter(o=>['awaiting_cart_confirmation','pending_approval'].includes(o.status)).length;
+    $('metric-pending').textContent=pending;$('inbox-count').textContent=pending;$('inbox-label').textContent=`${pending} OPEN`;
+    const verified=state.audit.chain_valid && state.orders.every(o=>o.verification.mandate === true && o.verification.offers.every(x=>x===true) && o.verification.receipt !== false);
+    $('metric-trust').textContent=!state.orders.length?'Ready':verified?'Verified':'Review needed';$('metric-trust-note').textContent=!state.orders.length?'Audit chain intact · no orders yet':verified?'Signed records · audit chain intact':'One or more checks need attention';
+    $('chain-status').textContent=state.audit.chain_valid?'✓ CHAIN VERIFIED':`✕ CHAIN BROKEN${state.audit.first_broken_seq?' AT #'+state.audit.first_broken_seq:''}`;
+    $('key-id').textContent=state.jwks.keys?.[0]?.kid ? `kid: ${state.jwks.keys[0].kid}` : 'No public key available';
+    render();
+  }catch(e){if(!silent)toast(`Gateway unavailable: ${e.message}`,true);$('updated').textContent='Gateway unavailable';$('metric-trust').textContent='Offline'}
+}
+function render(){renderOrders();renderDetail();renderInbox();renderAudit()}
+function renderOrders(){
+  $('order-list').innerHTML='<div class="list-heading">RECENT EXCHANGES</div>'+ (state.orders.length ? state.orders.map(o=>`<button class="order-item ${state.selected===o.order_id?'selected':''}" data-order="${escapeHtml(o.order_id)}"><div class="order-item-top"><strong>${escapeHtml(buyerName(o.buyer_id))}</strong>${humanStatus(o)}</div><small>${escapeHtml(orderName(o))}</small><div class="order-item-bottom"><span>${escapeHtml(date(o.created_at))}</span><b>${money(o.total_eur)}</b></div></button>`).join('') : '<div class="empty"><span class="empty-icon">↔</span>No exchanges yet.<br>Start with a kitchen request below.</div>');
+}
+function renderDetail(){
+  const o=state.orders.find(x=>x.order_id===state.selected);
+  if(!o){$('order-detail').innerHTML='<div class="empty"><span class="empty-icon">◇</span>Select an exchange to see signed offers,<br>policy decisions and the receipt.</div>';return}
+  const d=o.data||{},v=o.verification||{},lines=d.cart?.lines||d.lines||[];
+  const need=d.cart?.rationale||d.rationale||'The agent submitted this order under the buyer mandate.';
+  const reasons=d.decision?.reasons||[];
+  const flow=[['1','Buyer mandate',false],['2','Signed offer',false],['3','Policy check',false],['4',o.status==='placed'?'Receipt':'Human step',o.status!=='placed']];
+  const steps=flow.map((s,i)=>`${i?'<div class="flow-line"></div>':''}<div class="flow-step ${s[2]?'pending':''}"><span class="step-circle">${s[2]?'!':'✓'}</span><strong>${escapeHtml(s[1])}</strong></div>`).join('');
+  const actors=state.perspective==='buyer' ? ['Buyer agent','Valio Aimo'] : ['Valio Aimo','Buyer agent'];
+  const policyPanel=state.perspective==='valio' ? `<div class="decision-box"><strong>Valio policy review · ${escapeHtml(d.decision?.outcome||'pending')}</strong>${(d.decision?.checks||[]).map(c=>`${escapeHtml(c.rule)}: ${escapeHtml(c.outcome)} · ${escapeHtml(c.detail)}`).join('<br>')||'No policy checks recorded.'}</div>` : '';
+  $('order-detail').innerHTML=`<div class="detail-header"><div><div class="detail-kicker">${escapeHtml(actors[0].toUpperCase())} ↔ ${escapeHtml(actors[1].toUpperCase())}</div><h3>${escapeHtml(orderName(o))}</h3><p>${escapeHtml(o.order_number||o.order_id)} · ${escapeHtml(date(o.created_at))}</p></div>${humanStatus(o)}</div><div class="flow">${steps}</div><div class="detail-columns"><div class="detail-card"><h4>ORDER & OFFER</h4>${lines.map((line,i)=>{const item=line.offer||line;const source=(d.lines||[]).find(x=>x.offer_id===line.offer_id);const notes=item.delivery?.notes||source?.offer?.delivery?.notes||[];return `<div class="line-item"><span>${escapeHtml(line.quantity)} ${escapeHtml(item.sales_unit||'units')} · ${escapeHtml(item.name||line.name||line.product_id)}${line.substitutes_for?` <small>· replaces ${escapeHtml(line.substitutes_for)}</small>`:''}${line.fills_shortfall_of?` <small>· tops up ${escapeHtml(line.fills_shortfall_of)}</small>`:''}${line.needs_kitchen_check?' <small><b>· check with the kitchen</b></small>':''}${notes.map(n=>`<small> · ${escapeHtml(n)}</small>`).join('')}</span><b>${money(line.line_total_eur ?? Number(line.quantity)*Number(item.unit_price||0))}</b></div>`}).join('')}<div class="line-item"><strong>Total excl. VAT</strong><b>${money(o.total_eur)}</b></div><p><b>Agent rationale:</b> ${escapeHtml(need)}</p></div><div class="detail-card"><h4>CRYPTOGRAPHIC CHECKS</h4><div class="signature-row"><span>Buyer mandate · Ed25519</span>${validBadge(v.mandate)}</div><div class="signature-row"><span>Valio signed offers (${v.offers?.length||0})</span>${validBadge((v.offers||[]).length ? (v.offers.includes(false) ? false : v.offers.includes(null) ? null : true) : null)}</div><div class="signature-row"><span>Valio order receipt</span>${validBadge(v.receipt)}</div><div class="signature-row"><span>Audit chain · SHA-256</span>${validBadge(state.audit.chain_valid)}</div></div></div><div class="decision-box ${reasons.length||o.status!=='placed'?'warn':''}"><strong>${escapeHtml(d.decision?.outcome==='needs_approval'?'Human approval required':o.status==='awaiting_cart_confirmation'?'Buyer confirmation required':o.status==='placed'?'Order committed':o.status==='proposal'?'Recommendation only':'Policy decision')}</strong>${escapeHtml(reasons.join('; ')||d.autonomy?.reason||'All guardrails passed. The gateway committed the order under the signed mandate.')}</div>${d.autonomy&&d.autonomy.effective!==d.autonomy.requested?`<div class="decision-box warn"><strong>Autonomy capped · ${escapeHtml(d.autonomy.requested)} → ${escapeHtml(d.autonomy.effective)}</strong>${escapeHtml(d.autonomy.reason||'')}</div>`:''}${policyPanel}<div class="detail-footer"><button class="text-button" data-view="audit" data-subject="${escapeHtml(o.order_id)}">View exchange audit ↗</button><span class="hash">${escapeHtml(o.data?.receipt?.claims?.audit_head?.hash ? 'SHA-256 '+short(o.data.receipt.claims.audit_head.hash) : 'Awaiting receipt')}</span></div>`;
+}
+function renderInbox(){
+  const pending=state.orders.filter(o=>['awaiting_cart_confirmation','pending_approval'].includes(o.status));
+  $('inbox-list').innerHTML=pending.length?pending.map(o=>{const cart=o.status==='awaiting_cart_confirmation';const reasons=o.data?.decision?.reasons||[];const approver=o.data?.mandate?.approvers?.[0]||'';return `<article class="inbox-card"><div class="inbox-head"><div><div class="section-kicker">${cart?'CART CONFIRMATION':'POLICY EXCEPTION'} · ${escapeHtml(buyerName(o.buyer_id))}</div><h3>${escapeHtml(orderName(o))}</h3><p>${escapeHtml(o.order_id)} · ${escapeHtml(date(o.created_at))} · Hold until ${escapeHtml(date(o.hold_until))}</p></div>${humanStatus(o)}</div><div class="decision-box warn"><strong>${cart?'Confirm the exact basket':'Review the exception'}</strong>${escapeHtml(cart?(o.data.cart?.rationale||'Confirm the cart that the agent filled. A separate approval may still be needed.'):reasons.join('; ')||'Policy requires a human decision.')}<br><b>${money(o.total_eur)} excl. VAT</b></div><div class="inbox-actions"><input aria-label="Decision note" placeholder="Optional note" data-note="${escapeHtml(o.order_id)}"><button class="${cart?'primary-button':'primary-button'}" data-action="${cart?'confirm':'approve'}" data-id="${escapeHtml(o.order_id)}" data-approver="${escapeHtml(approver)}">${cart?'Confirm signed cart':'Approve order'}</button><button class="danger-button" data-action="${cart?'decline':'reject'}" data-id="${escapeHtml(o.order_id)}" data-approver="${escapeHtml(approver)}">${cart?'Decline':'Reject'}</button></div></article>`}).join(''):'<div class="empty inbox-card"><span class="empty-icon">✓</span>Nothing needs a decision right now.</div>';
+}
+function renderAudit(){
+  const entries=state.audit.entries||[];const orderIds=new Set(state.orders.map(o=>o.order_id));
+  let filtered=state.perspective==='buyer'?entries.filter(e=>orderIds.has(e.subject)||['agent.note','need.planned'].includes(e.event)):entries;
+  if(state.auditSubject) filtered=filtered.filter(e=>e.subject===state.auditSubject);
+  $('audit-list').innerHTML=filtered.length?filtered.slice().reverse().map(e=>`<div class="audit-entry"><span class="seq">#${escapeHtml(e.seq)}</span><div><b>${escapeHtml(e.event)}</b><p>${escapeHtml(date(e.ts))}</p></div><div><b>${escapeHtml(e.actor)}</b><p>${escapeHtml(e.summary)}</p></div><code title="${escapeHtml(e.hash)}">${escapeHtml(short(e.hash))}</code></div>`).join(''):'<div class="empty">No audit events yet.</div>';
+}
+function switchView(view){if(!['exchange','inbox','audit','trust'].includes(view))return;state.view=view;document.querySelectorAll('.view').forEach(el=>el.classList.toggle('hidden',el.id!==`view-${view}`));document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.view===view));const titles={exchange:['Trade exchange','A clear record of every decision between your purchasing agent and Valio Aimo.'],inbox:['Action inbox','Review the exact cart or approve a policy exception.'],audit:['Shared audit trail','A human-readable sequence of the decisions made by both parties.'],trust:['Trust protocol','Open, signed documents that agents and people can verify.']};$('page-title').innerHTML=escapeHtml(titles[view][0])+'<span class="title-period">.</span>';$('page-subtitle').textContent=titles[view][1];$('breadcrumb').textContent=view.toUpperCase();}
+async function decision(action,id,approver){
+  if(state.busy)return;state.busy=true;const note=document.querySelector(`[data-note="${CSS.escape(id)}"]`)?.value||'';
+  try{
+    if(['confirm','decline'].includes(action)){
+      const signed=await api('/api/demo/wallet/cart-confirmations',{method:'POST',body:JSON.stringify({order_id:id,confirmed_by:approver,decision:action,note})});
+      await api(`/api/v1/carts/${encodeURIComponent(id)}/${action}`,{method:'POST',body:JSON.stringify({confirmation:signed.confirmation})});
+    }else await api(`/api/v1/approvals/${encodeURIComponent(id)}/${action}`,{method:'POST',body:JSON.stringify({approver,note})});
+    toast(action==='confirm'?'Cart signed and confirmed':action==='approve'?'Order approved':action==='decline'?'Cart declined':'Order rejected');await refresh(true);
+  }catch(e){toast(e.message,true)}finally{state.busy=false}
+}
+document.addEventListener('click',e=>{
+  const nav=e.target.closest('[data-view]');if(nav){if(nav.dataset.view==='audit')state.auditSubject=nav.dataset.subject||null;switchView(nav.dataset.view);renderAudit();return}
+  const order=e.target.closest('[data-order]');if(order){state.selected=order.dataset.order;renderOrders();renderDetail();return}
+  const perspective=e.target.closest('[data-perspective]');if(perspective){state.perspective=perspective.dataset.perspective;document.querySelectorAll('[data-perspective]').forEach(x=>x.classList.toggle('selected',x===perspective));renderDetail();renderAudit();return}
+  const example=e.target.closest('[data-example]');if(example){$('request-input').value=example.dataset.example;$('buyer-select').value=example.dataset.buyer;return}
+  const action=e.target.closest('[data-action]');if(action)decision(action.dataset.action,action.dataset.id,action.dataset.approver);
+});
+$('refresh').addEventListener('click',()=>refresh());
+$('agent-form').addEventListener('submit',async e=>{e.preventDefault();if(state.busy)return;state.busy=true;const button=$('run-button');button.disabled=true;button.innerHTML='Agent working…';try{const result=await api('/ui/agent/run',{method:'POST',body:JSON.stringify({request:$('request-input').value,buyer:$('buyer-select').value,mode:$('mode-select').value})});if(result.order_id)state.selected=result.order_id;await refresh(true);toast(result.order_id?`Agent finished: ${statusText[result.status]||result.status}`:result.explanation||'Agent finished without an order',!!result.error)}catch(err){toast(err.message,true)}finally{state.busy=false;button.disabled=false;button.innerHTML='Run agent <span>↗</span>'}});
+refresh();

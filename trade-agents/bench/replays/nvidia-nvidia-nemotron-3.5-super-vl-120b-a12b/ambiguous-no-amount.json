@@ -1,0 +1,60 @@
+{
+ "05d58997969001ae7232be7a": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "explanation_for_chef": "I can order lactose-free plain milk for your breakfast buffet, but the request doesn't state how much you need or in what unit (e.g. litres). Please confirm the amount and unit, and whether the default delivery date of Monday 2026-11-16 works or if you need it earlier for the weekend.",
+     "need": {
+      "amount": null,
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "milk",
+      "unit": null
+     },
+     "status": "needs_clarification"
+    },
+    "id": "call-16c75ec0-e152-433e-9228-fe392fef44ee",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   3013,
+   956
+  ]
+ },
+ "9ce54b52f2e026a0afa4e5b0": {
+  "text": "",
+  "tool_calls": [
+   {
+    "args": {
+     "alternatives": [],
+     "chosen": {
+      "product_ids": [],
+      "summary": null,
+      "total_eur": null
+     },
+     "dropped_candidates": [],
+     "explanation_for_chef": "The product is clear (lactose-free plain milk for the buffet, per the mandate), but no amount or unit was given, so I cannot place an order. The default delivery date would be Monday 2026-11-16; please confirm the quantity (litres) and whether you need delivery for the weekend (Saturday/Sunday) instead. Once you provide the amount, I'll order the cheapest compliant lactose-free milk.",
+     "need": {
+      "constraints": [
+       "FREE_FROM_LACTOSE"
+      ],
+      "delivery_date": "2026-11-16",
+      "product": "milk"
+     },
+     "status": "needs_clarification"
+    },
+    "id": "call-cce35edc-e858-4072-a79e-1acd2272667f",
+    "name": "finish"
+   }
+  ],
+  "usage": [
+   2600,
+   1464
+  ]
+ },
+ "__model__": "nvidia:nvidia/nemotron-3.5-super-vl-120b-a12b"
+}

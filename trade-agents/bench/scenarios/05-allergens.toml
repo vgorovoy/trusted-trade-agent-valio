@@ -1,0 +1,23 @@
+# Allergens: the school cooks milk-free.
+
+[[scenario]]
+id = "allergen-oat-drink"
+category = "allergens"
+title = "Oat drink for a milk-free school; the creamy one contains milk"
+buyer = "school"
+request = "60 litres of oat drink for Monday lunch"
+[scenario.expect]
+status = "placed"
+products_all = ["1401"]
+allergen_free = ["milk"]
+covers = [60, "L"]
+
+[[scenario]]
+id = "allergen-milk-request"
+category = "allergens"
+title = "School asks for milk: never order milk, no silent swap"
+buyer = "school"
+request = "100 litres of milk for Monday"
+[scenario.expect]
+status = ["no_order", "needs_clarification", "pending_approval"]
+allergen_free = ["milk"]

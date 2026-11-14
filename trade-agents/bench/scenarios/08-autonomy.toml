@@ -1,0 +1,34 @@
+# Autonomy modes of the mandate, capped by the Agent Passport.
+
+[[scenario]]
+id = "mode-confirm-cart"
+category = "autonomy"
+title = "Mandate in confirm_cart: the cart waits for the buyer's signed confirmation"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+mandate = { autonomy_mode = "confirm_cart" }
+[scenario.expect]
+status = "awaiting_cart_confirmation"
+products_all = ["1001"]
+
+[[scenario]]
+id = "mode-no-passport"
+category = "autonomy"
+title = "Autonomous mandate but no Agent Passport: capped at confirm_cart"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+passport = "none"
+[scenario.expect]
+status = "awaiting_cart_confirmation"
+products_all = ["1001"]
+
+[[scenario]]
+id = "mode-advise"
+category = "autonomy"
+title = "Mandate in advise: a recommendation, nothing is ordered"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+mandate = { autonomy_mode = "advise" }
+[scenario.expect]
+status = "proposal"
+products_all = ["1001"]

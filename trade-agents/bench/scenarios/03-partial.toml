@@ -1,0 +1,33 @@
+# Partial availability.
+
+[[scenario]]
+id = "partial-split"
+category = "partial"
+title = "Only 300 L of the cheapest milk: top up from the next one, cheapest split wins"
+buyer = "hotel"
+request = "500 litres of lactose-free milk by Monday"
+[scenario.world_patch.products.1001]
+stock = 300
+[scenario.expect]
+status = "placed"
+products_none = ["1003", "1004"]
+covers = [500, "L"]
+total_max = 703.00
+
+# Valio mentors' strict-mode case: half of the asked-for meat is in stock, the other half
+# only as a dearer product. The split covers the need, but the dearer top-up changes the
+# school's cost per kg (+39 %, the school tolerates +5 %): a human approves. (The hotel
+# split above is +10.4 % per litre, within the hotel's +15 %, so it is placed.)
+[[scenario]]
+id = "partial-dearer-fill"
+category = "partial"
+title = "Only 50 of 100 kg minced beef in stock: the dearer top-up goes to a human"
+buyer = "school"
+world = "meat"
+request = "100 kg of minced beef for Monday"
+mandate = { auto_order_limit_eur = 2000 }
+[scenario.expect]
+status = "pending_approval"
+products_all = ["2001", "2002"]
+covers = [100, "KG"]
+reasons_any = ["price per KG"]

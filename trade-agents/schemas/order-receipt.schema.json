@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:valio-aimo:trade-agents:schema:order-receipt:v1",
+  "x-jws-typ": "valio.receipt.v1",
+  "$defs": {
+    "AuditHead": {
+      "additionalProperties": false,
+      "properties": {
+        "seq": {
+          "title": "Seq",
+          "type": "integer"
+        },
+        "hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "seq",
+        "hash"
+      ],
+      "title": "AuditHead",
+      "type": "object"
+    },
+    "FiredRule": {
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "description": "Guardrail id, e.g. spend.auto_limit.",
+          "title": "Rule",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "approval",
+            "block"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "outcome",
+        "detail"
+      ],
+      "title": "FiredRule",
+      "type": "object"
+    },
+    "ReceiptLine": {
+      "additionalProperties": false,
+      "properties": {
+        "offer_id": {
+          "title": "Offer Id",
+          "type": "string"
+        },
+        "product_id": {
+          "title": "Product Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "quantity": {
+          "title": "Quantity",
+          "type": "number"
+        },
+        "sales_unit": {
+          "title": "Sales Unit",
+          "type": "string"
+        },
+        "unit_price_eur": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit Price Eur"
+        },
+        "line_total_eur": {
+          "title": "Line Total Eur",
+          "type": "number"
+        },
+        "substitutes_for": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Substitutes For"
+        }
+      },
+      "required": [
+        "offer_id",
+        "product_id",
+        "name",
+        "quantity",
+        "sales_unit",
+        "unit_price_eur",
+        "line_total_eur",
+        "substitutes_for"
+      ],
+      "title": "ReceiptLine",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Order Receipt: claims of `order.data.receipt.jws`.",
+  "properties": {
+    "iss": {
+      "const": "valio-aimo",
+      "description": "Issuer: Valio Aimo.",
+      "title": "Iss",
+      "type": "string"
+    },
+    "iat": {
+      "description": "Issued at, ISO 8601 date-time.",
+      "title": "Iat",
+      "type": "string"
+    },
+    "order_id": {
+      "title": "Order Id",
+      "type": "string"
+    },
+    "order_number": {
+      "title": "Order Number",
+      "type": "string"
+    },
+    "buyer_id": {
+      "title": "Buyer Id",
+      "type": "string"
+    },
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "mandate_id": {
+      "title": "Mandate Id",
+      "type": "string"
+    },
+    "lines": {
+      "items": {
+        "$ref": "#/$defs/ReceiptLine"
+      },
+      "title": "Lines",
+      "type": "array"
+    },
+    "total_eur": {
+      "title": "Total Eur",
+      "type": "number"
+    },
+    "currency": {
+      "const": "EUR",
+      "title": "Currency",
+      "type": "string"
+    },
+    "vat": {
+      "const": "excluded",
+      "title": "Vat",
+      "type": "string"
+    },
+    "policy_outcome": {
+      "enum": [
+        "auto",
+        "needs_approval"
+      ],
+      "title": "Policy Outcome",
+      "type": "string"
+    },
+    "rules_fired": {
+      "items": {
+        "$ref": "#/$defs/FiredRule"
+      },
+      "title": "Rules Fired",
+      "type": "array"
+    },
+    "rules_checked": {
+      "title": "Rules Checked",
+      "type": "integer"
+    },
+    "autonomy_mode": {
+      "anyOf": [
+        {
+          "enum": [
+            "advise",
+            "confirm_cart",
+            "autonomous"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Autonomy Mode"
+    },
+    "cart_confirmed_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Cart Confirmed By"
+    },
+    "approved_by": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Approved By",
+      "type": "array"
+    },
+    "placed_at": {
+      "title": "Placed At",
+      "type": "string"
+    },
+    "audit_head": {
+      "$ref": "#/$defs/AuditHead",
+      "description": "Hash-chained audit entry of the placement."
+    }
+  },
+  "required": [
+    "iss",
+    "iat",
+    "order_id",
+    "order_number",
+    "buyer_id",
+    "agent_id",
+    "mandate_id",
+    "lines",
+    "total_eur",
+    "currency",
+    "vat",
+    "policy_outcome",
+    "rules_fired",
+    "rules_checked",
+    "autonomy_mode",
+    "cart_confirmed_by",
+    "approved_by",
+    "placed_at",
+    "audit_head"
+  ],
+  "title": "OrderReceiptClaims",
+  "type": "object"
+}

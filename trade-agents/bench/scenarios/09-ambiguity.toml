@@ -1,0 +1,21 @@
+# Too vague to buy: ask, do not guess.
+
+[[scenario]]
+id = "ambiguous-no-amount"
+category = "ambiguity"
+title = "No amount"
+buyer = "hotel"
+request = "We need milk for the weekend breakfast."
+[scenario.expect]
+status = "needs_clarification"
+orders_max = 0
+
+[[scenario]]
+id = "ambiguous-no-product"
+category = "ambiguity"
+title = "No product"
+buyer = "hotel"
+request = "Order 300 litres for Monday, the usual."
+[scenario.expect]
+status = "needs_clarification"
+orders_max = 0

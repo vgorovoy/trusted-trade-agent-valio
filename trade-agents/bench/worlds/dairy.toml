@@ -1,0 +1,120 @@
+# Synthetic Valio Aimo dairy slice, frozen on Friday evening before a Monday delivery.
+# Prices are EUR excl. VAT per sales unit; comparison = EUR per L / KG.
+# Hotel mandates require FREE_FROM_LACTOSE, the school excludes milk (AM).
+
+now = "2026-11-13T20:00:00+02:00"
+delivery = "2026-11-16"
+cutoff = "2026-11-14T12:00:00+0200"
+
+# -- milk ---------------------------------------------------------------------------------
+[products.1001]
+name_fi = "Laktoositon kevytmaitojuoma 1 l"
+name_en = "Lactose-free light milk drink 1 l"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "MAITO"
+price = 1.35
+comparison = 1.35
+comparison_unit = "L"
+reliability = 0.97
+
+[products.1002]
+name_fi = "Laktoositon täysmaitojuoma 1 l"
+name_en = "Lactose-free whole milk drink 1 l"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "MAITO"
+substitutes = ["1001"]
+price = 1.49
+comparison = 1.49
+comparison_unit = "L"
+reliability = 0.99
+
+[products.1003]
+name_fi = "Laktoositon kahvimaito 1 l"
+name_en = "Lactose-free coffee milk 1 l"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "MAITO"
+price = 0.95
+comparison = 0.95
+comparison_unit = "L"
+reliability = 0.98
+
+[products.1004]
+name_fi = "Laktoositon maito-kaakaojuoma 1 l"
+name_en = "Lactose-free cocoa milk drink 1 l"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "MAITO, SOKERI, KAAKAO"
+price = 0.99
+comparison = 0.99
+comparison_unit = "L"
+reliability = 0.98
+
+# -- butter -------------------------------------------------------------------------------
+[products.1201]
+name_fi = "Laktoositon voi 500 g"
+name_en = "Lactose-free butter 500 g"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "KERMA, SUOLA"
+price = 4.60
+comparison = 9.20
+comparison_unit = "KG"
+reliability = 0.98
+
+[products.1202]
+name_fi = "Laktoositon voi 10 kg"
+name_en = "Lactose-free butter 10 kg"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "KERMA, SUOLA"
+price = 82.00
+comparison = 8.20
+comparison_unit = "KG"
+reliability = 0.97
+
+# -- yoghurt ------------------------------------------------------------------------------
+[products.1301]
+name_fi = "Laktoositon maustamaton jogurtti 10 kg"
+name_en = "Lactose-free plain yoghurt 10 kg"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "MAITO, MAITOHAPPOBAKTEERI"
+price = 38.00
+comparison = 3.80
+comparison_unit = "KG"
+reliability = 0.96
+
+[products.1302]
+name_fi = "Laktoositon mansikka jogurtti 10 kg"
+name_en = "Lactose-free strawberry yoghurt 10 kg"
+allergens = ["AM"]
+claims = ["FREE_FROM_LACTOSE"]
+ingredients = "MAITO, SOKERI, MANSIKKA"
+price = 32.00
+comparison = 3.20
+comparison_unit = "KG"
+reliability = 0.96
+
+# -- milk-free (school) ---------------------------------------------------------------------
+[products.1401]
+name_fi = "Kaurajuoma 1 l"
+name_en = "Oat drink 1 l"
+allergens = ["GO"]
+ingredients = "VESI, KAURA"
+price = 1.60
+comparison = 1.60
+comparison_unit = "L"
+reliability = 0.96
+
+[products.1402]
+name_fi = "Kaurajuoma kermainen 1 l"
+name_en = "Creamy oat drink 1 l"
+allergens = ["GO", "AM"]
+ingredients = "VESI, KAURA, KERMA"
+price = 1.30
+comparison = 1.30
+comparison_unit = "L"
+reliability = 0.96

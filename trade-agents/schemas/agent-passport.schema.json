@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:valio-aimo:trade-agents:schema:agent-passport:v1",
+  "x-jws-typ": "valio.agent_passport.v1",
+  "additionalProperties": false,
+  "description": "Agent Passport: claims of the JWS passed as `agent_passport` to place_order.",
+  "properties": {
+    "iss": {
+      "const": "valio-aimo",
+      "description": "Issuer: Valio Aimo.",
+      "title": "Iss",
+      "type": "string"
+    },
+    "iat": {
+      "description": "Issued at, ISO 8601 date-time.",
+      "title": "Iat",
+      "type": "string"
+    },
+    "agent_id": {
+      "description": "Must equal the mandate's agent_id.",
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "model": {
+      "title": "Model",
+      "type": "string"
+    },
+    "harness": {
+      "title": "Harness",
+      "type": "string"
+    },
+    "max_mode": {
+      "description": "Cap on the mandate's autonomy_mode.",
+      "enum": [
+        "advise",
+        "confirm_cart",
+        "autonomous"
+      ],
+      "title": "Max Mode",
+      "type": "string"
+    },
+    "issued_at": {
+      "title": "Issued At",
+      "type": "string"
+    },
+    "exp": {
+      "description": "Expiry, RFC 7519 NumericDate (seconds since the epoch).",
+      "title": "Exp",
+      "type": "integer"
+    },
+    "bench_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bench Score"
+    }
+  },
+  "required": [
+    "iss",
+    "iat",
+    "agent_id",
+    "model",
+    "harness",
+    "max_mode",
+    "issued_at",
+    "exp"
+  ],
+  "title": "AgentPassportClaims",
+  "type": "object"
+}

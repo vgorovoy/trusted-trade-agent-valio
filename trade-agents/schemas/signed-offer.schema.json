@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:valio-aimo:trade-agents:schema:signed-offer:v1",
+  "x-jws-typ": "valio.offer.v1",
+  "additionalProperties": false,
+  "description": "Signed Offer: claims of the JWS in `signature` on every quote result and plan line.",
+  "properties": {
+    "iss": {
+      "const": "valio-aimo",
+      "description": "Issuer: Valio Aimo.",
+      "title": "Iss",
+      "type": "string"
+    },
+    "iat": {
+      "description": "Issued at, ISO 8601 date-time.",
+      "title": "Iat",
+      "type": "string"
+    },
+    "offer_id": {
+      "pattern": "^of_[0-9a-f]+$",
+      "title": "Offer Id",
+      "type": "string"
+    },
+    "valid_until": {
+      "description": "Price lock end, ISO 8601 date-time.",
+      "title": "Valid Until",
+      "type": "string"
+    },
+    "product_id": {
+      "title": "Product Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "sales_unit": {
+      "description": "Unit the quantity and price refer to, e.g. ST, KI.",
+      "title": "Sales Unit",
+      "type": "string"
+    },
+    "lot_size": {
+      "title": "Lot Size",
+      "type": "number"
+    },
+    "currency": {
+      "const": "EUR",
+      "title": "Currency",
+      "type": "string"
+    },
+    "unit_price": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "EUR excl. VAT per sales unit.",
+      "title": "Unit Price"
+    },
+    "unit_price_with_tax": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Unit Price With Tax"
+    },
+    "vat_rate": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Percent, e.g. 13.5.",
+      "title": "Vat Rate"
+    },
+    "contract_price": {
+      "description": "A buyer-specific (net) price was applied.",
+      "title": "Contract Price",
+      "type": "boolean"
+    },
+    "comparison_price": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "EUR per comparison unit excl. VAT.",
+      "title": "Comparison Price"
+    },
+    "comparison_unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "L or KG.",
+      "title": "Comparison Unit"
+    },
+    "requested_date": {
+      "description": "Requested delivery date, ISO 8601 date.",
+      "title": "Requested Date",
+      "type": "string"
+    },
+    "delivery_status": {
+      "enum": [
+        "available",
+        "partial",
+        "late",
+        "cutoff_passed",
+        "out_of_stock",
+        "sales_blocked",
+        "unknown"
+      ],
+      "title": "Delivery Status",
+      "type": "string"
+    },
+    "available_amount": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "In sales units; null = no limit.",
+      "title": "Available Amount"
+    },
+    "earliest_date": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Earliest Date"
+    },
+    "order_cutoff": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Order Cutoff"
+    },
+    "origin_country": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Origin Country"
+    },
+    "claims": {
+      "description": "GS1 nutritional claims, e.g. FREE_FROM_LACTOSE.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Claims",
+      "type": "array"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Labels",
+      "type": "array"
+    },
+    "contains_allergens": {
+      "description": "GS1 allergen codes, e.g. AM (milk).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Contains Allergens",
+      "type": "array"
+    }
+  },
+  "required": [
+    "iss",
+    "iat",
+    "offer_id",
+    "valid_until",
+    "product_id",
+    "name",
+    "sales_unit",
+    "lot_size",
+    "currency",
+    "unit_price",
+    "unit_price_with_tax",
+    "vat_rate",
+    "contract_price",
+    "comparison_price",
+    "comparison_unit",
+    "requested_date",
+    "delivery_status",
+    "available_amount",
+    "earliest_date",
+    "order_cutoff",
+    "origin_country",
+    "claims",
+    "labels",
+    "contains_allergens"
+  ],
+  "title": "SignedOfferClaims",
+  "type": "object"
+}

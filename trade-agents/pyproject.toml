@@ -1,0 +1,51 @@
+[project]
+name = "trade-agents"
+version = "0.1.0"
+description = "Valio Aimo agent gateway: offers, guardrails, approvals and audit for external purchasing agents"
+readme = "README.md"
+authors = [
+    { name = "Vladimir Gorovoy", email = "Vladimir.Gorovoy@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "cryptography>=50.0.2",
+    "fastapi>=0.162.7",
+    "google-genai>=3.3.0",
+    "httpx>=0.28.1",
+    "mcp>=2.3.0",
+    "openai>=3.50.0",
+    "psycopg[binary]>=3.3.9",
+    "pydantic>=2.14.3",
+    "python-dotenv>=1.2.4",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+tta = "trade_agents.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8.3,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "jsonschema>=4.26.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+# FastAPI declares dependencies as default arguments (Depends/Query): B008 is the framework's idiom.
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# zip() over rank labels truncates to the options on purpose.
+"src/trade_agents/service.py" = ["B905"]

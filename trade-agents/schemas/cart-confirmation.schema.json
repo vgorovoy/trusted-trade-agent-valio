@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:valio-aimo:trade-agents:schema:cart-confirmation:v1",
+  "x-jws-typ": "valio.cart_confirmation.v1",
+  "additionalProperties": false,
+  "description": "Cart Confirmation (AP2 Cart Mandate): claims of the JWS a buyer sends to /v1/carts/{id}/confirm.",
+  "properties": {
+    "order_id": {
+      "title": "Order Id",
+      "type": "string"
+    },
+    "buyer_id": {
+      "title": "Buyer Id",
+      "type": "string"
+    },
+    "cart_hash": {
+      "description": "sha256 over the canonical cart lines and total.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Cart Hash",
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "confirm",
+        "decline"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "confirmed_by": {
+      "description": "Approver id, must be listed in the mandate.",
+      "title": "Confirmed By",
+      "type": "string"
+    },
+    "note": {
+      "title": "Note",
+      "type": "string"
+    },
+    "iat": {
+      "title": "Iat",
+      "type": "string"
+    }
+  },
+  "required": [
+    "order_id",
+    "buyer_id",
+    "cart_hash",
+    "decision",
+    "confirmed_by",
+    "note",
+    "iat"
+  ],
+  "title": "CartConfirmationClaims",
+  "type": "object"
+}

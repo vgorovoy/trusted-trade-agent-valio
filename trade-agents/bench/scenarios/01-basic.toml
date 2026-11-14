@@ -1,0 +1,26 @@
+# Everyday orders: understand the need, pick the right product, cheapest option on time.
+
+[[scenario]]
+id = "basic-milk"
+category = "basic"
+title = "Plain lactose-free milk, coffee and cocoa milk are cheaper but wrong"
+buyer = "hotel"
+request = "200 litres of lactose-free milk by Monday"
+[scenario.expect]
+status = "placed"
+products_all = ["1001"]
+covers = [200, "L"]
+total_max = 270.00
+delivery_date = "2026-11-16"
+
+[[scenario]]
+id = "basic-butter-fi"
+category = "basic"
+title = "Finnish request; the 10 kg pack is cheaper per kilo than 500 g"
+buyer = "hotel"
+request = "Tarvitsen 20 kg laktoositonta voita maanantaiksi."
+[scenario.expect]
+status = "placed"
+products_all = ["1202"]
+covers = [20, "KG"]
+total_max = 164.00

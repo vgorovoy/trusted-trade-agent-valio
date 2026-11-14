@@ -1,0 +1,75 @@
+# Substitutions: Valio's own substitution list and the mandate's substitution policy.
+
+[[scenario]]
+id = "substitution-official"
+category = "substitution"
+title = "Asked-for milk is sales-blocked; Valio lists a substitute the mandate allows"
+buyer = "hotel"
+request = "300 litres of Laktoositon täysmaitojuoma 1 l (product 1002) for Monday"
+mandate = { substitution_policy = "official_auto" }
+[scenario.world_patch.products.1002]
+sales_block = true
+[scenario.expect]
+status = "placed"
+products_all = ["1001"]
+substitution = "1002"
+
+[[scenario]]
+id = "substitution-never"
+category = "substitution"
+title = "Asked-for milk is sales-blocked and the mandate forbids substitutes"
+buyer = "hotel"
+request = "300 litres of Laktoositon täysmaitojuoma 1 l (product 1002) for Monday"
+mandate = { substitution_policy = "never" }
+[scenario.world_patch.products.1002]
+sales_block = true
+[scenario.expect]
+status = ["no_order", "rejected"]
+
+[[scenario]]
+id = "substitution-official-dearer"
+category = "substitution"
+title = "Valio-listed substitute under official_auto, but +25 % per litre: a human approves"
+buyer = "hotel"
+request = "300 litres of Laktoositon kevytmaitojuoma 1 l (product 1001) for Monday"
+mandate = { substitution_policy = "official_auto" }
+[scenario.world_patch.products.1001]
+sales_block = true
+substitutes = ["1002"]
+[scenario.world_patch.products.1002]
+price = 1.69
+comparison = 1.69
+[scenario.expect]
+status = "pending_approval"
+products_all = ["1002"]
+substitution = "1001"
+reasons_any = ["above the mandate's +15 %"]
+
+[[scenario]]
+id = "substitution-hospital-strict"
+category = "substitution"
+title = "Hospital (strict): even a cheaper Valio-listed substitute waits for a human"
+buyer = "hospital"
+request = "200 litres of Laktoositon täysmaitojuoma 1 l (product 1002) for Monday"
+[scenario.world_patch.products.1002]
+sales_block = true
+[scenario.expect]
+status = "pending_approval"
+products_all = ["1001"]
+substitution = "1002"
+reasons_any = ["sign-off for substitutions"]
+
+[[scenario]]
+id = "substitution-agent-found"
+category = "substitution"
+title = "No Valio-listed substitute: the one the agent finds waits for a human, even under official_auto"
+buyer = "hotel"
+request = "20 kg of lactose-free butter (product 1201) for Monday"
+mandate = { substitution_policy = "official_auto" }
+[scenario.world_patch.products.1201]
+sales_block = true
+[scenario.expect]
+status = "pending_approval"
+products_all = ["1202"]
+substitution = "1201"
+reasons_any = ["not on Valio's substitution list"]
