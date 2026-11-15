@@ -11,7 +11,7 @@ Built during Junction 2026.
 - **Evaluation Lab:** [/models](https://vladimir-gorovoy--junction-valio-demo-web.us-east.modal.run/models)
   shows every run with each failed check visible; [/live](https://vladimir-gorovoy--junction-valio-demo-web.us-east.modal.run/live)
   runs a benchmark scenario on a live model.
-- **Video (1:50):** https://youtu.be/twQTlSw2j2U
+- **Video (1:50):** https://youtu.be/h5w2kXHI4P8
 
 ## Agent Readiness Bench results
 
