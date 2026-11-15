@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "retrieved": "2026-11-14",
+  "currency": "USD",
+  "note": "Public list prices on the retrieval date. Cached-input discounts are not applied (the runner does not record cache hits), so per-token costs are upper bounds. Reasoning tokens are billed as output.",
+  "models": {
+    "gemini": {
+      "model": "gemini-3.5-flash",
+      "basis": "per_token",
+      "input_per_million": 1.5,
+      "output_per_million": 9.0,
+      "source": "https://anotherwrapper.com/llm-pricing/gemini-3.5-flash",
+      "source_note": "Aggregators citing Google's standard rate; gemini-3.5-flash is no longer shown on aistudio.google.com/docs/pricing (which lists 3.6/3.8 Flash)."
+    },
+    "verda": {
+      "model": "kimi-k3-1-pro",
+      "basis": "per_token",
+      "input_per_million": 2.0,
+      "output_per_million": 10.0,
+      "source": "https://verda.com/pricing",
+      "source_note": "Verda Inference (preview), Standard tier."
+    },
+    "verda-deepseek": {
+      "model": "deepseek-4-1-flash-1017",
+      "basis": "per_token",
+      "input_per_million": 0.15,
+      "output_per_million": 0.6,
+      "source": "https://verda.com/pricing",
+      "source_note": "Verda Inference (preview), Standard tier."
+    },
+    "verda-nemotron": {
+      "model": "nemotron-3.5-super-vl",
+      "basis": "per_token",
+      "input_per_million": 0.15,
+      "output_per_million": 0.5,
+      "source": "https://openrouter.ai/nvidia/nemotron-3.5-super-vl",
+      "source_note": "Public per-token list price on OpenRouter (also Together AI) for the same open-weight model, used for comparability. Our runs used a dedicated Verda B300 container (USD 13.65/h on-demand, verda.com/pricing), which is billed per hour, not per token."
+    }
+  }
+}

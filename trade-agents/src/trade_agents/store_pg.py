@@ -1,6 +1,7 @@
 """Gateway state in PostgreSQL (e.g. Aiven for PostgreSQL), same contract as `store.Store`.
 
-Selected by `TTA_STORE_URL` or `AIVEN_PG_URL` (`postgres://…?sslmode=require`); see
+Selected by `TTA_STORE_URL` or `AIVEN_PG_URL` (`postgres://…?sslmode=require`), optionally
+in a dedicated schema (`TTA_STORE_SCHEMA`, e.g. a hosted demo's `demo_20261114`); see
 `store.open_store`. Differences from SQLite that matter:
 
 - `lock` is cross-process: entering it opens a transaction and takes a transaction-level
@@ -34,6 +35,7 @@ from .store import StoreConnectionError, _hash, now
 
 LOCK_ORDERS = 0x7474_0001  # pg_advisory_xact_lock keys (bigint)
 LOCK_AUDIT = 0x7474_0002
+LOCK_SCHEMA = 0x7474_0003
 ORDER_COLUMNS = ("idempotency_key", "buyer_id", "agent_id", "mandate_id", "status",
                  "total_eur", "order_number", "data", "hold_until")
 
@@ -147,8 +149,12 @@ class PgStore:
                 "use --local or TTA_LOCAL=1 explicitly for isolated demo storage."
             ) from None
         if self.schema:
-            self.con.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(
-                sql.Identifier(self.schema)))
+            # Serialise schema creation: concurrent CREATE SCHEMA IF NOT EXISTS from two
+            # containers can otherwise fail with a unique violation in the catalogue.
+            with self.con.transaction():
+                self.con.execute("SELECT pg_advisory_xact_lock(%s)", (LOCK_SCHEMA,))
+                self.con.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(
+                    sql.Identifier(self.schema)))
             self.con.execute(sql.SQL("SET search_path TO {}").format(
                 sql.Identifier(self.schema)))
 
@@ -234,14 +240,17 @@ class PgStore:
         self._q(f"UPDATE orders SET {sets} WHERE order_id = %s", (*fields.values(), order_id))
         return self.get_order(order_id)  # type: ignore[return-value]
 
-    def autonomous_spend_since(self, buyer_id: str, mandate_id: str, since: datetime) -> float:
+    def autonomous_spend_since(self, buyer_id: str, mandate_id: str, since: datetime,
+                               *, wall_since: datetime | None = None) -> float:
+        column = ("COALESCE(data::jsonb ->> 'received_at_wall', created_at)"
+                  if wall_since else "created_at")
         rows = self._q(
             "SELECT COALESCE(SUM(total_eur), 0) AS s FROM orders WHERE buyer_id = %s AND "
-            "mandate_id = %s AND created_at >= %s AND status = 'placed' AND "
+            f"mandate_id = %s AND {column} >= %s AND status = 'placed' AND "
             "COALESCE(CASE WHEN jsonb_typeof(data::jsonb -> 'approvals') = 'array' "
             "THEN jsonb_array_length(data::jsonb -> 'approvals') END, 0) = 0 AND "
             "COALESCE(data::jsonb -> 'cart_confirmation', 'null'::jsonb) = 'null'::jsonb",
-            (buyer_id, mandate_id, since.isoformat()))
+            (buyer_id, mandate_id, (wall_since or since).isoformat()))
         return round(float(rows[0]["s"]), 2)
 
     def next_order_number(self) -> str:

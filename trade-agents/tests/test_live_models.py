@@ -46,7 +46,7 @@ def test_live_input_and_container_budget_enforced_before_spawn(monkeypatch):
         manager.start(sc, 'live', 'gemini', 'gemini-3.5-flash')
     assert error.value.status_code == 409
     manager.active = None
-    manager.live_attempts = 20
+    manager.live_attempts = live_models.LIMITS['max_live_runs_per_container']
     with pytest.raises(HTTPException) as error:
         manager.start(sc, 'live', 'gemini', 'gemini-3.5-flash')
     assert error.value.status_code == 429

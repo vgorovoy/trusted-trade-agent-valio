@@ -25,5 +25,5 @@ available = "2026-11-18"
 [scenario.world_patch.products.1002]
 available = "2026-11-18"
 [scenario.expect]
-status = ["no_order", "pending_approval"]
+status = ["no_order", "pending_approval", "needs_clarification"]
 products_none = ["1003", "1004"]

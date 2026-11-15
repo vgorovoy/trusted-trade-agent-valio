@@ -541,8 +541,22 @@ TTA_TEST_PG_URL='postgres://avnadmin:…@<service>.aivencloud.com:<port>/default
 ```
 
 They include a race of six gateways, each with its own connection, against one mandate:
-only the orders that fit the limit are placed. Checked on a local PostgreSQL 14; Aiven
-credentials are not configured yet.
+only the orders that fit the limit are placed. Checked on a local PostgreSQL 14 and live on
+Aiven for PostgreSQL (21 passed, 2 expected skips). The gateway uses Aiven when
+`AIVEN_PG_URL` (or `TTA_STORE_URL`) is set and local mode is off; `TTA_LOCAL=1` and
+`--local` always force SQLite. A frozen `TTA_DEMO_CLOCK` also uses SQLite unless the
+deployment opts into a dedicated schema with `TTA_STORE_SCHEMA` (lowercase identifier, e.g.
+`demo_20261114`): frozen-clock records then live in that schema only, apart from tests and
+real-time data, and every container shares one audit chain through the advisory lock. Signing
+keys and web evidence files stay in the local state directory (a shared volume when hosted).
+
+```bash
+AIVEN_PG_URL=… TTA_STORE_SCHEMA=demo_20261114 \
+  TTA_DEMO_CLOCK='2026-11-12T10:00:00+02:00' uv run tta serve
+```
+
+`/ui/overview` reports `storage.backend` (`postgres` or `sqlite`) and `storage.schema`,
+never the URL.
 
 ## Valio review agent (seller side)
 

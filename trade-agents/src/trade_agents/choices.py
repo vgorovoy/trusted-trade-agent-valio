@@ -12,6 +12,7 @@ from datetime import date, timedelta
 from typing import Any
 
 from .buyer_agent.profiles import BuyerProfile
+from .clock import spend_wall_since
 from .offers import assess_delivery
 from .policy import SPEND_WINDOW_HOURS, LineProposal, Mandate, evaluate
 from .service import Gateway, GatewayError, OrderLineIn, offer_from_dict
@@ -204,7 +205,8 @@ class ChoiceService:
         if mandate.max_substitute_price_increase_pct is not None:
             self.gateway._price_references(proposals, incoming, references)
         prior = self.store.autonomous_spend_since(mandate.buyer_id, mandate.mandate_id,
-                                                  now() - timedelta(hours=SPEND_WINDOW_HOURS))
+                                                  now() - timedelta(hours=SPEND_WINDOW_HOURS),
+                                                  wall_since=spend_wall_since(SPEND_WINDOW_HOURS))
         decision = evaluate(mandate, proposals, now=now(),
                             signature_ok=self.gateway._mandate_signature_ok(mandate),
                             prior_spend_eur=prior)

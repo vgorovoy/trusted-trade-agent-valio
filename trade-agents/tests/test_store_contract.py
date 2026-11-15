@@ -91,6 +91,20 @@ def test_autonomous_spend(store):
     assert store.autonomous_spend_since("b1", "m1", now() + timedelta(hours=1)) == 0.0
 
 
+def test_autonomous_spend_wall_window(store):
+    """Frozen demo clock: business times never move, so the window uses real receipt time."""
+    from datetime import UTC, datetime
+    frozen = now() - timedelta(days=30)
+    fresh, stale = _rec(total=70), _rec(total=900)
+    fresh["data"]["received_at_wall"] = datetime.now(UTC).isoformat()
+    stale["data"]["received_at_wall"] = (datetime.now(UTC) - timedelta(days=2)).isoformat()
+    store.create_order(fresh)
+    store.create_order(stale)
+    wall_since = datetime.now(UTC) - timedelta(hours=24)
+    assert store.autonomous_spend_since("b1", "m1", frozen) == 970.0     # frozen window: all
+    assert store.autonomous_spend_since("b1", "m1", frozen, wall_since=wall_since) == 70.0
+
+
 def test_audit_chain(store):
     for i in range(3):
         e = store.audit("actor", "evt", "ord_1" if i else "other", f"entry {i}", {"i": i})
@@ -229,3 +243,12 @@ def test_pg_parallel_gateways_respect_cumulative_limit(settings, catalog, mandat
         stores[0].con.execute(f'DROP SCHEMA "{schema}" CASCADE')
         for s in stores:
             s.close()
+
+
+def test_spend_wall_since_only_under_demo_clock(monkeypatch):
+    from trade_agents.clock import spend_wall_since
+    monkeypatch.delenv("TTA_DEMO_CLOCK", raising=False)
+    assert spend_wall_since(24) is None
+    monkeypatch.setenv("TTA_DEMO_CLOCK", "2026-11-12T10:00:00+02:00")
+    since = spend_wall_since(24)
+    assert since is not None and since.year >= 2026 and since.utcoffset().total_seconds() == 0

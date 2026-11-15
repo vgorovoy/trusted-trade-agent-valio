@@ -35,6 +35,7 @@ class Final:
     choice: dict[str, Any] | None = None
     pre_human_orders: list[dict[str, Any]] = field(default_factory=list)
     agent_status: str | None = None
+    tool_priced: set[str] = field(default_factory=set)   # priced inside find_substitutes
 
     @property
     def order(self) -> dict[str, Any] | None:
@@ -51,12 +52,15 @@ class Final:
     @property
     def candidates(self) -> set[str]:
         """Products the agent itself chose to price: product_ids of plan_need / get_offers,
+        the product it asked find_substitutes about and the candidates that tool priced for it,
         plus the originals its order lines say they replace (`substitutes_for`), which the
         gateway prices once to check the replacement's price delta."""
         picked = {str(p) for s in self.result.trace if s.tool in ("plan_need", "get_offers")
                   for p in (s.args.get("product_ids") or [])}
-        return picked | {str(ln["substitutes_for"]) for ln in self.lines
-                         if ln.get("substitutes_for")}
+        subs = {str(s.args.get("product_id")) for s in self.result.trace
+                if s.tool == "find_substitutes" and s.args.get("product_id")}
+        return picked | subs | self.tool_priced | {str(ln["substitutes_for"]) for ln in self.lines
+                                                   if ln.get("substitutes_for")}
 
     @property
     def reasons(self) -> list[str]:

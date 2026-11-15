@@ -22,6 +22,7 @@ function updateImagePreview(){
 function setInputFile(id,file){const transfer=new DataTransfer();if(file)transfer.items.add(file);menuEl(id).files=transfer.files;}
 function updatePreset(mode){
   menuEl('request-kind').value=mode;
+  menuEl('buyer-model-settings')?.classList.toggle('hidden',mode!=='product');
   menuEl('mode-select').value=mode==='product'?'autonomous':'confirm_cart';menuEl('mode-select').disabled=mode!=='product';
   menuEl('menu-mode-help').textContent=mode==='product'?'A product request can proceed under the signed mandate. Adding a photo or documents routes the request through a reviewed draft first.':'This creates an editable ingredient draft, not an order. Supply quantities and dates; incomplete notes need clarification. Use portions = 1 when service counts or final quantities are already supplied. Each reviewed basket still requires confirmation.';
   document.querySelectorAll('[data-menu-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.menuMode===mode)));

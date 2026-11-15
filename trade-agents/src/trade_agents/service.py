@@ -18,6 +18,7 @@ from typing import Any, Protocol
 from pydantic import BaseModel, Field
 
 from .catalog import AllergenFilter, Catalog, Product, UnknownAllergen
+from .clock import spend_wall_since
 from .config import Settings, get_settings
 from .offers import Content, Delivery, Offer, assess_delivery, build_offer
 from .policy import (
@@ -607,8 +608,12 @@ class Gateway:
             existing = self.store.order_by_key(mandate.buyer_id, idempotency_key)
             if existing:
                 return existing
+            # A frozen demo clock never lets old orders leave the window; there, count the
+            # last SPEND_WINDOW_HOURS of real time so a shared public demo does not lock up.
+            wall_since = spend_wall_since(SPEND_WINDOW_HOURS)
             prior = self.store.autonomous_spend_since(mandate.buyer_id, mandate.mandate_id,
-                                                      ts - timedelta(hours=SPEND_WINDOW_HOURS))
+                                                      ts - timedelta(hours=SPEND_WINDOW_HOURS),
+                                                      wall_since=wall_since)
             decision = evaluate(mandate, proposals, now=ts,
                                 signature_ok=signature_ok,
                                 prior_spend_eur=prior)

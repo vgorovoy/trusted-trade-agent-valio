@@ -16,11 +16,13 @@ MODELS = {
                'https://integrate.api.nvidia.com/v1'),
     'verda': ('Verda', 'kimi-k3-1-pro', ('VERDA_API_KEY', 'VERDA_INFERENCE_API_KEY'),
               'https://inference.verda.com/v1'),
+    'verda-deepseek': ('Verda · DeepSeek', 'deepseek-4-1-flash-1017',
+                       ('VERDA_API_KEY', 'VERDA_INFERENCE_API_KEY'), 'https://inference.verda.com/v1'),
 }
 LIMITS = {'max_scenarios': 1, 'max_steps': 8, 'request_timeout_seconds': 45,
           'sdk_max_attempts': 1, 'application_max_attempts': 1, 'max_output_tokens': 4096,
           'max_trajectory_tokens': 40000, 'worker_timeout_seconds': 240,
-          'max_live_runs_per_container': 20}
+          'max_live_runs_per_container': 100}
 
 
 def credential(provider: str) -> str | None:

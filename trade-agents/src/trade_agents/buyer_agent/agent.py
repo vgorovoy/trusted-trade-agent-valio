@@ -131,7 +131,7 @@ class BuyerAgent:
         self.on_trace = on_trace
 
     def run(self, request: str) -> AgentResult:
-        tools = AgentTools(self.transport, self.profile)
+        tools = AgentTools(self.transport, self.profile, request=request)
         res = AgentResult(request=request, buyer=self.profile.key, status="error",
                           model=getattr(self.llm, "name", "?"))
         messages: list[dict[str, Any]] = [{

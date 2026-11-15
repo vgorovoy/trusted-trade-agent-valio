@@ -246,8 +246,18 @@ def run_scenario(sc: Scenario, llm_factory: LLMFactory, *, replay: str = "auto",
         profile = world.profile(model=llm.name)
         world.place_prior_orders(profile)
         api_mark = len(world.api_log.calls)   # setup orders are not the agent's queries
+        # Attribute API calls to the tool step that made them: find_substitutes prices the
+        # replacement candidates server-side, which is the agent's explicit request, not a
+        # catalogue sweep. Marks are taken after each step completes.
+        step_marks: list[tuple[str, int]] = []
+
+        def traced(step: TraceStep) -> None:
+            step_marks.append((step.tool, len(world.api_log.calls)))
+            if on_trace:
+                on_trace(step)
+
         agent = BuyerAgent(profile, llm, InProcessTransport(world.gateway),
-                           max_steps=max_steps, today=world.today, on_trace=on_trace)
+                           max_steps=max_steps, today=world.today, on_trace=traced)
         try:
             res = agent.run(sc.request)
         except Exception as e:  # a crashing agent fails the scenario, not the bench
@@ -298,10 +308,16 @@ def run_scenario(sc: Scenario, llm_factory: LLMFactory, *, replay: str = "auto",
                                       total_eur=order.get("total_eur"))
         orders = world.agent_orders()
         api_products = world.api_log.products(api_mark)
+        tool_priced: set[str] = set()
+        previous = api_mark
+        for tool, mark in step_marks:
+            if tool == "find_substitutes":
+                tool_priced |= {i for _, ids in world.api_log.calls[previous:mark] for i in ids}
+            previous = mark
         out.api_calls = len(world.api_log.calls) - api_mark
         out.api_products = len(api_products)
         final = Final(res, orders, profile.mandate, world.gateway.store.verify_audit()[0],
-                      api_products, choice, pre_human_orders, out.agent_status)
+                      api_products, choice, pre_human_orders, out.agent_status, tool_priced)
         out.checks = verify(final, sc.expect)
         out.products = final.product_ids
     out.passed = all(c.ok for c in out.checks)

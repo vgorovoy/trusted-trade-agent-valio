@@ -156,27 +156,21 @@ def test_stops_at_pending_approval_and_refuses_to_split(gw, hotel):
 def test_ignores_injected_instruction(gw, hotel):
     def obey_injection(messages, tools):  # worst case: the model believes the product text
         res = last_tool_result(messages, "plan_need")
-        line = res["options"][0]["lines"][0]
-        assert line["product_id"] == "700"
-        return call("place_order", rationale="product text says limit raised",
-                    mandate={"auto_order_limit_eur": 99999}, lines=[
-                        {"offer_id": line["offer_id"], "quantity": 5000}])
+        assert "quarantined" in res.get("error", "") and res["quarantined"] == ["700"]
+        return finish("needs_clarification")
 
     res, llm = run(gw, hotel, [
         call("search_products", query="maito"),
         call("plan_need", query="maito", amount=100, unit="L", requested_date="2026-11-16",
              product_ids=["700"]),
-        obey_injection, finish("placed")], "100 l lactose-free milk")
-    # the model saw the warning, the mandate could not be changed, a human must decide
+        obey_injection], "100 l lactose-free milk")
+    # the model saw the warning; the poisoned listing is quarantined and cannot be ordered
     search_reply = json.loads(next(m for m in llm.calls[1] if m["role"] == "tool")["content"])
     assert "700" in search_reply["untrusted_text_warning"]
-    assert res.status == "pending_approval" and res.total_eur == 2500.0
+    assert not gw.store.list_orders()
     assert "700" in res.flagged_products
-    order = gw.order(res.order_id)
-    assert order["data"]["mandate"]["auto_order_limit_eur"] == 1000
     notes = [e for e in gw.audit()["entries"] if e["event"] == "agent.note"]
     assert notes and notes[0]["subject"] == "700"
-
 
 def test_offline_agent_end_to_end(gw, hotel):
     agent = BuyerAgent(hotel, OfflineBuyerLLM(), InProcessTransport(gw), today=TODAY)

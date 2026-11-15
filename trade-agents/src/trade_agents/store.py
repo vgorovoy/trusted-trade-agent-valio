@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import threading
 import uuid
@@ -144,15 +145,19 @@ class Store:
             self.con.commit()
         return self.get_order(order_id)  # type: ignore[return-value]
 
-    def autonomous_spend_since(self, buyer_id: str, mandate_id: str, since: datetime) -> float:
+    def autonomous_spend_since(self, buyer_id: str, mandate_id: str, since: datetime,
+                               *, wall_since: datetime | None = None) -> float:
         """What the agent committed on its own under one mandate since `since`: placed
-        orders that no human approved or confirmed."""
+        orders that no human approved or confirmed. With `wall_since` (frozen demo clock),
+        the window uses each order's real receipt time instead of the frozen business time."""
+        column = ("COALESCE(json_extract(data, '$.received_at_wall'), created_at)"
+                  if wall_since else "created_at")
         r = self.con.execute(
             "SELECT COALESCE(SUM(total_eur), 0) FROM orders WHERE buyer_id = ? AND "
-            "mandate_id = ? AND created_at >= ? AND status = 'placed' AND "
+            f"mandate_id = ? AND {column} >= ? AND status = 'placed' AND "
             "COALESCE(json_array_length(json_extract(data, '$.approvals')), 0) = 0 AND "
             "json_extract(data, '$.cart_confirmation') IS NULL",
-            (buyer_id, mandate_id, since.isoformat()),
+            (buyer_id, mandate_id, (wall_since or since).isoformat()),
         ).fetchone()
         return round(float(r[0]), 2)
 
@@ -254,8 +259,8 @@ class StateStore(Protocol):
                     buyer_id: str | None = None) -> list[dict]: ...
     def create_order(self, rec: dict[str, Any]) -> dict[str, Any]: ...
     def update_order(self, order_id: str, **fields: Any) -> dict[str, Any]: ...
-    def autonomous_spend_since(self, buyer_id: str, mandate_id: str,
-                               since: datetime) -> float: ...
+    def autonomous_spend_since(self, buyer_id: str, mandate_id: str, since: datetime,
+                               *, wall_since: datetime | None = None) -> float: ...
     def next_order_number(self) -> str: ...
     def audit(self, actor: str, event: str, subject: str, summary: str,
               data: dict[str, Any] | None = None) -> dict[str, Any]: ...
@@ -265,9 +270,24 @@ class StateStore(Protocol):
     def get_valio_review(self, order_id: str) -> dict[str, Any] | None: ...
 
 
+def store_schema() -> str | None:
+    """Optional Postgres schema for gateway state (`TTA_STORE_SCHEMA`), e.g. `demo_20261114`.
+
+    A dedicated schema keeps a hosted demo's records apart from tests and real-time data."""
+    schema = os.getenv("TTA_STORE_SCHEMA", "").strip()
+    if schema and not re.fullmatch(r"[a-z_][a-z0-9_]{0,62}", schema):
+        raise ValueError("TTA_STORE_SCHEMA must be a lowercase identifier (a-z, 0-9, _)")
+    return schema or None
+
+
 def store_url() -> str | None:
-    """Postgres URL from `TTA_STORE_URL` or `AIVEN_PG_URL`; never log it."""
-    if local_mode():
+    """Postgres URL from `TTA_STORE_URL` or `AIVEN_PG_URL`; never log it.
+
+    `TTA_LOCAL=1` always means SQLite. A frozen `TTA_DEMO_CLOCK` also means SQLite unless
+    the demo explicitly opts into its own Postgres schema with `TTA_STORE_SCHEMA`, so frozen
+    business timestamps never mix with real-time records in the default schema."""
+    schema = store_schema()  # validate even when unused
+    if os.getenv("TTA_LOCAL") == "1" or (local_mode() and not schema):
         return None
     url = os.getenv("TTA_STORE_URL") or os.getenv("AIVEN_PG_URL") or ""
     return url if url.startswith(("postgres://", "postgresql://")) else None
@@ -279,5 +299,5 @@ def open_store(db_path: Path) -> StateStore:
     if url:
         from .store_pg import PgStore
 
-        return PgStore(url)
+        return PgStore(url, schema=store_schema())
     return Store(db_path)

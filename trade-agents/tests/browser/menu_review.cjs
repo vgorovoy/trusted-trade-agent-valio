@@ -24,6 +24,9 @@ if (!['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)) {
       if (target.pathname === '/ui/overview') return route.fulfill({json: {
         orders: [], choices: [], audit: {entries: [], chain_valid: true}, jwks: {keys: []},
       }});
+      if (target.pathname === '/ui/agent/models') return route.fulfill({json: {
+        default: {id: '', label: 'Gemini 3.5 Flash'}, options: [],
+      }});
       if (target.pathname === '/ui/menu/draft') {
         drafts++;
         return route.fulfill({json: {

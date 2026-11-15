@@ -7,11 +7,11 @@
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <title>Valio Aimo · Trusted Trade Agents</title>
   <link rel="stylesheet" href="/app.css">
-  <link rel="stylesheet" href="/menu.css?v=unified-presets-2">
+  <link rel="stylesheet" href="/menu.css?v=buyer-model-1">
   <link rel="stylesheet" href="/demo-proof.css?v=1">
   <script type="module" src="/demo-proof.js?v=1"></script>
-  <script type="module" src="/app.js?v=actual-time-6"></script>
-  <script type="module" src="/menu.js?v=unified-presets-2"></script>
+  <script type="module" src="/app.js?v=buyer-model-1"></script>
+  <script type="module" src="/menu.js?v=buyer-model-1"></script>
 </head>
 <body>
   <div class="shell">
@@ -45,10 +45,10 @@
 <div class="kitchen-request-modes"><div class="menu-entry-buttons" role="group" aria-label="Request example"><button type="button" data-menu-mode="product" aria-pressed="true">1 · Product top-up</button><button type="button" data-menu-mode="handwritten" aria-pressed="false">2 · Handwritten list</button><button type="button" data-menu-mode="menu" aria-pressed="false">3 · Menu + recipe cards + stock</button></div><select id="request-kind" class="hidden" aria-label="Internal request type"><option value="product">Product</option><option value="handwritten">Handwritten</option><option value="menu">Menu</option></select></div>
 <form id="agent-form" class="hidden" aria-hidden="true"><input id="request-input" value=""><button id="run-button" type="submit">Run agent</button></form>
 <form id="menu-form"><div class="menu-fields"><label>Kitchen<select id="buyer-select"><option value="restaurant" selected>Restaurant / café</option><option value="school">School kitchen</option><option value="hospital">Hospital kitchen</option><option value="hotel">Hotel kitchen</option></select></label><label>Autonomy<select id="mode-select"><option value="autonomous">Autonomous</option><option value="confirm_cart">Confirm cart</option><option value="advise">Advise only</option></select></label><label id="menu-portions-label">People / portions<input id="menu-guests" type="number" min="1" max="10000" step="1" value="1" required></label></div>
-<label class="menu-description-label" for="menu-text">Kitchen request</label><textarea id="menu-text" rows="5" maxlength="12000" placeholder="Describe the need, quantities and delivery date.">200 litres of lactose-free milk for Monday.</textarea><p id="menu-mode-help" class="menu-help"></p>
+<label class="menu-description-label" for="menu-text">Kitchen request</label><textarea id="menu-text" rows="5" maxlength="12000" placeholder="Describe the need, quantities and delivery date.">200 litres of lactose-free milk for Monday.</textarea><p id="menu-mode-help" class="menu-help"></p><details class="run-settings" id="buyer-model-settings"><summary><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></svg>Settings</summary><label class="buyer-model" for="buyer-model-select">Buyer model<select id="buyer-model-select" aria-describedby="buyer-model-note"><option value="" selected>Gemini 3.5 Flash (default)</option></select><small id="buyer-model-note">Product requests only. Photo and menu drafts use Gemini.</small></label></details>
 <div class="menu-attachment-area"><label class="menu-attachment" for="menu-image">One image · JPEG / PNG, up to 5 MB<input id="menu-image" type="file" accept="image/jpeg,image/png"></label><div id="menu-image-preview" class="hidden"><img id="menu-image-thumbnail" alt="Selected kitchen request image"><span id="menu-image-name"></span></div>
 <div id="menu-document-inputs" class="menu-documents"><label>Menu / service counts<input id="menu-document" type="file" accept=".txt,.md,.json"></label><label>Recipe cards<input id="recipe-document" type="file" accept=".txt,.md,.json"></label><label>Stock / incoming receipts<input id="stock-document" type="file" accept=".txt,.md,.json"></label><p class="menu-help">.txt, .md or .json · 100 KB per file · 12,000 characters combined with the request. No PDFs. Documents are input data; signed kitchen restrictions still apply.</p></div></div>
-<button class="primary-button" type="submit" id="menu-draft-button">Run agent</button><div id="menu-message" role="status" aria-live="polite"></div></form><section class="menu-preview hidden" id="menu-preview" aria-label="Review ingredient draft"></section></div>
+<button class="primary-button" type="submit" id="menu-draft-button">Run agent</button><p id="buyer-model-used" class="buyer-model-used hidden" role="status"></p><div id="menu-message" role="status" aria-live="polite"></div></form><section class="menu-preview hidden" id="menu-preview" aria-label="Review ingredient draft"></section></div>
           <div class="section-top"><h2>Exchanges</h2><div class="segmented" aria-label="Perspective"><button class="selected" data-perspective="buyer">Buyer</button><button data-perspective="valio">Valio</button></div></div>
           <div class="exchange-layout"><div class="exchange-list" id="order-list"></div><div class="detail-panel" id="order-detail"></div></div>
         </section>

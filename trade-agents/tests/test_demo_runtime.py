@@ -21,7 +21,7 @@ AT = '2026-11-12T10:00:00+02:00'
 
 @pytest.fixture(autouse=True)
 def clean_runtime(monkeypatch):
-    for name in ('TTA_LOCAL', 'TTA_DEMO_CLOCK', 'TTA_STORE_URL', 'AIVEN_PG_URL'):
+    for name in ('TTA_LOCAL', 'TTA_DEMO_CLOCK', 'TTA_STORE_URL', 'AIVEN_PG_URL', 'TTA_STORE_SCHEMA'):
         monkeypatch.setenv(name, "")
         monkeypatch.delenv(name)
 
@@ -126,3 +126,42 @@ def test_cli_invalid_clock(monkeypatch):
     with pytest.raises(SystemExit) as error:
         cli.main(['--demo-clock', '2026-11-12T10:00:00', 'drift', 'ignored.json'])
     assert error.value.code == 2
+
+
+def test_frozen_clock_postgres_requires_explicit_schema(monkeypatch, tmp_path):
+    """A frozen-clock demo stays on SQLite unless it opts into its own Postgres schema."""
+    connect = Mock(side_effect=psycopg.OperationalError('offline'))
+    monkeypatch.setattr(psycopg, 'connect', connect)
+    monkeypatch.setenv('AIVEN_PG_URL', 'postgresql://unused/test')
+    monkeypatch.setenv('TTA_DEMO_CLOCK', AT)
+    assert store_url() is None
+    monkeypatch.setenv('TTA_STORE_SCHEMA', 'demo_20261114')
+    assert store_url() == 'postgresql://unused/test'
+    with pytest.raises(StoreConnectionError):  # a configured database never falls back
+        open_store(tmp_path / 'state.sqlite')
+    assert not (tmp_path / 'state.sqlite').exists()
+    monkeypatch.setenv('TTA_LOCAL', '1')  # explicit local storage always wins
+    assert store_url() is None
+
+
+def test_store_schema_passed_to_pgstore(monkeypatch, tmp_path):
+    seen = {}
+
+    class FakePg:
+        def __init__(self, url, *, schema=None):
+            seen.update(url=url, schema=schema)
+
+    import trade_agents.store_pg as store_pg
+    monkeypatch.setattr(store_pg, 'PgStore', FakePg)
+    monkeypatch.setenv('AIVEN_PG_URL', 'postgresql://unused/test')
+    monkeypatch.setenv('TTA_STORE_SCHEMA', 'demo_20261114')
+    open_store(tmp_path / 'state.sqlite')
+    assert seen == {'url': 'postgresql://unused/test', 'schema': 'demo_20261114'}
+
+
+@pytest.mark.parametrize('bad', ['Demo', 'demo-1', 'x;drop', '1demo'])
+def test_store_schema_rejects_unsafe_names(monkeypatch, bad):
+    monkeypatch.setenv('AIVEN_PG_URL', 'postgresql://unused/test')
+    monkeypatch.setenv('TTA_STORE_SCHEMA', bad)
+    with pytest.raises(ValueError, match='TTA_STORE_SCHEMA'):
+        store_url()
